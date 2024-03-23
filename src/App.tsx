@@ -2,8 +2,7 @@
 function App() {
   return (
     <>
-      <div>Template Code</div>
-     
+      <div>Template Code</div>     
     </>
   )
 }
