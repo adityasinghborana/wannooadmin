@@ -25,7 +25,7 @@ interface Row {
   firstName: string;
 }
 
-const Vendor = () => {
+const PendingReq = () => {
   const [rows, setRows] = useState<Row[]>([]);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
@@ -174,4 +174,4 @@ const Vendor = () => {
   );
 }
 
-export default Vendor
+export default PendingReq

@@ -1,5 +1,5 @@
 
-import { MdDashboard, MdLogout, MdSupervisedUserCircle } from "react-icons/md"
+import { MdDashboard, MdLogout, MdPending, MdSupervisedUserCircle, MdVerifiedUser, MdWorkHistory } from "react-icons/md"
 import MenuLink from "./menuLink/menuLink"
 import { Avatar } from "@mui/material"
 import { deepOrange } from "@mui/material/colors"
@@ -23,10 +23,26 @@ const Sidebar = () => {
       {
         title: 'Vendors',
         path:'/dashboard/vendors',
-        icon: <MdDashboard />
+        icon: <MdVerifiedUser />
+      },
+      {
+        title: 'Pending-Requests',
+        path:'/dashboard/pending-requests',
+        icon: <MdPending />
       }
     ]
-  }]
+  },
+  {
+    title:'Services',
+    list:[
+      {
+        title: 'Tours',
+        path:'/dashboard/tours',
+        icon: <MdWorkHistory />
+      },    
+    ]
+  }
+  ]
 
   return (
     <div className="shadow-md ml-3 mt-4 h-full">
