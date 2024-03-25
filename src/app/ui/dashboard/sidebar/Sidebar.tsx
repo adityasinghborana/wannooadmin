@@ -45,7 +45,7 @@ const Sidebar = () => {
   ]
 
   return (
-    <div className="shadow-md ml-3 mt-4 h-full">
+    <div className="fixed shadow-md ml-3 mt-4 h-full">
       <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row">
       <Avatar sx={{bgcolor: deepOrange[500] }}>A</Avatar>
       <div className="flex flex-col">

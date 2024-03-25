@@ -2,6 +2,7 @@
 import { getAllUsers } from "@/lib/services";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -32,6 +33,15 @@ const User = () => {
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
   const [open, setOpen] = useState(false);
   const [filteredRows, setFilteredRows] = useState<Row[]>(rows);
+  const [loading, setLoading] = useState(false);
+
+  const showLoader = () => {
+    setLoading(true);
+  };
+
+  const hideLoader = () => {
+    setLoading(false);
+  };
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: "id", headerName: "ID", flex: 1 },
@@ -109,15 +119,22 @@ const User = () => {
 
   useEffect(() => {
     const getData = async () => {
+      showLoader();
       let res = await getAllUsers();
       setRows(res);
       setFilteredRows(res);
+      hideLoader();
     };
     if (rows.length === 0) getData();
   }, []);
 
   return (
     <div className="mt-5">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-35">
+          <CircularProgress />
+        </div>
+      )}
       <Box sx={{ width: "100%", backgroundColor: "white" }}>
         <div className="mb-4 flex justify-between">
           <TextField
@@ -129,7 +146,9 @@ const User = () => {
           <Button
             onClick={() => handleOpenDialog()}
             disabled={selectedRows.length === 0}
-            className={`${selectedRows.length <= 1 && "hidden"} mt-2 mr-2 px-4 py-2 rounded-3xl bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600`}
+            className={`${
+              selectedRows.length <= 1 && "hidden"
+            } mt-2 mr-2 px-4 py-2 rounded-3xl bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600`}
           >
             <GridDeleteIcon />
             Delete Selected Rows

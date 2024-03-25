@@ -1,41 +1,57 @@
 "use client";
 import {
-  Box,
+  Button,
   Card,
+  CardActions,
   CardContent,
-  CardMedia,
   Link,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import Pagination from "@mui/material/Pagination";
+import React from "react";
 
-
-const TourCard: React.FC = (tour:any) => {
-
-    useEffect(()=>{
-        console.log(tour)
-    },[])
-    return (
-        <div className="bg-slate-600">
-        <Link href={`/details/${tour.id}`} style={{ textDecoration: 'none' }} className="flex items-center justify-center ">
-          <Card className="w-full h-96">
-            <img src={tour?.tourdetails[0]?.imagePath} alt="Card" style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: '4px 4px 0 0' }} />
-            <CardContent>              
+const TourCard: React.FC = (tour: any) => {
+  return (
+    <div className="cursor-pointer">
+      {/* <Link
+        href={`/dashboard/tours/${tour.tourId}`}
+        style={{ textDecoration: "none" }}
+        className="flex items-center justify-center rounded-3xl"
+      > */}
+        <Card className="w-full h-96 rounded-3xl">
+          <img
+            src={tour?.tourdetails[0]?.imagePath}
+            alt="Card"
+            style={{
+              width: "100%",
+              height: 200,
+              objectFit: "cover",
+              borderRadius: "4px 4px 0 0",
+            }}
+          />
+          <CardContent className="mb-2">
             <Typography variant="body2" component="div" className="font-bold">
-                {tour.id}
+              {tour.tourId}
             </Typography>
-            <Typography gutterBottom variant="h5" component="div">          
-                {tour.tourName}
+            <Typography gutterBottom variant="h5" component="div" className="truncate">
+              {tour.tourName}
             </Typography>
-              <Typography variant="body2" color='text.secondary' className="line-clamp-6">
-                {tour?.tourShortDescription}
-              </Typography>
-            </CardContent>
-          </Card>
-         </Link>
-        </div>        
-      );
-    };
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className="line-clamp-2 h-10"
+            >
+              {tour?.tourShortDescription}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" className="hover:bg-blue-600 hover:text-white rounded-2xl">View</Button>
+            <Button size="small" className="hover:bg-yellow-600 hover:text-white rounded-2xl text-yellow-600">Edit</Button>
+            <Button size="small" className="hover:bg-red-600 hover:text-white rounded-2xl text-red-600">Delete</Button>
+          </CardActions>
+        </Card>
+      {/* </Link> */}
+    </div>
+  );
+};
 
 export default TourCard;

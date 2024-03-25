@@ -9,7 +9,7 @@ const Layout=({
   }>)=>{
     return(
         <div className="flex md:flex-row md:gap-5">
-            <div className="w-full md:w-1/5 min-h-[97vh] bg-[#182237]">
+            <div className="w-full md:w-1/5 min-h-[97vh] bg-[#182237] hidden md:block">
                 <Sidebar/>
             </div>
             <div className="w-full md:w-4/5 mt-2">
