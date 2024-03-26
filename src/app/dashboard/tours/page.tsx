@@ -1,15 +1,89 @@
 "use client";
 import TourCard from "@/app/ui/tours/tourCards";
 import { getAllTours } from "@/lib/services";
-import { TextField, debounce } from "@mui/material";
+import { Box, Button, TextField, debounce } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
+import { DataGrid, GridColDef, GridDeleteIcon, GridRowId } from "@mui/x-data-grid";
+import { MdDelete, MdEdit, MdViewAgenda } from "react-icons/md";
 
+interface Row {
+  id: GridRowId;
+  email: string;
+  firstName: string;
+  tourdetails:[{
+    imagePath: string
+  }]
+}
 
 const Tours: React.FC = () => {
   const [allTours, setAllTours] = useState<any[]>([]);
-  const [filteredCards, setFilteredCards] = useState<any[]>(allTours);
+  // const [filteredCards, setFilteredCards] = useState<any[]>(allTours);
   const [loading, setLoading] = useState(false);
+  const [rows, setRows] = useState<Row[]>([]);
+  const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
+  const [selectedRow, setSelectedRow] = useState<Row | null>(null);
+  const [open, setOpen] = useState(false);
+  const [filteredRows, setFilteredRows] = useState<Row[]>(allTours);
+
+
+  const columns: GridColDef<(typeof rows)[number]>[] = [
+    {
+      field: "",
+      headerName: "Thumbnail",
+      flex: 1,
+      width: 200,
+      maxWidth:200,
+      // editable: true,
+      renderCell: (params) => {
+        return <img src={`${params.row?.tourdetails[0].imagePath}`} alt="thumbnail"/>;
+      },
+    },
+    { field: "tourId", headerName: "ID",},
+    {
+      field: "tourName",
+      headerName: "Name",
+      width:200,
+      // editable: true,
+    },
+    {
+      field: "tourShortDescription",
+      headerName: "Description",
+      width: 400,
+      // editable: true,
+    },    
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className="min-h-full content-center max-w-[200px]">
+          <div className="grid grid-cols-3 mt-6 gap-2">
+          <button
+            // onClick={() => handleOpenDialog(params.row)}
+            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
+            >
+            <MdEdit />
+          </button>
+          <button
+            // onClick={() => handleOpenDialog(params.row)}
+            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-yellow-300 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
+          >
+            <MdViewAgenda />
+          </button>
+          <button
+            // onClick={() => handleOpenDialog(params.row)}
+            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+          >
+            <MdDelete />
+          </button>
+          </div>
+          </div>
+        );
+      },
+    },
+  ];
 
   const showLoader = () => {
     setLoading(true);
@@ -25,9 +99,9 @@ const Tours: React.FC = () => {
 
   const handleSearch = debounce((value: string) => {
     const FilteredCards = allTours.filter((tours) =>
-      tours.tourShortDescription.toLowerCase().includes(value.toLowerCase())
+      tours.tourName.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredCards(FilteredCards);
+    setFilteredRows(FilteredCards);
   }, 300);
 
   useEffect(() => {
@@ -35,7 +109,7 @@ const Tours: React.FC = () => {
       showLoader() 
       let res = await getAllTours();
       setAllTours(res);
-      setFilteredCards(res);
+      setFilteredRows(res);
       hideLoader()
     };
     if (allTours.length === 0)getTours();
@@ -43,22 +117,50 @@ const Tours: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-end">
-      <TextField
-        label="Search by name"
-        variant="standard"
-        onChange={handleInputChange}
-        className="my-2 px-4 ml-4"
-        InputProps={{ style: { color: 'white' } }}
-        InputLabelProps={{ style: { color: 'white' } }}
-      />
-      </div>
       {loading && <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-35"><CircularProgress /></div>} 
-      <div className="grid md:grid-cols-3 gap-5">
+      {/* <div className="grid md:grid-cols-3 gap-5">
         {filteredCards.map((tours,i) => (
           <TourCard {...tours} key={i} />
         ))}
-      </div>
+      </div> */}
+      <Box  sx={{ width: "100%", backgroundColor: "white" }}>
+        <div className="my-4 flex justify-between ">
+          <TextField
+            label="Search by name"
+            variant="standard"
+            onChange={handleInputChange}
+            className="my-2 rounded-full ml-4"
+          />
+          <Button
+            // onClick={() => handleOpenDialog()}
+            // disabled={selectedRows.length === 0}
+            className={`
+            ${
+              selectedRows.length <= 1 && "hidden"
+            }
+             mt-2 mr-2 px-4 py-2 rounded-3xl bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600`}
+          >
+            <GridDeleteIcon />
+            Delete Selected Rows
+          </Button>          
+        </div>
+        <DataGrid
+          rowHeight={100}
+          rows={filteredRows}
+          columns={columns}
+          autoHeight
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection
+          onRowSelectionModelChange={(newSelection) => {
+            setSelectedRows(newSelection);
+          }}
+        />
+      </Box>
     </div>
   );
 };
