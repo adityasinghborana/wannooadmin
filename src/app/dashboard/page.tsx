@@ -9,6 +9,7 @@ const Dashboard = () => {
           <Card title="Total Users" value={1200} desc="......" />
           <Card title="Total Vendors" value={1200} desc="......"/>
           <Card title="Total Tours" value={1200} desc="......"/>
+          <Card title="Total Bookings" value={1200} desc="......"/>
         </div>
           <Charts />
       </div>

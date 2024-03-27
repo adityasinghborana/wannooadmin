@@ -41,6 +41,33 @@ const Sidebar = () => {
         icon: <MdWorkHistory />
       },    
     ]
+  },
+
+  {
+    title:'Email',
+    list:[
+      {
+        title: 'Email Templates',
+        path:'/dashboard/tours',
+        icon: <MdWorkHistory />
+      },    
+    ]
+  },
+
+  {
+    title:'Bookings',
+    list:[
+      {
+        title: 'Confirmed Bookings',
+        path:'/dashboard/tours',
+        icon: <MdWorkHistory />
+      },  
+      {
+        title: 'Canceled Bookings ',
+        path:'/dashboard/tours',
+        icon: <MdWorkHistory />
+      },     
+    ]
   }
   ]
 
