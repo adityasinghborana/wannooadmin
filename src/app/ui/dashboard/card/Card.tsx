@@ -1,4 +1,4 @@
-import React from "react"
+import { FC } from "react"
 import { MdSupervisedUserCircle } from "react-icons/md"
 
 interface Props{
@@ -7,7 +7,7 @@ interface Props{
     desc: string
 }
 
-const Card: React.FC<Props> = (props) => {
+const Card: FC <Props> = (props) => {
   return (
         <div className="bg-[#182237] p-2 md:p-5 rounded-xl cursor-pointer flex w-full hover:bg-[#2e374a]">
             <MdSupervisedUserCircle size={24}/>

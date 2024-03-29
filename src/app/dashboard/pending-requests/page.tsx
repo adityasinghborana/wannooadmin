@@ -106,16 +106,7 @@ const PendingReq = () => {
     );
     setFilteredRows(filtered);
   }, 300);
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     let res = await getAllUsers();
-  //     setRows(res);
-  //     setFilteredRows(res);
-  //   };
-  //   if (rows.length === 0) getData();
-  // }, []);
-
+  
   return (
     <div className="mt-5">
       <Box sx={{ width: "100%", backgroundColor: "white" }}>

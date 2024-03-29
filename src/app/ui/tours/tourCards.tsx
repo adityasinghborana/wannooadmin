@@ -4,12 +4,11 @@ import {
   Card,
   CardActions,
   CardContent,
-  Link,
-  Typography,
+  Typography
 } from "@mui/material";
-import React from "react";
+import { FC } from "react";
 
-const TourCard: React.FC = (tour: any) => {
+const TourCard: FC = (tour: any) => {
   return (
     <div className="cursor-pointer">
       {/* <Link

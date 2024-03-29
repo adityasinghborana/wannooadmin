@@ -2,10 +2,11 @@
 import TourCard from "@/app/ui/tours/tourCards";
 import { getAllTours } from "@/lib/services";
 import { Box, Button, TextField, debounce } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import { DataGrid, GridColDef, GridDeleteIcon, GridRowId } from "@mui/x-data-grid";
 import { MdDelete, MdEdit, MdViewAgenda } from "react-icons/md";
+import Link from "next/link";
 
 interface Row {
   id: GridRowId;
@@ -16,7 +17,7 @@ interface Row {
   }]
 }
 
-const Tours: React.FC = () => {
+const Tours: FC = () => {
   const [allTours, setAllTours] = useState<any[]>([]);
   // const [filteredCards, setFilteredCards] = useState<any[]>(allTours);
   const [loading, setLoading] = useState(false);
@@ -60,18 +61,17 @@ const Tours: React.FC = () => {
         return (
           <div className="min-h-full content-center max-w-[200px]">
           <div className="grid grid-cols-3 mt-6 gap-2">
-          <button
-            // onClick={() => handleOpenDialog(params.row)}
+          <Link href={`/dashboard/tours/${params.row.id}`}            
             className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
             >
             <MdEdit />
-          </button>
-          <button
+          </Link>
+          <Link href={`/dashboard/tours/view${params.row.id}`}
             // onClick={() => handleOpenDialog(params.row)}
             className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-yellow-300 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
           >
             <MdViewAgenda />
-          </button>
+          </Link>
           <button
             // onClick={() => handleOpenDialog(params.row)}
             className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
@@ -84,14 +84,6 @@ const Tours: React.FC = () => {
       },
     },
   ];
-
-  const showLoader = () => {
-    setLoading(true);
-  };
-
-  const hideLoader = () => {
-    setLoading(false);
-  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleSearch(event.target.value);
@@ -106,11 +98,9 @@ const Tours: React.FC = () => {
 
   useEffect(() => {
     const getTours = async () => {
-      showLoader() 
       let res = await getAllTours();
       setAllTours(res);
       setFilteredRows(res);
-      hideLoader()
     };
     if (allTours.length === 0)getTours();
   }, []);

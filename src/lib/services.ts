@@ -1,8 +1,8 @@
-import axios from "axios"
+import axiosInstance from "./loader.interceptor"
 
 export async function getAllUsers(){
     try {
-        let res = await axios.get('http://69.48.163.45:3000/users')
+        let res = await axiosInstance.get('/users')
         return res?.data
     } catch (error) {
         throw error
@@ -11,7 +11,7 @@ export async function getAllUsers(){
 
 export async function deleteUser(id:number) {
     try {
-        let res = await axios.post('http://69.48.163.45:3000/deleteuser',id)
+        let res = await axiosInstance.post('/deleteuser',id)
         return res?.data
     } catch (error) {
         throw error
@@ -20,7 +20,16 @@ export async function deleteUser(id:number) {
 
 export async function getAllTours() {
     try {
-        let res = await axios.get('http://69.48.163.45:3000/tours')
+        let res = await axiosInstance.get('/tours')
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function getTourDetails(id:any) {
+    try {
+        let res = await axiosInstance.get(`/tourdetails?id=${id}`)
         return res?.data
     } catch (error) {
         throw error

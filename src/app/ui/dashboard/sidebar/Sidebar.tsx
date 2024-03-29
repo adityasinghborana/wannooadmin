@@ -1,5 +1,5 @@
 
-import { MdDashboard, MdLogout, MdPending, MdSupervisedUserCircle, MdVerifiedUser, MdWorkHistory } from "react-icons/md"
+import { MdApi, MdDashboard, MdLogout, MdPending, MdSupervisedUserCircle, MdVerifiedUser, MdWorkHistory } from "react-icons/md"
 import MenuLink from "./menuLink/menuLink"
 import { Avatar } from "@mui/material"
 import { deepOrange } from "@mui/material/colors"
@@ -48,31 +48,40 @@ const Sidebar = () => {
     list:[
       {
         title: 'Email Templates',
-        path:'/dashboard/tours',
+        path:'/dashboard/email',
         icon: <MdWorkHistory />
       },    
     ]
   },
-
+  // {
+  //   title:'Bookings',
+  //   list:[
+  //     {
+  //       title: 'Confirmed Bookings',
+  //       path:'/dashboard/tours',
+  //       icon: <MdWorkHistory />
+  //     },  
+  //     {
+  //       title: 'Canceled Bookings ',
+  //       path:'/dashboard/tours',
+  //       icon: <MdWorkHistory />
+  //     },     
+  //   ]
+  // },
   {
-    title:'Bookings',
+    title:'API',
     list:[
       {
-        title: 'Confirmed Bookings',
-        path:'/dashboard/tours',
-        icon: <MdWorkHistory />
-      },  
-      {
-        title: 'Canceled Bookings ',
-        path:'/dashboard/tours',
-        icon: <MdWorkHistory />
+        title: "Api's",
+        path:'/dashboard/api',
+        icon: <MdApi />
       },     
     ]
   }
   ]
 
   return (
-    <div className="fixed shadow-md ml-3 mt-4 h-full">
+    <div className="shadow-md ml-3 mt-4 h-full">
       <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row">
       <Avatar sx={{bgcolor: deepOrange[500] }}>A</Avatar>
       <div className="flex flex-col">
