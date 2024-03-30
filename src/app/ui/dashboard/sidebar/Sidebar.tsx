@@ -1,5 +1,5 @@
 
-import { MdApi, MdDashboard, MdLogout, MdPending, MdSupervisedUserCircle, MdVerifiedUser, MdWorkHistory } from "react-icons/md"
+import { MdApi, MdDashboard, MdHome, MdImage, MdLogout, MdPending, MdSupervisedUserCircle, MdVerifiedUser, MdWorkHistory } from "react-icons/md"
 import MenuLink from "./menuLink/menuLink"
 import { Avatar } from "@mui/material"
 import { deepOrange } from "@mui/material/colors"
@@ -42,7 +42,6 @@ const Sidebar = () => {
       },    
     ]
   },
-
   {
     title:'Email',
     list:[
@@ -51,6 +50,31 @@ const Sidebar = () => {
         path:'/dashboard/email',
         icon: <MdWorkHistory />
       },    
+    ]
+  },
+  {
+    title:'Home Page',
+    list:[
+      {
+        title: 'Home Page Data',
+        path:'/dashboard/homepage/home',
+        icon: <MdHome />
+      },    
+      {
+        title: 'Background Image',
+        path:'/dashboard/homepage/bgImage',
+        icon: <MdImage />
+      },
+    ]
+  },
+  {
+    title:'About us',
+    list:[
+      {
+        title: 'Aboutus Data',
+        path:'/dashboard/aboutus',
+        icon: <MdWorkHistory />
+      },   
     ]
   },
   // {
