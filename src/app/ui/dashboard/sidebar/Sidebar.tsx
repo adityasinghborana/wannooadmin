@@ -3,10 +3,12 @@ import { MdApi, MdDashboard, MdHome, MdImage, MdLogout, MdPending, MdSupervisedU
 import MenuLink from "./menuLink/menuLink"
 import { Avatar } from "@mui/material"
 import { deepOrange } from "@mui/material/colors"
+import { signOut } from "firebase/auth"
+import { auth } from "@/firebase/config"
 
 
 const Sidebar = () => {
-
+ const user = JSON.parse(sessionStorage.getItem('user')!)
   const menuItems = [{
     title:'pages',
     list:[
@@ -103,13 +105,12 @@ const Sidebar = () => {
     ]
   }
   ]
-
   return (
     <div className="shadow-md ml-3 mt-4 h-full">
       <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row">
       <Avatar sx={{bgcolor: deepOrange[500] }}>A</Avatar>
       <div className="flex flex-col">
-        <span className="font-[500]">Arsalaan</span>
+        <span className="font-[500]">{user?.email}</span>
         <span className="text-sm text-[#b7bac1]">Admin</span>
       </div>
       </div>
@@ -125,7 +126,10 @@ const Sidebar = () => {
           </li>
       ))}
       </ul>
-      <button className="p-5 mt-2 flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full hover:bg-[#2e374a]">
+      <button onClick={()=>{
+        signOut(auth),
+        sessionStorage.removeItem('user')
+      }} className="p-5 mt-2 flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full hover:bg-[#2e374a]">
          <MdLogout/>Logout
       </button>
     </div>

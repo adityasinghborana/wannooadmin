@@ -63,11 +63,9 @@ export async function getHomePageData() {
     }   
 }
 
-
-
 export async function getBackgroundImage() {
     try {
-        let res = await axiosInstance.get(`/bgimage`)
+        let res = await axiosInstance.get(`/sliderimages`)
         return res?.data
     } catch (error) {
         throw error
@@ -76,7 +74,7 @@ export async function getBackgroundImage() {
 
 export async function uploadBackgroundImage(bgimage:any) {
     try {
-        let res = await axiosInstance.post(`/uploadimage`,bgimage)
+        let res = await axiosInstance.post(`/upload`,bgimage)
         return res?.data
     } catch (error) {
         throw error
@@ -94,7 +92,34 @@ export async function getRayanaAPi() {
 
 export async function UpdateRayanaAPi(newKey:any) {
     try {
-        let res = await axiosInstance.post(`/updateapikey`,newKey)
+        let res = await axiosInstance.put(`/updateapikey`,newKey)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function GetStripeApi() {
+    try {
+        let res = await axiosInstance.get(`/stripekey`)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function UpdateStripeApi(newKey:any) {
+    try {
+        let res = await axiosInstance.put(`/updatestripekey`,newKey)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function getEmail() {
+    try {
+        let res = await axiosInstance.get(`/email`)
         return res?.data
     } catch (error) {
         throw error

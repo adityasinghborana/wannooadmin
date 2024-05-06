@@ -1,9 +1,15 @@
 'use client'
 
-import SearchAppBar from "./ui/dashboard/navbar/Navbar";
-import Sidebar from "./ui/dashboard/sidebar/Sidebar";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+
+  const router = useRouter() 
+
+  useEffect(()=>{
+      router.push('/dashboard')
+  },[])
 
   return (
   <>    

@@ -2,14 +2,13 @@
 import { getAllUsers } from "@/lib/services";
 import {
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   TextField,
-  debounce,
+  debounce
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import {
@@ -120,7 +119,7 @@ const User = () => {
   return (
     <div className="mt-5">
       <Box sx={{ width: "100%", backgroundColor: "white" }}>
-        <div className="mb-4 flex justify-between">
+        <div className="mb-4 ml-4 flex justify-between">
           <TextField
             label="Search by email"
             variant="standard"

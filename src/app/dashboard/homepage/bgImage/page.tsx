@@ -36,7 +36,7 @@ const BgImage = () => {
       };
     
       const updateImage = () => {
-        // Add logic to allow users to update the current image
+        
       };
 
   return (
