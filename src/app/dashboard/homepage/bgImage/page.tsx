@@ -44,7 +44,7 @@ const BgImage = () => {
         <div id={String(currentImageIndex)} className="carousel flex justify-center">
           <div className="bg-black grid h-64 w-full">
             <img
-              src={bgimage[currentImageIndex].url}
+              src={bgimage[currentImageIndex].url }
               alt={`${bgimage[currentImageIndex].filename}`}
             />
             <div className="controls mt-4 flex justify-between">

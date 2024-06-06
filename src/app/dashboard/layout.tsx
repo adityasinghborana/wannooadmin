@@ -13,8 +13,8 @@ const DashboardLayout: React.FC<{
   const router = useRouter()
   const [user, loading, error] = useAuthState(auth);
   
-  if (!user && !loading && !error && !pathName.includes('/login')) {
-    router.replace('/login');
+  if (!user && !loading && !error && !pathName.includes('/signIn')) {
+    router.replace('/signIn');
     return null; // Render nothing while redirecting
   }
 

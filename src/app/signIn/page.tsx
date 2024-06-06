@@ -5,7 +5,7 @@ import {useSignInWithEmailAndPassword} from 'react-firebase-hooks/auth'
 import {auth} from '@/firebase/config'
 import { stringify } from 'querystring';
 
-const LoginPage = () => {
+const SignIn = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +17,7 @@ const LoginPage = () => {
   const handleLogin = async (e:any) => {
     try {
       const res = await signInWithEmailAndPassword(username, password)
-      sessionStorage.setItem('user', JSON.stringify(res?.user))
+      localStorage.setItem('user', JSON.stringify(res?.user))
       router.push('/dashboard')
       setUsername('')
       setPassword('')
@@ -38,7 +38,7 @@ const LoginPage = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-800">
       <div className="bg-gray-900 p-8 rounded-lg shadow-md w-96 text-white">
-        <h1 className="text-3xl font-bold text-center mb-8">Login</h1>
+        <h1 className="text-3xl font-bold text-center mb-8">Sign-In</h1>
         {/* <form onSubmit={handleLogin}> */}
           {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-4">
@@ -68,4 +68,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignIn;

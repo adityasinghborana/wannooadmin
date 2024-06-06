@@ -20,14 +20,14 @@ interface Row {
 
 const Tours: FC = () => {
   const Tours = useAppSelector((state)=>state.tour.Tours)
-  const [allTours, setAllTours] = useState<any[]>(Tours);
+  const [allEvents, setAllEvents] = useState<any[]>(Tours);
   // const [filteredCards, setFilteredCards] = useState<any[]>(allTours);
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<Row[]>([]);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
   const [open, setOpen] = useState(false);
-  const [filteredRows, setFilteredRows] = useState<Row[]>(allTours);
+  const [filteredRows, setFilteredRows] = useState<Row[]>(allEvents);
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -91,7 +91,7 @@ const Tours: FC = () => {
   };
 
   const handleSearch = debounce((value: string) => {
-    const FilteredCards = allTours.filter((tours) =>
+    const FilteredCards = allEvents.filter((tours) =>
       tours.tourName.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredRows(FilteredCards);
@@ -101,11 +101,6 @@ const Tours: FC = () => {
   return (
     <div>
       {loading && <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-35"><CircularProgress /></div>} 
-      {/* <div className="grid md:grid-cols-3 gap-5">
-        {filteredCards.map((tours,i) => (
-          <TourCard {...tours} key={i} />
-        ))}
-      </div> */}
       <Box  sx={{ width: "100%", backgroundColor: "white" }}>
         <div className="my-4 flex justify-between ">
           <TextField
@@ -115,8 +110,6 @@ const Tours: FC = () => {
             className="my-2 rounded-full ml-4"
           />
           <Button
-            // onClick={() => handleOpenDialog()}
-            // disabled={selectedRows.length === 0}
             className={`
             ${
               selectedRows.length <= 1 && "hidden"

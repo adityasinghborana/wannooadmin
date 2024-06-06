@@ -1,5 +1,6 @@
 "use client";
 import { getAllUsers } from "@/lib/services";
+import { useAppSelector } from "@/lib/store/hooks";
 import {
   Button,
   Dialog,
@@ -27,12 +28,13 @@ interface Row {
 }
 
 const User = () => {
-  const [rows, setRows] = useState<Row[]>([]);
+  const Users = useAppSelector((state)=> state.user.Users)
+  console.log(Users)
+  const [rows, setRows] = useState<Row[]>(Users);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
   const [open, setOpen] = useState(false);
-  const [filteredRows, setFilteredRows] = useState<Row[]>(rows);
-
+  const [filteredRows, setFilteredRows] = useState<Row[]>(Users);
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: "id", headerName: "ID", flex: 1 },
     {
@@ -50,6 +52,13 @@ const User = () => {
     {
       field: "age",
       headerName: "Age",
+      type: "number",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "orders",
+      headerName: "Bookings",
       type: "number",
       flex: 1,
       editable: true,
@@ -106,15 +115,6 @@ const User = () => {
     );
     setFilteredRows(filtered);
   }, 300);
-
-  useEffect(() => {
-    const getData = async () => {
-      let res = await getAllUsers();
-      setRows(res);
-      setFilteredRows(res);
-    };
-    if (rows.length === 0) getData();
-  }, []);
 
   return (
     <div className="mt-5">

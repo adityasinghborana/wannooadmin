@@ -8,7 +8,7 @@ import { auth } from "@/firebase/config"
 
 
 const Sidebar = () => {
- const user = JSON.parse(sessionStorage.getItem('user')!)
+ const user = JSON.parse(localStorage.getItem('user')!)
   const menuItems = [{
     title:'pages',
     list:[
@@ -41,6 +41,11 @@ const Sidebar = () => {
         title: 'Tours',
         path:'/dashboard/tours',
         icon: <MdWorkHistory />
+      },
+      {
+        title: 'Events',
+        path:'/dashboard/events',
+        icon: <MdWorkHistory />
       },    
     ]
   },
@@ -70,11 +75,16 @@ const Sidebar = () => {
     ]
   },
   {
-    title:'About us',
+    title:'Other',
     list:[
       {
         title: 'Aboutus Data',
         path:'/dashboard/aboutus',
+        icon: <MdWorkHistory />
+      },
+      {
+        title: 'Contact us',
+        path:'/dashboard/contactus',
         icon: <MdWorkHistory />
       },   
     ]
@@ -128,7 +138,7 @@ const Sidebar = () => {
       </ul>
       <button onClick={()=>{
         signOut(auth),
-        sessionStorage.removeItem('user')
+        localStorage.removeItem('user')
       }} className="p-5 mt-2 flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full hover:bg-[#2e374a]">
          <MdLogout/>Logout
       </button>

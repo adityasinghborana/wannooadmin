@@ -1,4 +1,6 @@
 "use client";
+import { getAllUsers } from "@/lib/services";
+import { useAppSelector } from "@/lib/store/hooks";
 import {
   Button,
   Dialog,
@@ -7,7 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  debounce,
+  debounce
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import {
@@ -26,13 +28,13 @@ interface Row {
 }
 
 const Vendor = () => {
-  const [rows, setRows] = useState<Row[]>([]);
+  const Vendors = useAppSelector((state)=> state.vendor.Vendors)
+  console.log(Vendors)
+  const [rows, setRows] = useState<Row[]>(Vendors);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
   const [open, setOpen] = useState(false);
-  const [filteredRows, setFilteredRows] = useState<Row[]>(rows);
-
-  
+  const [filteredRows, setFilteredRows] = useState<Row[]>(Vendors);
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: "id", headerName: "ID", flex: 1 },
     {
@@ -50,6 +52,13 @@ const Vendor = () => {
     {
       field: "age",
       headerName: "Age",
+      type: "number",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "orders",
+      headerName: "Bookings",
       type: "number",
       flex: 1,
       editable: true,
@@ -107,19 +116,10 @@ const Vendor = () => {
     setFilteredRows(filtered);
   }, 300);
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     let res = await getAllUsers();
-  //     setRows(res);
-  //     setFilteredRows(res);
-  //   };
-  //   if (rows.length === 0) getData();
-  // }, []);
-
   return (
     <div className="mt-5">
       <Box sx={{ width: "100%", backgroundColor: "white" }}>
-        <div className="mb-4 flex justify-between">
+        <div className="mb-4 ml-4 flex justify-between">
           <TextField
             label="Search by email"
             variant="standard"
@@ -129,7 +129,9 @@ const Vendor = () => {
           <Button
             onClick={() => handleOpenDialog()}
             disabled={selectedRows.length === 0}
-            className={`${selectedRows.length <= 1 && "hidden"} mt-2 mr-2 px-4 py-2 rounded-3xl bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600`}
+            className={`${
+              selectedRows.length <= 1 && "hidden"
+            } mt-2 mr-2 px-4 py-2 rounded-3xl bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600`}
           >
             <GridDeleteIcon />
             Delete Selected Rows
@@ -172,6 +174,6 @@ const Vendor = () => {
       </Box>
     </div>
   );
-}
+};
 
-export default Vendor
+export default Vendor;

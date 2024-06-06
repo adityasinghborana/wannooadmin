@@ -125,3 +125,30 @@ export async function getEmail() {
         throw error
     }   
 }
+
+export async function getAllVendors() {
+    try {
+        let res = await axiosInstance.get(`/allvendors`)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function SignUpVendor( data:any ) {
+    try {
+        let res = await axiosInstance.post(`/signupvendor`,data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function Signin( data:any ) {
+    try {
+        let res = await axiosInstance.post(`/vendor`,data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
