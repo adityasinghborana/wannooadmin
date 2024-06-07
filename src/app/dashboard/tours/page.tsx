@@ -60,7 +60,7 @@ const Tours: FC = () => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <div className="min-h-full content-center max-w-[200px]">
+          <div className="min-h-full content-center max-w-[200px] ">
           <div className="grid grid-cols-3 mt-6 gap-2">
           <Link href={`/dashboard/tours/${params.row.id}`}            
             className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
@@ -100,13 +100,13 @@ const Tours: FC = () => {
 
   return (
     <div>
-      {loading && <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-35"><CircularProgress /></div>} 
+      {loading && <div className="absolute inset-0 flex items-center justify-center bg-yellow bg-opacity-35"><CircularProgress /></div>} 
       {/* <div className="grid md:grid-cols-3 gap-5">
         {filteredCards.map((tours,i) => (
           <TourCard {...tours} key={i} />
         ))}
       </div> */}
-      <Box  sx={{ width: "100%", backgroundColor: "white" }}>
+      <Box  sx={{ width: "100%", backgroundColor: "white" ,borderRadius: 3,paddingX:1,paddingY:2}}>
         <div className="my-4 flex justify-between ">
           <TextField
             label="Search by name"
@@ -134,10 +134,10 @@ const Tours: FC = () => {
           autoHeight
           initialState={{
             pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
+              paginationModel: { page: 0, pageSize: 10 },
             },
           }}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[5,10,20]}
           checkboxSelection
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection);

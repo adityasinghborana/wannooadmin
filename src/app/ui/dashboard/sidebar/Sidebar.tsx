@@ -42,6 +42,12 @@ const Sidebar = () => {
         path:'/dashboard/tours',
         icon: <MdWorkHistory />
       },
+      
+      {
+        title: 'Add Tours',
+        path:'/dashboard/tours',
+        icon: <MdWorkHistory />
+      },
       {
         title: 'Events',
         path:'/dashboard/events',

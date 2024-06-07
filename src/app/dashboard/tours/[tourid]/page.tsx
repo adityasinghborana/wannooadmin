@@ -68,7 +68,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className=" w-full flex justify-center px-20">
       <div className="w-full justify-self-center">
         <form
           onSubmit={handleSubmit}

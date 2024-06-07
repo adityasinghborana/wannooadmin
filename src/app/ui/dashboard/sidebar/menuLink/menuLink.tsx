@@ -13,7 +13,7 @@ interface Props{
 const MenuLink: FC <Props> = ({items}) => {
   const pathname = usePathname()
     return (
-    <Link className={`flex items-center p-[20px] hover:bg-[#2e374a] ${pathname === items.path && 'bg-[#2e374a]'}`} href={items.path}>{items.icon}{items.title}</Link>
+    <Link className={`flex items-center p-[20px] hover:bg-[#fb89ff] ${pathname === items.path && 'bg-[#fb89ff]'}`} href={items.path}>{items.icon}{items.title}</Link>
   )
 }
 

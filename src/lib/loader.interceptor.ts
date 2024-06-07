@@ -20,8 +20,8 @@ const createLoader = () => {
 };
 
 const axiosInstance = axios.create({
-  // baseURL: 'http://69.48.163.45:3000', // Production
-  baseURL: 'https://5pl5s9cq-3000.inc1.devtunnels.ms', // Dev tunnel
+   baseURL: 'http://69.48.163.45:3000', // Production
+  //baseURL: 'https://5pl5s9cq-3000.inc1.devtunnels.ms', // Dev tunnel
 });
 
 axiosInstance.interceptors.request.use(
