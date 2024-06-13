@@ -109,8 +109,8 @@ const PendingReq = () => {
   
   return (
     <div className="mt-5">
-      <Box sx={{ width: "100%", backgroundColor: "white" }}>
-        <div className="mb-4 flex justify-between">
+      <Box sx={{ width: "100%", backgroundColor: "white", borderRadius: 3 }}>
+      <div className="mb-4 ml-4 flex justify-between">
           <TextField
             label="Search by email"
             variant="standard"

@@ -45,7 +45,7 @@ const Sidebar = () => {
       
       {
         title: 'Add Tours',
-        path:'/dashboard/tours',
+        path:'/dashboard/add-tours',
         icon: <MdWorkHistory />
       },
       {
@@ -84,13 +84,13 @@ const Sidebar = () => {
     title:'Other',
     list:[
       {
-        title: 'Aboutus Data',
-        path:'/dashboard/aboutus',
+        title: 'About us',
+        path:'/dashboard/about-us',
         icon: <MdWorkHistory />
       },
       {
         title: 'Contact us',
-        path:'/dashboard/contactus',
+        path:'/dashboard/contact-us',
         icon: <MdWorkHistory />
       },   
     ]

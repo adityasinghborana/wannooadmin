@@ -152,3 +152,39 @@ export async function Signin( data:any ) {
         throw error
     }   
 }
+
+export async function GetAllCities() {
+    try {
+        let res = await axiosInstance.get(`/cities`)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function GetAllTourTypes() {
+    try {
+        let res = await axiosInstance.get(`/tourtypes`)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function AddTourTypes(data:any) {
+    try {
+        let res = await axiosInstance.post(`/addtourtypes`, data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function AddCity(data:any) {
+    try {
+        let res = await axiosInstance.post(`/addcity`, data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
