@@ -1,3 +1,5 @@
+const { text } = require('stream/consumers');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -17,15 +19,20 @@ module.exports = {
       },
     },
     extend: {
+      spacing: {
+        'global': 'var(--global-padding)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        background: "var(--bg)",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--bgSoft)",
+          text:"var(--text)",
+          bodytext:"var(--textSoft)"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

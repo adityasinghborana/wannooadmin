@@ -107,12 +107,12 @@ const Tours: FC = () => {
         ))}
       </div> */}
       <Box  sx={{ width: "100%", backgroundColor: "white" ,borderRadius: 3,paddingX:1,paddingY:2}}>
-        <div className="my-4 flex justify-between ">
+        <div className="my-4 flex justify-between px-8">
           <TextField
             label="Search by name"
             variant="standard"
             onChange={handleInputChange}
-            className="my-2 rounded-full ml-4"
+            className="my-2 rounded-full ml-4 "
           />
           <Button
             // onClick={() => handleOpenDialog()}
@@ -132,6 +132,7 @@ const Tours: FC = () => {
           rows={filteredRows}
           columns={columns}
           autoHeight
+          
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 10 },

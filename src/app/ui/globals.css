@@ -3,10 +3,13 @@
 @tailwind utilities;
 
 :root{
-    --bg: #151c2c;
-    --bgSoft: #182237;
-    --text: white;
-    --textSoft:#b7bac1;      
+    --bg: #f8f8f8;
+    --bgSoft: #ecd6fd;
+    --text: #434343;
+    --textSoft:#ededed;
+    --primary:#fb89ff;
+    --global-padding: 1rem; /* Default global padding */
+      
 }
 
 *{

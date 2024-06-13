@@ -117,9 +117,9 @@ const User = () => {
   }, 300);
 
   return (
-    <div className="mt-5">
-      <Box sx={{ width: "100%", backgroundColor: "white" ,borderRadius:3}}>
-        <div className="mb-4 ml-4 flex justify-between">
+    <div className="min-h-screen bg-gray-100 rounded-3xl mt-8 ">
+      <Box sx={{ width: "100%", backgroundColor: "white" ,borderRadius:3 }}>
+        <div className="mb-4 ml-4 flex justify-between ">
           <TextField
             label="Search by email"
             variant="standard"

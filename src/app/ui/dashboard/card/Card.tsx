@@ -9,7 +9,7 @@ interface Props{
 
 const Card: FC <Props> = (props) => {
   return (
-        <div className="bg-[#182237] p-2 md:p-5 rounded-xl cursor-pointer flex w-full hover:bg-[#2e374a]">
+        <div className=" bg-primary p-2 md:p-5 rounded-xl cursor-pointer flex w-full hover:bg-primary">
             <MdSupervisedUserCircle size={24}/>
             <div className="flex flex-col gap-5">
                 <span className="">{props.title}</span>

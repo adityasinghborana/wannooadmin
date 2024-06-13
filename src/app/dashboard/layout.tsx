@@ -27,10 +27,10 @@ const DashboardLayout: React.FC<{
           </>
         ) : (
           <>
-            <div className="w-full md:w-1/5 min-h-[97vh] bg-[#182237] hidden md:block">
+            <div className=" shadow-2xl w-full pr-2 md:w-1/6 min-h-[97vh] bg-primary-foreground hidden md:block rounded-2xl mt-2">
               <Sidebar />
             </div>
-            <div className="w-full md:w-4/5 mt-2">
+            <div className="w-full md:w-5/5 mt-4">
               <Navbar />
               {children}
             </div>

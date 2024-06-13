@@ -10,7 +10,7 @@ import { auth } from "@/firebase/config"
 const Sidebar = () => {
  const user = JSON.parse(localStorage.getItem('user')!)
   const menuItems = [{
-    title:'pages',
+    title:'Pages',
     list:[
       {
         title: 'Dashboard',
@@ -122,18 +122,18 @@ const Sidebar = () => {
   }
   ]
   return (
-    <div className="shadow-md ml-3 mt-4 h-full">
-      <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row">
+    <div className=" mx-1  px-global mt-4 h-full">
+      <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row " >
       <Avatar sx={{bgcolor: deepOrange[500] }}>A</Avatar>
-      <div className="flex flex-col">
+      <div className="flex flex-col pr-global mt-global">
         <span className="font-[500]">{user?.email}</span>
-        <span className="text-sm text-[#b7bac1]">Admin</span>
+        <span className="text-sm text-primary">Admin</span>
       </div>
       </div>
       <ul>
       {menuItems.map((cat,i)=>(
         <li className="list-none" key={cat.title}>
-            <span className="font-bold text-[#b7bac1] text-sm" key={i}>
+            <span className="font-bold text-primary text-sm" key={i}>
             {cat.title}
             </span>
             {cat.list.map((item,i)=>(
@@ -145,7 +145,7 @@ const Sidebar = () => {
       <button onClick={()=>{
         signOut(auth),
         localStorage.removeItem('user')
-      }} className="p-5 mt-2 flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full hover:bg-[#2e374a]">
+      }} className="p-global mt-2 flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full text-primary-text  hover:bg-primary hover:text-primary-bodytext">
          <MdLogout/>Logout
       </button>
     </div>

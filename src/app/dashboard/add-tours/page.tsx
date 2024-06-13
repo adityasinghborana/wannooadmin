@@ -7,30 +7,21 @@ interface FormData {
   cityId: string;
   cityName: string;
   tourName: string;
-  reviewCount: string;
-  rating: string;
   duration: string;
   departurePoint: string;
   reportingTime: string;
   tourLanguage: string;
   imagePath: string;
-  imageCaptionName: string;
   cityTourTypeId: string;
   cityTourType: string;
   tourDescription: string;
   tourInclusion: string;
   tourShortDescription: string;
-  raynaToursAdvantage: string;
   whatsInThisTour: string;
   importantInformation: string;
   itenararyDescription: string;
   usefulInformation: string;
   faqDetails: string;
-  termsAndConditions: string;
-  cancellationPolicyName: string;
-  cancellationPolicyDescription: string;
-  childCancellationPolicyName: string;
-  childCancellationPolicyDescription: string;
   childAge: string;
   infantAge: string;
   infantCount: string;
@@ -41,10 +32,9 @@ interface FormData {
   longitude: string;
   startTime: string;
   meal: string;
-  videoUrl: string;
   googleMapUrl: string;
   tourExclusion: string;
-  howToRedeem: string;
+
   cutOffhrs: string;
 }
 
@@ -53,30 +43,21 @@ const TourForm: React.FC = () => {
     cityId: '',
     cityName: '',
     tourName: '',
-    reviewCount: '',
-    rating: '',
     duration: '',
     departurePoint: '',
     reportingTime: '',
     tourLanguage: '',
     imagePath: '',
-    imageCaptionName: '',
     cityTourTypeId: '',
     cityTourType: '',
     tourDescription: '',
     tourInclusion: '',
     tourShortDescription: '',
-    raynaToursAdvantage: '',
     whatsInThisTour: '',
     importantInformation: '',
     itenararyDescription: '',
     usefulInformation: '',
     faqDetails: '',
-    termsAndConditions: '',
-    cancellationPolicyName: '',
-    cancellationPolicyDescription: '',
-    childCancellationPolicyName: '',
-    childCancellationPolicyDescription: '',
     childAge: '',
     infantAge: '',
     infantCount: '',
@@ -87,10 +68,8 @@ const TourForm: React.FC = () => {
     longitude: '',
     startTime: '',
     meal: '',
-    videoUrl: '',
     googleMapUrl: '',
     tourExclusion: '',
-    howToRedeem: '',
     cutOffhrs: '',
   });
 
@@ -136,8 +115,8 @@ const TourForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full">
+    <div className="min-h-screen bg-gray-100 m-8 rounded-3xl">
+      <div className="bg-white p-8  shadow-md w-full rounded-3xl">
         <h2 className="text-2xl text-black font-bold mb-6 text-center">Create Tour</h2>
         <form onSubmit={handleSubmit} className='grid grid-cols-3 gap-4'>
         <div className="mb-4">
@@ -221,15 +200,17 @@ const TourForm: React.FC = () => {
               </div>
             );
           })}
+<div></div>
 
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+              className="bg-blue-900 text-white py-2 px-4 rounded hover:bg-purple-400 w-full" 
             >
               Submit
             </button>
           </div>
+          <div></div>
         </form>
       </div>
     </div>

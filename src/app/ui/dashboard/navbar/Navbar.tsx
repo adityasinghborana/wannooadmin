@@ -9,8 +9,8 @@ import {
 export default function Navbar() {
   const pathname = usePathname();
   return (
-    <div className="grid grid-cols-2 items-center bg-[#182237] min-h-16 rounded">
-      <div className="text-[#b7bac1] font-bold text-transform: capitalize hidden md:block ml-5">
+    <div className="mx-8 grid grid-cols-2 items-center bg-primary min-h-16 rounded-2xl">
+      <div className="text-primary-bodytext font-bold text-transform: capitalize hidden md:block ml-5">
         {pathname.split("/").pop()}
       </div>
       

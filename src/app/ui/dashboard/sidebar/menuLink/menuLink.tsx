@@ -13,7 +13,13 @@ interface Props{
 const MenuLink: FC <Props> = ({items}) => {
   const pathname = usePathname()
     return (
-    <Link className={`flex items-center p-[20px] hover:bg-[#fb89ff] ${pathname === items.path && 'bg-[#fb89ff]'}`} href={items.path}>{items.icon}{items.title}</Link>
+      <Link
+      className={`text-primary-text flex mt-2 items-center p-4 rounded-2xl hover:bg-primary hover:text-primary-bodytext ${pathname === items.path ? 'bg-primary text-[#ffffff]' : ''}`} // tailwind global config is overwritten so setting the colour manually
+      href={items.path}
+    >
+      {items.icon}
+      {items.title}
+    </Link>
   )
 }
 
