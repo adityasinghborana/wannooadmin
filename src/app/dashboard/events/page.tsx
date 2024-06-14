@@ -99,7 +99,7 @@ const Tours: FC = () => {
 
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100 mt-5">
       {loading && <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-35"><CircularProgress /></div>} 
       <Box  sx={{ width: "100%", backgroundColor: "white", borderRadius: 3}}>
         <div className="mb-4 ml-4 flex justify-between">

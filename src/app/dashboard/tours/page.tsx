@@ -99,7 +99,7 @@ const Tours: FC = () => {
 
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100 mt-8">
       {loading && <div className="absolute inset-0 flex items-center justify-center bg-yellow bg-opacity-35"><CircularProgress /></div>} 
       {/* <div className="grid md:grid-cols-3 gap-5">
         {filteredCards.map((tours,i) => (

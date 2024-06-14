@@ -20,7 +20,7 @@ const QuillEditor = () => {
   },[])
 
   return (
-    <div className='bg-white min-h-[80vh]'>
+    <div className='bg-white min-h-[80vh] mt-5'>
       <ReactQuill
         className='text-black'
         theme="snow"
