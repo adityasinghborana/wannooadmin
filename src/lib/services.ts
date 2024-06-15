@@ -72,9 +72,9 @@ export async function getBackgroundImage() {
     }   
 }
 
-export async function uploadBackgroundImage(bgimage:any) {
+export async function UploadImage(image:any) {
     try {
-        let res = await axiosInstance.post(`/upload`,bgimage)
+        let res = await axiosInstance.post(`/upload`,image)
         return res?.data
     } catch (error) {
         throw error
@@ -183,6 +183,15 @@ export async function AddTourTypes(data:any) {
 export async function AddCity(data:any) {
     try {
         let res = await axiosInstance.post(`/addcity`, data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function GetAllImages() {
+    try {
+        let res = await axiosInstance.get(`/library`)
         return res?.data
     } catch (error) {
         throw error
