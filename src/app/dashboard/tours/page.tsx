@@ -14,7 +14,8 @@ interface Row {
   firstName: string;
   tourdetails: [{
     imagePath: string
-  }]
+  }];
+  tourShortDescription:string
 }
 
 const Tours: FC = () => {

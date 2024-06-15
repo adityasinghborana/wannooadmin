@@ -21,23 +21,23 @@ const DataGridContainer: React.FC<DataGridContainerProps> = ({ rows, columns }) 
         display: "flex",
         flexDirection: "column",
         '& .MuiDataGrid-cell': {
-          border: 'none',
+          border: 0,
         },
         height: "calc(100vh - 5rem)",
         '& .MuiDataGrid-virtualScroller': {
-          border: 'none',
+          border: 0,
           height: '100%',
         },
         '& .MuiDataGrid-root': {
-          border: 'none',
+          border: 0,
           textAlign: 'center',
         },
         '& .MuiDataGrid-columnHeaderTitleContainer': {
-          border: 'none',
+          border: 0,
           justifyContent: 'center',
         },
         '& .Mui-lastChild': {
-          border: 'none',
+          border: 0,
           margin: 2,
         },
       }}
@@ -58,7 +58,7 @@ const DataGridContainer: React.FC<DataGridContainerProps> = ({ rows, columns }) 
           }}
           pageSizeOptions={[5, 10, 20]}
           checkboxSelection
-          className="data-grid-no-border"
+          className="border-none"
         />
       </Box>
     </Box>
