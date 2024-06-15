@@ -1,4 +1,5 @@
 "use client";
+import Container from "@/app/ui/dashboard/container/Container";
 import {
   Button,
   Dialog,
@@ -108,7 +109,7 @@ const PendingReq = () => {
   }, 300);
   
   return (
-    <div className="mt-5">
+    <Container>
       <Box sx={{ width: "100%", backgroundColor: "white", borderRadius: 3 }}>
       <div className="mb-4 ml-4 flex justify-between">
           <TextField
@@ -161,7 +162,7 @@ const PendingReq = () => {
           }}
         />
       </Box>
-    </div>
+    </Container>
   );
 }
 

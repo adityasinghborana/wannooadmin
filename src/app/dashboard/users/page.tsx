@@ -1,4 +1,6 @@
 "use client";
+import DataGridContainer from "@/app/ui/dashboard/DataGridContainer/DataGridContainer";
+import Container from "@/app/ui/dashboard/container/Container";
 import { getAllUsers } from "@/lib/services";
 import { useAppSelector } from "@/lib/store/hooks";
 import {
@@ -69,16 +71,22 @@ const User = () => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <button
+          <div className="flex gap-2 h-full items-center justify-center">
+            <button
             onClick={() => handleOpenDialog(params.row)}
-            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
-          >
+            className="flex items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+            >
             <MdDelete />
-          </button>
+            </button>
+          </div>
         );
       },
     },
   ];
+
+  useEffect(()=>{
+    Users.length === 0 && getAllUsers().then((data)=>setRows(data))
+  })
 
   const handleOpenDialog = (row?: Row) => {
     row && setSelectedRow(row);
@@ -117,62 +125,9 @@ const User = () => {
   }, 300);
 
   return (
-    <div className="min-h-screen bg-gray-100 rounded-3xl mt-8">
-      <Box sx={{ width: "100%", backgroundColor: "white" ,borderRadius:3 }}>
-        <div className="mb-4 ml-4 flex justify-between ">
-          <TextField
-            label="Search by email"
-            variant="standard"
-            onChange={handleInputChange}
-            className="my-2 rounded-full ml-4"
-          />
-          <Button
-            onClick={() => handleOpenDialog()}
-            disabled={selectedRows.length === 0}
-            className={`${
-              selectedRows.length <= 1 && "hidden"
-            } mt-2 mr-2 px-4 py-2 rounded-3xl bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600`}
-          >
-            <GridDeleteIcon />
-            Delete Selected Rows
-          </Button>
-          <Dialog open={open} onClose={() => handleCloseDialog()}>
-            <DialogTitle>
-              Delete {selectedRow ? "Row" : "Selected Rows"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {selectedRow
-                  ? `Are you sure you want to delete the row with ID ${selectedRow.id}?`
-                  : "Are you sure you want to delete the selected rows?"}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => handleCloseDialog()}>Cancel</Button>
-              <Button
-                onClick={
-                  selectedRow
-                    ? () => handleDeleteRow(selectedRow.id)
-                    : handleDeleteSelectedRows
-                }
-                autoFocus
-              >
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-        <DataGrid
-          rows={filteredRows}
-          columns={columns}
-          autoHeight
-          checkboxSelection
-          onRowSelectionModelChange={(newSelection) => {
-            setSelectedRows(newSelection);
-          }}
-        />
-      </Box>
-    </div>
+    <Container>
+      <DataGridContainer rows={rows} columns={columns} />
+    </Container>
   );
 };
 

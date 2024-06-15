@@ -1,4 +1,6 @@
 "use client";
+import DataGridContainer from "@/app/ui/dashboard/DataGridContainer/DataGridContainer";
+import Container from "@/app/ui/dashboard/container/Container";
 import { getAllUsers } from "@/lib/services";
 import { useAppSelector } from "@/lib/store/hooks";
 import {
@@ -117,8 +119,9 @@ const Vendor = () => {
   }, 300);
 
   return (
-    <div className="mt-5">
-      <Box sx={{ width: "100%", backgroundColor: "white", borderRadius: 3 }}>
+    <Container>
+      <DataGridContainer rows={rows} columns={columns} />
+      {/* <Box sx={{ width: "100%", backgroundColor: "white", borderRadius: 3 }}>
         <div className="mb-4 ml-4 flex justify-between">
           <TextField
             label="Search by email"
@@ -171,8 +174,8 @@ const Vendor = () => {
             setSelectedRows(newSelection);
           }}
         />
-      </Box>
-    </div>
+      </Box> */}
+    </Container>
   );
 };
 

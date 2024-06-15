@@ -1,4 +1,5 @@
 "use client"
+import Container from '@/app/ui/dashboard/container/Container';
 import { getEmail } from '@/lib/services';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
@@ -20,7 +21,7 @@ const QuillEditor = () => {
   },[])
 
   return (
-    <div className='bg-white min-h-[80vh] mt-5'>
+    <Container>
       <ReactQuill
         className='text-black'
         theme="snow"
@@ -28,7 +29,7 @@ const QuillEditor = () => {
         style={{ height: '74vh' }}
         onChange={handleChange}
       />
-    </div>
+    </Container>
   );
 };
 

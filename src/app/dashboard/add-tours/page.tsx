@@ -1,4 +1,5 @@
 'use client'
+import Container from '@/app/ui/dashboard/container/Container';
 import { AddCity, AddTourTypes, GetAllCities, GetAllImages, GetAllTourTypes, UploadImage } from '@/lib/services';
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 
@@ -169,7 +170,7 @@ const TourForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 m-8 rounded-3xl">
+    <Container>
       <div className="bg-white p-8  shadow-md w-full rounded-3xl">
         <h2 className="text-2xl text-black font-bold mb-6 text-center">Create Tour</h2>
         <form onSubmit={handleSubmit} className='grid grid-cols-3 gap-4'>
@@ -360,7 +361,7 @@ const TourForm: React.FC = () => {
           <div></div>
         </form>
       </div>
-    </div>
+    </Container>
   );
 };
 

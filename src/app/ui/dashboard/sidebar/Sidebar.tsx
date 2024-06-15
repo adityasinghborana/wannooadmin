@@ -122,11 +122,11 @@ const Sidebar = () => {
   }
   ]
   return (
-    <div className=" mx-1  px-global mt-4 h-full">
+    <div className="mx-1 px-global mt-4 h-full overflow-y-auto" style={{maxHeight:"calc(100vh)", scrollbarWidth:"none"}}>
       <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row " >
-      <Avatar sx={{bgcolor: deepOrange[500] }}>A</Avatar>
+      <Avatar sx={{bgcolor: deepOrange[500] }}>{user?.email.charAt(0)}</Avatar>
       <div className="flex flex-col pr-global mt-global">
-        <span className="font-[500]">{user?.email}</span>
+        <span className="font-[500] text-ellipsis overflow-hidden max-w-[100px] whitespace-nowrap" title={user?.email}>{user?.email}</span>
         <span className="text-sm text-primary">Admin</span>
       </div>
       </div>
@@ -145,7 +145,8 @@ const Sidebar = () => {
       <button onClick={()=>{
         signOut(auth),
         localStorage.removeItem('user')
-      }} className="p-global mt-2 flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full text-primary-text  hover:bg-primary hover:text-primary-bodytext">
+      }} className="p-global flex items-center gap-3 cursor-pointer rounded-xl bg-none border-none w-full text-primary-text  hover:bg-primary hover:text-primary-bodytext mb-6" //Added margin bottom here
+         >
          <MdLogout/>Logout
       </button>
     </div>

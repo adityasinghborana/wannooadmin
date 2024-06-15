@@ -20,21 +20,23 @@ const DashboardLayout: React.FC<{
 
   if(user){
     return (
-      <div className="flex md:flex-row md:gap-5 min-w-full min-h-full">
+      <div className="flex md:flex-row md:gap-5 min-w-full overflow-hidden" style={{maxHeight:"calc(100vh)"}}>
         {pathName.includes("tours/") ? (
-          <>
+          <div className="flex flex-col w-full h-full">
             {children}
-          </>
+          </div>
         ) : (
-          <>
-            <div className=" shadow-2xl w-full pr-2 md:w-1/6 min-h-[97vh] bg-primary-foreground hidden md:block rounded-2xl mt-2">
+          <div className="flex flex-row w-full h-full">
+            <div className="shadow-2xl w-full pr-2 md:w-1/6 bg-primary-foreground hidden md:block rounded-r-3xl">
               <Sidebar />
             </div>
-            <div className="w-full md:w-5/5 mt-4">
-              <Navbar />
-              {children}
+            <div className="flex flex-col flex-grow w-full h-full overflow-y-auto">
+              <div className="mx-8 my-2">
+                <Navbar />
+                {children}
+              </div>
             </div>
-          </>
+          </div>
         )}
       </div>
     );

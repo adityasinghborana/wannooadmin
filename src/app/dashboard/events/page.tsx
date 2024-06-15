@@ -8,6 +8,7 @@ import { DataGrid, GridColDef, GridDeleteIcon, GridRowId } from "@mui/x-data-gri
 import { MdDelete, MdEdit, MdViewAgenda } from "react-icons/md";
 import Link from "next/link";
 import { useAppSelector } from "@/lib/store/hooks";
+import Container from "@/app/ui/dashboard/container/Container";
 
 interface Row {
   id: GridRowId;
@@ -99,7 +100,7 @@ const Tours: FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 mt-5">
+    <Container>
       {loading && <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-35"><CircularProgress /></div>} 
       <Box  sx={{ width: "100%", backgroundColor: "white", borderRadius: 3}}>
         <div className="mb-4 ml-4 flex justify-between">
@@ -137,7 +138,7 @@ const Tours: FC = () => {
           }}
         />
       </Box>
-    </div>
+    </Container>
   );
 };
 

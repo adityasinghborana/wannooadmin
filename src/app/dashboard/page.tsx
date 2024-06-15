@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/lib/store/hooks";
 import { addUsers } from "@/lib/store/features/user/userSlice";
 import { addTours } from "@/lib/store/features/tours/tourSlice";
 import { addVendors } from "@/lib/store/features/vendors/vendorSlice";
+import Container from "../ui/dashboard/container/Container";
 
 const Dashboard = () => {
   const [users,setUsers] = useState(0)
@@ -40,7 +41,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className="mt-5">
+    <Container>
       <div className="">
         <div className="hidden md:grid grid-cols-3 gap-5 mb-4">
           <Card title="Total Users" value={users} desc="......" />
@@ -54,7 +55,7 @@ const Dashboard = () => {
         </div>
           {/* <Charts /> */}
       </div>
-    </div>
+    </Container>
   );
 };
 export default Dashboard;
