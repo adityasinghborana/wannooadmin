@@ -65,16 +65,25 @@ export async function getHomePageData() {
 
 export async function getBackgroundImage() {
     try {
-        let res = await axiosInstance.get(`/sliderimages`)
+        let res = await axiosInstance.get(`/bgimage`)
         return res?.data
     } catch (error) {
         throw error
     }   
 }
 
-export async function UploadImage(image:any) {
+export async function UploadTourImage(image:any) {
     try {
         let res = await axiosInstance.post(`/upload`,image)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function UploadBackgroundImage(image:any) {
+    try {
+        let res = await axiosInstance.post(`/uploadimage`,image)
         return res?.data
     } catch (error) {
         throw error

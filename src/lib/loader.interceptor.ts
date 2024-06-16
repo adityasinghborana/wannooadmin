@@ -27,7 +27,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Show loader here
-    console.log('first')
     return config;
   },
   (error) => {

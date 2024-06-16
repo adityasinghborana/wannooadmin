@@ -12,9 +12,9 @@ interface Row {
   id: GridRowId;
   email: string;
   firstName: string;
-  tourdetails: [{
+  tourdetails: {
     imagePath: string
-  }];
+  };
   tourShortDescription:string
 }
 
@@ -32,9 +32,9 @@ const Tours: FC = () => {
       headerName: "Thumbnail",
       flex: 1,
       renderCell: (params) => {
-        const imagePath = params.row.tourdetails[0].imagePath;
+        const imagePath = params.row.tourdetails?.imagePath;
         return <><div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <img src={imagePath} alt="thumbnail" height={130} width={130} />
+          <img src={imagePath} alt={imagePath} height={130} width={130} />
         </div></>
       },
     },

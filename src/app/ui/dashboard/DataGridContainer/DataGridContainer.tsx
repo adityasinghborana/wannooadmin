@@ -12,35 +12,25 @@ interface DataGridContainerProps {
 const DataGridContainer: React.FC<DataGridContainerProps> = ({ rows, columns }) => {
   return (
     <Box
-      sx={{
-        width: "100%",
-        backgroundColor: "white",
-        borderRadius: 3,
-        paddingX: 1,
-        paddingY: 1,
-        display: "flex",
-        flexDirection: "column",
-        '& .MuiDataGrid-cell': {
-          border: 0,
-        },
-        height: "calc(100vh - 5rem)",
-        '& .MuiDataGrid-virtualScroller': {
-          border: 0,
-          height: '100%',
-        },
+    sx={{
+      width: "100%",
+      backgroundColor: "white",
+      borderRadius: 3,
+      paddingX: 1,
+      paddingY: 1,
+      display: "flex",
+      flexDirection: "column",
+      height: "calc(100vh - 5rem)",
         '& .MuiDataGrid-root': {
-          border: 0,
-          textAlign: 'center',
-        },
-        '& .MuiDataGrid-columnHeaderTitleContainer': {
-          border: 0,
-          justifyContent: 'center',
-        },
-        '& .Mui-lastChild': {
-          border: 0,
-          margin: 2,
-        },
-      }}
+        border: 'none',
+        },     
+        '& .css-qcqlck-MuiDataGrid-root .MuiDataGrid-cell--flex': {
+        border: 'none',
+        },     
+      // '& .MuiDataGrid-columnHeaderTitleContainer': {
+      //   justifyContent: 'center',
+      // },
+    }}
     >
       <Box
         sx={{
