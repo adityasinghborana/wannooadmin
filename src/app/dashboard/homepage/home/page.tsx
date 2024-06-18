@@ -1,7 +1,7 @@
 "use client"
 import Container from "@/app/ui/dashboard/container/Container"
-import { getHomePageData } from "@/lib/services"
-import { FormEvent, useEffect, useState } from "react"
+import { UpdateHomePageData, getHomePageData } from "@/lib/services"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 const Home = () => {
     const [homepagedata,setHomePageData] = useState({})
@@ -14,9 +14,19 @@ const Home = () => {
         getData()
     },[])
 
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setHomePageData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+      // const { id, ...rest } = homepagedata as Record<string, any>;
+      // setHomePageData(rest);
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(homepagedata);
+        await UpdateHomePageData(homepagedata)
       };
 
     return (
@@ -36,10 +46,9 @@ const Home = () => {
                     <input
                       type="text"
                       name={key}
-                      value={homepagedata[key as keyof typeof homepagedata]}
-                    //   onChange={handleChange}
+                      defaultValue={homepagedata[key as keyof typeof homepagedata]}
+                      onChange={handleChange}
                       className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
-                      required
                     />
                   </div>
                 );

@@ -206,3 +206,12 @@ export async function GetAllImages() {
         throw error
     }   
 }
+
+export async function UpdateHomePageData(data:any) {
+    try {
+        let res = await axiosInstance.patch(`/updatedata`,data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}

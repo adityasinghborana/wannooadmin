@@ -4,77 +4,94 @@ import { AddCity, AddTourTypes, GetAllCities, GetAllImages, GetAllTourTypes, Upl
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 
 // Define types for the form data
-interface FormData {
-  cityId: string;
+interface TourDetails {
+  countryId: number | null;
+  countryName: string;
+  cityId: number | null;
   cityName: string;
   tourName: string;
   duration: string;
-  departurePoint: string;
-  reportingTime: string;
-  tourLanguage: string;
-  // imagePath: string; // removed image path from the state and created a new one
+  imagePath: string;
   cityTourTypeId: string;
   cityTourType: string;
+  contractId: number | null;
+  isRecommended: boolean;
+  isPrivate: boolean;
+  isSlot: boolean;
   tourDescription: string;
   tourInclusion: string;
-  tourShortDescription: string;
-  whatsInThisTour: string;
+  shortDescription: string;
   importantInformation: string;
-  itenararyDescription: string;
+  itineraryDescription: string;
   usefulInformation: string;
-  faqDetails: string;
   childAge: string;
   infantAge: string;
-  infantCount: string;
-  isSlot: string;
-  onlyChild: string;
-  contractId: string;
-  latitude: string;
-  longitude: string;
+  infantCount: number | null;
+  isOnlyChild: boolean;
   startTime: string;
   meal: string;
   googleMapUrl: string;
   tourExclusion: string;
-
-  cutOffhrs: string;
+  imagePaths: string[];
+  optionList: TourOption[];
 }
 
+interface TourOption {
+  optionName: string;
+  childAge: string;
+  infantAge: string;
+  optionDescription: string;
+  minPax: number;
+  maxPax: number;
+  duration: string;
+  operationDays: { [day: string]: number }; // Key is weekday string (e.g., "monday"), value is 1 (available) or 0 (not available)
+  timeSlots: TimeSlot[];
+}
+
+interface TimeSlot {
+  timeSlotId: string;
+  timeSlot: string;
+  available: number;
+  adultPrice: number;
+  childPrice: number;
+}
+
+
 const TourForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    cityId: '',
+  const [formData, setFormData] = useState<TourDetails>({
+    countryId: null,
+    countryName: '', // Empty string placeholder
+    cityId: null,
     cityName: '',
     tourName: '',
     duration: '',
-    departurePoint: '',
-    reportingTime: '',
-    tourLanguage: '',
+    imagePath: '',
     cityTourTypeId: '',
     cityTourType: '',
+    contractId: null,
+    isRecommended: false,
+    isPrivate: false,
+    isSlot: false,
     tourDescription: '',
     tourInclusion: '',
-    tourShortDescription: '',
-    whatsInThisTour: '',
+    shortDescription: '',
     importantInformation: '',
-    itenararyDescription: '',
+    itineraryDescription: '',
     usefulInformation: '',
-    faqDetails: '',
     childAge: '',
     infantAge: '',
-    infantCount: '',
-    isSlot: '',
-    onlyChild: '',
-    contractId: '',
-    latitude: '',
-    longitude: '',
+    infantCount: null,
+    isOnlyChild: false,
     startTime: '',
     meal: '',
     googleMapUrl: '',
     tourExclusion: '',
-    cutOffhrs: '',
-  });
+    imagePaths: [],
+    optionList: [],
+  })
 
   const [cities, setCities] = useState([
-    { CityId: '0', CityName: 'No record found' }
+    { id: 0, CityId: 0, CityName: 'No record found' }
   ])
 
   const [tourTypes, settTourTypes] = useState([
@@ -161,6 +178,15 @@ const TourForm: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
+    if (name === 'cityName') {
+      const city = cities.find((city) => city.CityName === value);
+      if (city) {
+        setFormData((prevData) => ({
+          ...prevData,
+          cityid: city.CityId,
+        }));
+      }
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -187,7 +213,7 @@ const TourForm: React.FC = () => {
               >
                 <option value="" disabled>Select a city</option>
                 {cities.map((city, i) => (
-                  <option key={i} value={city.CityId}>
+                  <option key={i} value={city.CityName}>
                     {city.CityName}
                   </option>
                 ))}
@@ -275,7 +301,7 @@ const TourForm: React.FC = () => {
 
                     {availableImages.length > imagesPerPage && (
                       <div className="flex justify-center items-center mt-4">
-                        <button onClick={handlePrevPage} className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 mr-2">
+                        <button type='button' onClick={handlePrevPage} className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 mr-2">
                           &lt;
                         </button>
                         {Array.from({ length: totalPages }).map((_, index) => (
@@ -285,7 +311,7 @@ const TourForm: React.FC = () => {
                               }`}
                           />
                         ))}
-                        <button onClick={handleNextPage} className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 ml-2">
+                        <button type='button' onClick={handleNextPage} className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 ml-2">
                           &gt;
                         </button>
                       </div>
@@ -331,31 +357,33 @@ const TourForm: React.FC = () => {
 
             {/* Other form fields */}
             {Object.keys(formData).map((key) => {
-              if (key === 'cityName' || key === 'cityTourType' || key === 'cityId') return null;
+              if (key === 'cityName' || key === 'cityTourType' || key === 'cityid' || key === 'countryid') return null;
+              const type = typeof (formData as any)[key as keyof FormData] === 'boolean' ? 'checkbox' : 'text';
               return (
                 <div className="mb-4" key={key}>
                   <label className="block text-gray-700 capitalize">
                     {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
                   </label>
                   <input
-                    type="text"
+                    type={type}
                     name={key}
-                    value={formData[key as keyof FormData]}
+                    defaultValue={(formData as any)[key as keyof FormData]}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
                     required
+                    checked={type === 'checkbox' && (formData as any)[key as keyof FormData]}
                   />
                 </div>
               );
             })}
             <div className="flex justify-center col-span-3">
-                <button
-                  type="submit"
-                  className="bg-blue-900 text-white py-2 px-4 rounded hover:bg-purple-400 w-96"
-                >
-                  Submit
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="bg-blue-900 text-white py-2 px-4 rounded hover:bg-purple-400 w-96"
+              >
+                Submit
+              </button>
+            </div>
           </form>
         </div>
       </div>
