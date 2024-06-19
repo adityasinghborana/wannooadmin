@@ -14,11 +14,11 @@ const MenuLink: FC <Props> = ({items}) => {
   const pathname = usePathname()
     return (
       <Link
-      className={`text-primary-text flex mt-2 items-center p-4 rounded-2xl hover:bg-primary hover:text-primary-bodytext ${pathname === items.path ? 'bg-primary text-[#ffffff]' : ''}`} // tailwind global config is overwritten so setting the colour manually
+      className={`text-primary-text flex mt-2 items-center p-4 rounded-2xl hover:bg-primary text-sm hover:text-primary-bodytext ${pathname === items.path ? 'bg-primary text-[#ffffff]' : ''}`} // tailwind global config is overwritten so setting the colour manually
       href={items.path}
     >
       {items.icon}
-      {items.title}
+      {items.title }
     </Link>
   )
 }

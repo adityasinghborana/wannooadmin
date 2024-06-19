@@ -57,6 +57,7 @@ export async function updateAboutUsDetails(data:any) {
 export async function getHomePageData() {
     try {
         let res = await axiosInstance.get(`/homepage`)
+    
         return res?.data
     } catch (error) {
         throw error
@@ -210,6 +211,33 @@ export async function GetAllImages() {
 export async function UpdateHomePageData(data:any) {
     try {
         let res = await axiosInstance.patch(`/updatedata`,data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+export async function UpdateContactUsPageData(data:any) {
+    try {
+        let res = await axiosInstance.patch(`/updatecontactusdata`,data)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+
+export async function getContactUsPageData() {
+    try {
+        let res = await axiosInstance.get(`/contactusdata`)
+    
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+export async function getForms() {
+    try {
+        let res = await axiosInstance.get(`/forms`)
+    
         return res?.data
     } catch (error) {
         throw error

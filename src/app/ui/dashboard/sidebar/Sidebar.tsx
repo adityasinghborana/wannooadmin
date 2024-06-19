@@ -92,6 +92,11 @@ const Sidebar = () => {
         title: 'Contact us',
         path:'/dashboard/contact-us',
         icon: <MdWorkHistory />
+      },  
+      {
+        title: 'Forms Submission',
+        path:'/dashboard/forms',
+        icon: <MdWorkHistory />
       },   
     ]
   },

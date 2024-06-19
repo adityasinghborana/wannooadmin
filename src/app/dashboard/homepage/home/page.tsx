@@ -11,7 +11,8 @@ const Home = () => {
     }
 
     useEffect(()=>{
-        getData()
+        const data = getData();
+     
     },[])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -41,7 +42,7 @@ const Home = () => {
                 return (
                   <div className="mb-4" key={key}>
                     <label className="block text-gray-700 capitalize">
-                      {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+                      {key.toUpperCase()}
                     </label>
                     <input
                       type="text"
