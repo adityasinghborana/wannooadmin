@@ -2,6 +2,7 @@
 import Container from '@/app/ui/dashboard/container/Container';
 import { AddCity, AddTourTypes, GetAllCities, GetAllImages, GetAllTourTypes, UploadTourImage } from '@/lib/services';
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import { FiTrash } from 'react-icons/fi';
 
 // Define types for the form data
 interface TourDetails {
@@ -87,8 +88,30 @@ const TourForm: React.FC = () => {
     googleMapUrl: '',
     tourExclusion: '',
     imagePaths: [],
-    optionList: [],
+    optionList: [
+      {
+        optionName: '',
+        childAge: '',
+        infantAge: '',
+        optionDescription: '',
+        minPax: 0,
+        maxPax: 0,
+        duration: '',
+        operationDays: { 'monday': 1 },
+        timeSlots: [
+          {
+            timeSlotId: '',
+            timeSlot: '',
+            available: 0,
+            adultPrice: 0,
+            childPrice: 0,
+          }
+        ]
+      }
+    ],
   })
+
+  const [hiddenFields, setHiddenFields] = useState(['cityTourTypeId', 'cityId', 'cityid', 'countryId', 'cityName', 'cityTourType'])
 
   const [cities, setCities] = useState([
     { id: 0, CityId: 0, CityName: 'No record found' }
@@ -172,6 +195,7 @@ const TourForm: React.FC = () => {
     getCitiesAndTourTypes()
   }, [])
 
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -188,6 +212,61 @@ const TourForm: React.FC = () => {
       }
     }
   };
+
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [optionList, setOptionList] = useState(formData.optionList);
+
+  const handleOptionChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, i: number) => {
+    const { name, value } = e.target;
+    const newOptionList = [...optionList];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updatedOption = { ...newOptionList[i], [name]: value } as any;
+    newOptionList[i] = updatedOption;
+    setOptionList(newOptionList);
+  };
+
+  const addOption = () => {    
+    setFormData({
+      ...formData,
+      optionList: [...optionList,
+      {
+        optionName: '',
+        childAge: '',
+        infantAge: '',
+        optionDescription: '',
+        minPax: 0,
+        maxPax: 0,
+        duration: '',
+        operationDays: { 'monday': 1 },
+        timeSlots: [
+          {
+            timeSlotId: '',
+            timeSlot: '',
+            available: 0,
+            adultPrice: 0,
+            childPrice: 0,
+          }
+        ]
+      }
+      ]
+    })
+    setOptionList(formData.optionList)
+  }
+
+  const removeOption = (optionIndex: number) => {
+    const newOptionList = optionList.filter((_, index) => index !== optionIndex);    
+    setFormData({
+      ...formData,
+      optionList: [...optionList]
+    })
+    setOptionList(newOptionList);
+  }
+
+  const toggleAccordion = (index: number) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
+
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -283,8 +362,8 @@ const TourForm: React.FC = () => {
                     <div className="grid grid-cols-3 gap-2">
                       {availableImages
                         .slice(currentPage * imagesPerPage, (currentPage + 1) * imagesPerPage)
-                        .map((image) => (
-                          <div key={image.name} className="relative">
+                        .map((image, index) => (
+                          <div key={index} className="relative">
                             <img
                               src={process.env.NEXT_PUBLIC_URL + image.url}
                               alt={image.name}
@@ -356,25 +435,222 @@ const TourForm: React.FC = () => {
             </div>
 
             {/* Other form fields */}
-            {Object.keys(formData).map((key) => {
-              if (key === 'cityName' || key === 'cityTourType' || key === 'cityid' || key === 'countryid') return null;
-              const type = typeof (formData as any)[key as keyof FormData] === 'boolean' ? 'checkbox' : 'text';
-              return (
-                <div className="mb-4" key={key}>
-                  <label className="block text-gray-700 capitalize">
-                    {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
-                  </label>
-                  <input
-                    type={type}
-                    name={key}
-                    defaultValue={(formData as any)[key as keyof FormData]}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
-                    required
-                    checked={type === 'checkbox' && (formData as any)[key as keyof FormData]}
-                  />
+            {Object.keys(formData).map((key,i) => {
+              if (hiddenFields.includes(key)) return null;
+              let type: 'text' | 'checkbox' | 'number' | 'time' | 'file' | 'textarea' = 'text';
+              if (key === 'duration' || key === 'startTime') {
+                type = 'time';
+              } else if (key === 'imagePath') {
+                type = 'file';
+              } else if (key === 'contractId') {
+                type = 'number';
+              } else if (key === 'isRecommended') {
+                type = 'checkbox';
+              } else if (['childAge', 'infantAge', 'infantCount'].includes(key)) {
+                type = 'number';
+              } else if (['description', 'shortDescription'].includes(key)) {
+                type = 'textarea'; // Use textarea type for these keys
+              } else {
+                type = 'text';
+              }
+              if (key !== 'optionList') return (
+                <div className='mb-4'>
+                  {
+                    <div className="mb-4" key={i}>
+                      <label className="block text-gray-700 capitalize">
+                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+                      </label>
+                      {type === 'textarea' ? (
+                        <textarea
+                          name={key}
+                          defaultValue={(formData as any)[key as keyof FormData]}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
+                          required
+                        />
+                      ) : (
+                        <input
+                          type={type}
+                          name={key}
+                          defaultValue={(formData as any)[key as keyof FormData]}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
+                          required
+                          checked={type === 'checkbox' && (formData as any)[key as keyof FormData]}
+                        />
+                      )}
+                    </div>
+                  }
                 </div>
               );
+              return (
+                <div className='col-span-3'>
+                  <label className="flex justify-center text-xl rounded-xl px-4 py-3 text-white capitalize w-full bg-primary mb-4">
+                    <h1>Options</h1>
+                  </label>
+                  {
+                    (formData as any)[key as keyof FormData].map((option: any, index: any) => (
+                      <div key={index} className='accordion-item border border-gray-300 rounded-lg mb-4 shadow-md'>
+                        <div
+                          className='accordion-header cursor-pointer bg-blue-100 p-4 flex justify-between items-center rounded-t-lg'                          
+                        >
+                          <h2 className='text-lg font-semibold text-blue-700'>
+                            Option {index + 1}
+                          </h2>
+                          <div className='flex items-center justify-between'>
+                            <span className="text-blue-700 mx-8" onClick={() => toggleAccordion(index)}>
+                              {expandedIndex === index ? '-' : '+'}
+                            </span>
+                            <span className="text-red-500 hover:text-blue-400" onClick={() => removeOption(index)}>
+                              <FiTrash />
+                            </span>
+                          </div>
+
+                        </div>
+                        <div className={`accordion-content transition-max-height duration-300 ease-in-out ${expandedIndex === index ? 'max-h-full p-4' : 'max-h-0 p-0 overflow-hidden'}`}>
+                          <div className='grid grid-cols-3 gap-6'>
+                            <div>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Option Name
+                              </label>
+                              <input
+                                type="text"
+                                name={`optionList[${index}].optionName`}
+                                defaultValue={option.optionName}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Child Age
+                              </label>
+                              <input
+                                type="number"
+                                name={`optionList[${index}].childAge`}
+                                defaultValue={option.childAge}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Infant Age
+                              </label>
+                              <input
+                                type="number"
+                                name={`optionList[${index}].infantAge`}
+                                defaultValue={option.infantAge}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div className='col-span-3'>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Option Description
+                              </label>
+                              <textarea
+                                name={`optionList[${index}].optionDescription`}
+                                defaultValue={option.optionDescription}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Min Pax
+                              </label>
+                              <input
+                                type="number"
+                                name={`optionList[${index}].minPax`}
+                                defaultValue={option.minPax}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Max Pax
+                              </label>
+                              <input
+                                type="number"
+                                name={`optionList[${index}].maxPax`}
+                                defaultValue={option.maxPax}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Duration
+                              </label>
+                              <input
+                                type="text"
+                                name={`optionList[${index}].duration`}
+                                defaultValue={option.duration}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div className='col-span-3'>
+                              <label className="block text-gray-700 capitalize mb-1">
+                                Operation Days
+                              </label>
+                              <input
+                                type="text"
+                                name={`optionList[${index}].operationDays`}
+                                defaultValue={JSON.stringify(option.operationDays)}
+                                onChange={(e) => handleOptionChange(e, index)}
+                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                              />
+                            </div>
+                            <div className='col-span-3'>
+                              <label className="flex justify-center font-semibold text-lg rounded-2xl text-black capitalize w-full bg-[#fdc4ff] mb-2 py-2">
+                                <h1>Time Slots</h1>
+                              </label>
+                              <div className='grid grid-cols-3 gap-4 mt-2'>
+                                {option.timeSlots?.map((timeSlot: any, timeSlotIndex: any) => (
+                                  Object.keys(timeSlot).map((key, i) => (
+                                    <div key={i} className='mb-4'>
+                                      <label className="block text-gray-700 capitalize mb-1">
+                                        {key}
+                                      </label>
+                                      <input
+                                        type="text"
+                                        name={`optionList[${index}].timeSlots[${timeSlotIndex}].${key}`}
+                                        defaultValue={timeSlot[key]}
+                                        onChange={handleOptionChange}
+                                        className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        required
+                                      />
+                                    </div>
+                                  ))
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  }
+                  <button
+                    className="mt-4 p-3 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition duration-200"
+                    onClick={addOption}
+                    type="button"
+                  >
+                    Add Option
+                  </button>
+                </div>
+
+              )
             })}
             <div className="flex justify-center col-span-3">
               <button
