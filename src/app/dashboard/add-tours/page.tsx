@@ -3,6 +3,7 @@ import Container from '@/app/ui/dashboard/container/Container';
 import { AddCity, AddTourTypes, GetAllCities, GetAllImages, GetAllTourTypes, UploadTourImage } from '@/lib/services';
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { FiTrash } from 'react-icons/fi';
+import Select from 'react-select';
 
 // Define types for the form data
 interface TourDetails {
@@ -34,6 +35,10 @@ interface TourDetails {
   googleMapUrl: string;
   tourExclusion: string;
   imagePaths: string[];
+  adultprice: number | null;
+  childprice: number | null;
+  amount: number | null;
+  infantprice: number | null;
   optionList: TourOption[];
 }
 
@@ -88,6 +93,10 @@ const TourForm: React.FC = () => {
     googleMapUrl: '',
     tourExclusion: '',
     imagePaths: [],
+    adultprice: 0,
+    childprice: 0,
+    amount: 0,
+    infantprice: 0,
     optionList: [
       {
         optionName: '',
@@ -97,7 +106,7 @@ const TourForm: React.FC = () => {
         minPax: 0,
         maxPax: 0,
         duration: '',
-        operationDays: { 'monday': 1 },
+        operationDays: { },
         timeSlots: [
           {
             timeSlotId: '',
@@ -225,7 +234,7 @@ const TourForm: React.FC = () => {
     setOptionList(newOptionList);
   };
 
-  const addOption = () => {    
+  const addOption = () => {
     setFormData({
       ...formData,
       optionList: [...optionList,
@@ -237,7 +246,7 @@ const TourForm: React.FC = () => {
         minPax: 0,
         maxPax: 0,
         duration: '',
-        operationDays: { 'monday': 1 },
+        operationDays: { },
         timeSlots: [
           {
             timeSlotId: '',
@@ -253,8 +262,34 @@ const TourForm: React.FC = () => {
     setOptionList(formData.optionList)
   }
 
+  const daysOfWeek = [
+    { value: 'monday', label: 'Monday' },
+    { value: 'tuesday', label: 'Tuesday' },
+    { value: 'wednesday', label: 'Wednesday' },
+    { value: 'thursday', label: 'Thursday' },
+    { value: 'friday', label: 'Friday' },
+    { value: 'saturday', label: 'Saturday' },
+    { value: 'sunday', label: 'Sunday' }
+  ];
+
+
+  const handleDaysChange = (selectedDays:any, index:any) => {
+    const updatedOptionList = [...optionList];
+    let operationDays = {};
+    selectedDays.forEach((day: { value: string; }) => {
+      operationDays = { ...operationDays, [day.value]: 1 };
+    });
+    updatedOptionList[index].operationDays = operationDays;
+    setOptionList(updatedOptionList);
+    setFormData({
+      ...formData,
+      optionList: [...optionList]
+    })    
+  };
+
+
   const removeOption = (optionIndex: number) => {
-    const newOptionList = optionList.filter((_, index) => index !== optionIndex);    
+    const newOptionList = optionList.filter((_, index) => index !== optionIndex);
     setFormData({
       ...formData,
       optionList: [...optionList]
@@ -435,7 +470,7 @@ const TourForm: React.FC = () => {
             </div>
 
             {/* Other form fields */}
-            {Object.keys(formData).map((key,i) => {
+            {Object.keys(formData).map((key, i) => {
               if (hiddenFields.includes(key)) return null;
               let type: 'text' | 'checkbox' | 'number' | 'time' | 'file' | 'textarea' = 'text';
               if (key === 'duration' || key === 'startTime') {
@@ -444,8 +479,6 @@ const TourForm: React.FC = () => {
                 type = 'file';
               } else if (key === 'contractId') {
                 type = 'number';
-              } else if (key === 'isRecommended') {
-                type = 'checkbox';
               } else if (['childAge', 'infantAge', 'infantCount'].includes(key)) {
                 type = 'number';
               } else if (['description', 'shortDescription'].includes(key)) {
@@ -476,7 +509,6 @@ const TourForm: React.FC = () => {
                           onChange={handleChange}
                           className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
                           required
-                          checked={type === 'checkbox' && (formData as any)[key as keyof FormData]}
                         />
                       )}
                     </div>
@@ -492,7 +524,7 @@ const TourForm: React.FC = () => {
                     (formData as any)[key as keyof FormData].map((option: any, index: any) => (
                       <div key={index} className='accordion-item border border-gray-300 rounded-lg mb-4 shadow-md'>
                         <div
-                          className='accordion-header cursor-pointer bg-blue-100 p-4 flex justify-between items-center rounded-t-lg'                          
+                          className='accordion-header cursor-pointer bg-blue-100 p-4 flex justify-between items-center rounded-t-lg'
                         >
                           <h2 className='text-lg font-semibold text-blue-700'>
                             Option {index + 1}
@@ -603,13 +635,13 @@ const TourForm: React.FC = () => {
                               <label className="block text-gray-700 capitalize mb-1">
                                 Operation Days
                               </label>
-                              <input
-                                type="text"
+                              <Select
+                                isMulti
                                 name={`optionList[${index}].operationDays`}
-                                defaultValue={JSON.stringify(option.operationDays)}
-                                onChange={(e) => handleOptionChange(e, index)}
-                                className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                required
+                                options={daysOfWeek}
+                                defaultValue={Object.keys(option.operationDays).map(day => ({ value: day, label: day.charAt(0).toUpperCase() + day.slice(1) }))}
+                                onChange={(selectedDays) => handleDaysChange(selectedDays, index)}
+                                className="w-full mt-1"
                               />
                             </div>
                             <div className='col-span-3'>
@@ -627,7 +659,7 @@ const TourForm: React.FC = () => {
                                         type="text"
                                         name={`optionList[${index}].timeSlots[${timeSlotIndex}].${key}`}
                                         defaultValue={timeSlot[key]}
-                                        onChange={handleOptionChange}
+                                        // onChange={handleOptionChange}
                                         className="w-full p-3 border border-gray-300 rounded-lg mt-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         required
                                       />
