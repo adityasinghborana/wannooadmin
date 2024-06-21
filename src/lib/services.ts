@@ -73,18 +73,18 @@ export async function getBackgroundImage() {
     }   
 }
 
-export async function UploadTourImage(image:any) {
-    try {
-        let res = await axiosInstance.post(`/upload`,image)
-        return res?.data
-    } catch (error) {
-        throw error
-    }   
-}
+// export async function UploadTourImage(image:any) {
+//     try {
+//         let res = await axiosInstance.post(`/upload`,image)
+//         return res?.data
+//     } catch (error) {
+//         throw error
+//     }   
+// }
 
 export async function UploadBackgroundImage(image:any) {
     try {
-        let res = await axiosInstance.post(`/uploadimage`,image)
+        let res = await axiosInstance.post(`/upload`,image)
         return res?.data
     } catch (error) {
         throw error
