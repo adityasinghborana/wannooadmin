@@ -58,14 +58,14 @@ const Home: React.FC = () => {
   return (
     <Container>
       <div
-        className="bg-white p-8 shadow-md w-full rounded-3xl"
-        style={{ height: "calc(100vh - 6rem)" }}
+        className="bg-white p-8 shadow-md w-full rounded-3xl mt-12 "
+        style={{ height: "calc(100vh - 10rem)" }}
       >
         <h2 className="text-2xl text-black font-bold mb-6 text-center">
           Home page data
         </h2>
         <div
-          className="overflow-y-auto"
+          className="overflow-y-auto "
           style={{ maxHeight: "90%", scrollbarWidth: "none" }}
         >
           <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
@@ -90,7 +90,7 @@ const Home: React.FC = () => {
             <div className="flex justify-center col-span-3">
               <button
                 type="submit"
-                className="bg-blue-900 text-white py-2 px-4 rounded hover:bg-purple-400 w-96"
+                className="bg-primary text-white py-2 px-4 rounded-full hover:bg-purple-400 w-96"
               >
                 Submit
               </button>

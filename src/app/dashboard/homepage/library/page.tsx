@@ -1,9 +1,15 @@
 "use client";
-import { UploadBackgroundImage, getBackgroundImage } from "@/lib/services";
+import {
+  UploadBackgroundImage,
+  deleteBackgroundImage,
+  getBackgroundImage,
+} from "@/lib/services";
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FiTrash, FiUpload } from "react-icons/fi";
 import Container from "@/app/ui/dashboard/container/Container";
+import localbaseurl from "@/constants.js";
+import Constants from "@/constants.js";
 
 interface Image {
   id: number;
@@ -22,7 +28,7 @@ const ImageManagement: React.FC = () => {
   const [redirectUrl, setRedirectUrl] = useState("");
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
 
-  const imagesPerPage = 3;
+  const imagesPerPage = 15;
   const totalPages = Math.ceil(images.length / imagesPerPage);
 
   useEffect(() => {
@@ -31,6 +37,7 @@ const ImageManagement: React.FC = () => {
       try {
         const response = await getBackgroundImage();
         setImages(response);
+        console.log({ data: response });
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -76,6 +83,8 @@ const ImageManagement: React.FC = () => {
         setSelectedFile(null);
       }
     }
+    const response = await getBackgroundImage();
+    setImages(response);
   };
 
   const handleImageSelect = (url: string) => {
@@ -86,11 +95,19 @@ const ImageManagement: React.FC = () => {
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImagePreviews((prevPreviews) =>
-      prevPreviews.filter((_, i) => i !== index)
-    );
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  const handleRemoveImage = async (index: number, imageUrl: string) => {
+    const imageToRemove = images[index];
+    try {
+      await deleteBackgroundImage(imageToRemove.url); // API call to delete the image by ID
+
+      // Update the state only if the API call is successful
+      setImagePreviews((prevPreviews) =>
+        prevPreviews.filter((_, i) => i !== index)
+      );
+      setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
   };
 
   const handlePrevPage = () => {
@@ -104,12 +121,12 @@ const ImageManagement: React.FC = () => {
   return (
     <Container>
       <div
-        className="bg-white p-8 shadow-md w-full rounded-3xl"
-        style={{ height: "calc(100vh - 6rem)" }}
+        className="bg-white p-8 shadow-md w-full rounded-3xl mt-8"
+        style={{ height: "calc(100vh - 8rem)" }}
       >
-        <h2 className="text-2xl text-black font-bold mb-6 text-center">
+        {/* <h2 className="text-2xl text-black font-bold mb-6 text-center">
           Manage Images
-        </h2>
+        </h2> */}
         <div className="overflow-y-auto flex-grow">
           <div className="mb-4 flex justify-between items-center">
             <label className="block text-gray-700 text-lg">Upload Images</label>
@@ -123,27 +140,27 @@ const ImageManagement: React.FC = () => {
             />
             <label
               htmlFor="upload-input"
-              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
+              className="cursor-pointer bg-primary text-white px-4 py-2 rounded hover:bg-black flex items-center rounded-xl"
             >
               <FiUpload className="mr-2" /> Upload
             </label>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 rounded-2xl gap-6 mt-4">
             {images
               .slice(
                 currentPage * imagesPerPage,
                 (currentPage + 1) * imagesPerPage
               )
-              .map((image) => (
+              .map((image, index) => (
                 <div
-                  key={image.id}
-                  className="relative group bg-gray-100 rounded-lg shadow-lg overflow-hidden"
+                  key={image.name}
+                  className="relative group bg-gray-100 rounded-2xl shadow-lg overflow-hidden"
                 >
                   <img
-                    src={process.env.NEXT_PUBLIC_URL + image.url}
+                    src={Constants.localBaseUrl + image.url}
                     alt={image.filename}
-                    className={`w-full h-48 object-fill transition-transform duration-200 ease-in-out transform group-hover:scale-105 ${
+                    className={`w-full h-48 transition-transform duration-200 ease-in-out transform group-hover:scale-105 object-cover ${
                       selectedImages.includes(image.url)
                         ? "border-4 border-blue-500"
                         : "border"
@@ -153,7 +170,7 @@ const ImageManagement: React.FC = () => {
                   <button
                     type="button"
                     className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => handleRemoveImage(images.indexOf(image))}
+                    onClick={() => handleRemoveImage(index, image.url)}
                   >
                     <FiTrash />
                   </button>
@@ -162,24 +179,24 @@ const ImageManagement: React.FC = () => {
           </div>
 
           {images.length > imagesPerPage && (
-            <div className="flex justify-center items-center mt-4">
+            <div className="flex justify-center items-center mt-10 text-white ">
               <button
                 onClick={handlePrevPage}
-                className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 mr-2"
+                className="py-2 px-4 rounded-2xl rounded-full text-lg bg-primary hover:bg-gray-400 mr-2"
               >
                 &lt;
               </button>
               {Array.from({ length: totalPages }).map((_, index) => (
                 <div
                   key={index}
-                  className={`w-2 h-2 rounded-full mx-1 ${
-                    index === currentPage ? "bg-blue-500" : "bg-gray-300"
+                  className={`w-3 h-3 rounded-full mx-2 ${
+                    index === currentPage ? "bg-primary" : "bg-primary-bodytext"
                   }`}
                 />
               ))}
               <button
                 onClick={handleNextPage}
-                className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 ml-2"
+                className="py-2 px-4 rounded-full bg-primary text-lg hover:bg-gray-400 ml-2"
               >
                 &gt;
               </button>
