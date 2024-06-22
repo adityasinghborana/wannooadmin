@@ -107,23 +107,38 @@ const Sidebar = () => {
           path: "/dashboard/forms",
           icon: <MdWorkHistory />,
         },
+        {
+          title: "Experiences",
+          path: "/dashboard/experiences",
+          icon: <MdWorkHistory />,
+        },
+        {
+          title: "Footer",
+          path: "/dashboard/footer",
+          icon: <MdWorkHistory />,
+        },
       ],
     },
-    // {
-    //   title:'Bookings',
-    //   list:[
-    //     {
-    //       title: 'Confirmed Bookings',
-    //       path:'/dashboard/tours',
-    //       icon: <MdWorkHistory />
-    //     },
-    //     {
-    //       title: 'Canceled Bookings ',
-    //       path:'/dashboard/tours',
-    //       icon: <MdWorkHistory />
-    //     },
-    //   ]
-    // },
+    {
+      title: "Bookings",
+      list: [
+        {
+          title: "Confirmed Bookings",
+          path: "/dashboard/tours",
+          icon: <MdWorkHistory />,
+        },
+        {
+          title: "Canceled Bookings ",
+          path: "/dashboard/tours",
+          icon: <MdWorkHistory />,
+        },
+        {
+          title: "Bookings",
+          path: "/dashboard/bookings",
+          icon: <MdWorkHistory />,
+        },
+      ],
+    },
     {
       title: "API",
       list: [
