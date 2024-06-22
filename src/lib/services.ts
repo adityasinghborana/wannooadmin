@@ -243,3 +243,12 @@ export async function getForms() {
         throw error
     }   
 }
+
+export async function AddTour(tourData:any) {
+    try {
+      const response = await axiosInstance.post('/addtour', tourData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
