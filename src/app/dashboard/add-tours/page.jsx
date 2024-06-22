@@ -6,8 +6,9 @@ import * as yup from 'yup';
 import Container from '@/app/ui/dashboard/container/Container';
 import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from 'react-icons/md';
 import Select from 'react-select';
-import { GetAllCities, GetAllTourTypes } from '@/lib/services';
-
+import { GetAllCities, GetAllImages, GetAllTourTypes, UploadTourImage } from '@/lib/services';
+import CustomImageUpload from '../../ui/dashboard/ImageModal/ImageUpload';
+import ImageUploadModal from '../../ui/dashboard/SingleImageModal/CustomSingleImageUpload';
 // Define the schema for validation
 const tourSchema = yup.object().shape({
   countryname: yup.string().required(),
@@ -38,7 +39,7 @@ const tourSchema = yup.object().shape({
   childprice: yup.number().required(),
   infantprice: yup.number().required(),
   amount: yup.number().required(),
-  imagepaths: yup.string().required().required(),
+  imagepaths: yup.array().of(yup.string()).required(),
   optionlist: yup.array().of(
     yup.object().shape({
       optionname: yup.string().required(),
@@ -130,8 +131,8 @@ const TourForm = () => {
       },
     ],
   };
-  
-  const { control, handleSubmit, formState: { errors }, getValues } = useForm({
+
+  const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: yupResolver(tourSchema),
     defaultValues
   });
@@ -157,7 +158,6 @@ const TourForm = () => {
   const [cityId, setCityId] = useState();
   const [countryId, setCountryId] = useState();
   const [cityToureTypeId, setCityTourTypeId] = useState();
-  const [operationalDays, setOperationalDays] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -218,15 +218,46 @@ const TourForm = () => {
 
   const onSubmit = (data) => {
     let user = JSON.parse(localStorage.getItem('user'))
-    let datatopost = {...data,
-      vendoruid: user.providerData.uid,
+    let datatopost = {
+      ...data,
+      vendoruid: user?.uid,
       cityid: cityId,
       countryid: countryId,
-      citytourtypeid: cityToureTypeId,    
+      citytourtypeid: cityToureTypeId,
     }
     console.log(datatopost)
     // Send data to the API
   };
+
+  const [imagepaths, setImagePaths] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setSelectedImage(file);
+        setIsModalOpen(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleConfirm = async () => {
+      let formData = new FormData();
+      formData.append('image', selectedImage);
+      let imgData = await UploadTourImage(formData)
+    // Assuming you're storing image paths in a field named "imagepaths"
+    setValue('imagepath', imgData?.image?.url);
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    setValue('imagepaths', [...imagepaths])
+  }, [imagepaths]);
 
   return (
     <Container>
@@ -235,8 +266,8 @@ const TourForm = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Basic tour data fields */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {Object.keys(tourSchema.fields).filter((key) =>  !['optionlist', 'vendoruid', 'countryid', 'cityid', 'citytourtypeid'].includes(key)).map((key, index) => {
-                if (['isprivate', 'isrecommended', 'isslot', 'isvendortour', 'onlychild'].includes(key)) {
+              {Object.keys(tourSchema.fields).filter((key) => !['optionlist', 'vendoruid', 'countryid', 'cityid', 'citytourtypeid'].includes(key)).map((key, index) => {
+                if (['isprivate', 'isrecommended', 'isslot', 'isvendortour', 'isonlychild'].includes(key)) {
                   return (
                     <div key={index} className="mb-4">
                       <label htmlFor={key} className="block text-gray-700 text-sm font-bold mb-2">
@@ -250,7 +281,7 @@ const TourForm = () => {
                             id={key}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                             {...field}
-                            >
+                          >
                             <option>Select</option>
                             <option value="true">True</option>
                             <option value="false">False</option>
@@ -260,7 +291,8 @@ const TourForm = () => {
                       {errors[key]?.message && <p className="text-red-500 text-xs mt-1">{errors[key].message}</p>}
                     </div>
                   );
-                } else if (['countryname', 'cityname', 'citytourtype'].includes(key)) {
+                }
+                else if (['countryname', 'cityname', 'citytourtype'].includes(key)) {
                   return (
                     <div key={index} className="mb-4">
                       <label htmlFor={key} className="block text-gray-700 text-sm font-bold mb-2">
@@ -273,28 +305,73 @@ const TourForm = () => {
                           <select
                             onClick={(e) => {
                               if (key === 'cityname') {
-                                setCityId(e.target.selectedOptions[0].id)
+                                setCityId(e?.target?.selectedOptions[0]?.id)
                               } else if (key === 'countryname') {
                                 setCountryId(e.target.value)
                               } else if (key === 'citytourtype') {
                                 setCityTourTypeId(e.target.value)
                               }
-                             }}
+                            }}
                             id={key}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                             {...field}
-                            >
+                          >
                             <option>Select</option>
                             {key === 'cityname' && cities?.map((city) => <option key={city.CityId} value={city.CityName} id={city.CityId}>{city.CityName}</option>)}
                             {key === 'countryname' && <option >Dubai</option>}
-                            {key === 'citytourtype' && tourType?.map((tour)=><option key={tour.cityTourType} value={tour.cityTourType}>{tour.cityTourType}</option>)}
+                            {key === 'citytourtype' && tourType?.map((tour) => <option key={tour.cityTourType} value={tour.cityTourType}>{tour.cityTourType}</option>)}
                           </select>
                         )}
                       />
                       {errors[key]?.message && <p className="text-red-500 text-xs mt-1">{errors[key].message}</p>}
                     </div>
                   );
-                } else {
+                }
+                else if (['imagepaths', 'imagepath'].includes(key)) {
+                  if (key === 'imagepaths') {
+                    return (
+                      <div key={index} className="mb-4">
+                        <label htmlFor={key} className="block text-gray-700 text-sm font-bold mb-2">
+                          {key.charAt(0).toUpperCase() + key.slice(1)}
+                        </label>
+                        {
+                          <Controller
+                            name={key}
+                            control={control}
+                            render={({ field }) => (
+                              <CustomImageUpload onImageSelect={setImagePaths} Images={GetAllImages} />
+                            )}
+                          />
+                        }
+                        {errors[key]?.message && <p className="text-red-500 text-xs mt-1">{errors[key].message}</p>}
+                      </div>
+                    )
+                  } else {
+                    return (
+                      <div>
+                        <label htmlFor="image-upload" className="block text-gray-700 text-sm font-bold mb-2">
+                          Upload Image
+                        </label>
+                        <Controller
+                          name="image-upload"
+                          control={control}
+                          render={({ field }) => (
+                            <input type="file" id="image-upload" onChange={(e) => handleImageSelect(e)} />
+                          )}
+                        />
+                        {errors['image-upload'] && <p className="text-red-500 text-xs mt-1">{errors['image-upload'].message}</p>}
+
+                        <ImageUploadModal
+                          isOpen={isModalOpen}
+                          onClose={() => setIsModalOpen(false)}
+                          onConfirm={handleConfirm}
+                          imagePreview={imagePreview}
+                        />
+                      </div>
+                    )
+                  }
+                }
+                else {
                   const field = tourSchema.fields[key];
                   return (
                     <div key={index} className="mb-4">
@@ -327,7 +404,7 @@ const TourForm = () => {
               {optionFields.map((option, index) => (
                 <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
                   <div className="flex items-center w-full rounded-full px-3 mb-4 bg-primary">
-                    <h3 className={`text-lg text-center text-slate-700 font-medium ${index !== openIndex && 'text-white'} p-2`} style={{ width: '100%'}}>Option {index + 1} {option.optionname}</h3>
+                    <h3 className={`text-lg text-center text-slate-700 font-medium ${index !== openIndex && 'text-white'} p-2`} style={{ width: '100%' }}>Option {index + 1} {option.optionname}</h3>
                     <div className='w-[20%] flex justify-items-end'>
                       <button
                         type="button"
@@ -375,19 +452,18 @@ const TourForm = () => {
                                           acc[day.value] = selected.some((sel) => sel.value === day.value) ? 1 : 0;
                                           return acc;
                                         }, {});
-                                        setOperationalDays(operationDays)
                                         field.onChange(operationDays);
                                       }}
                                       value={daysOfWeekOptions.filter((option) => field.value[option.value])}
                                       isMulti
                                     />
                                   )}
-                                  />
-                                    {errors.optionlist?.[index]?.operationDays && (
-                                      <p className="text-red-500 text-xs mt-1">
-                                        {errors.optionlist[index].operationDays.message}
-                                      </p>
-                                    )}
+                                />
+                                {errors.optionlist?.[index]?.operationDays && (
+                                  <p className="text-red-500 text-xs mt-1">
+                                    {errors.optionlist[index].operationDays.message}
+                                  </p>
+                                )}
                               </div>
                             );
                           }
@@ -473,15 +549,14 @@ const TourForm = () => {
               <button
                 type="button"
                 className="text-green-800 border rounded-2xl px-2 py-1 flex mt-4"
-                style={{backgroundColor:'#89CFF0'}}
+                style={{ backgroundColor: '#89CFF0' }}
                 onClick={() => handleAddOption()}
               >
                 Add Option <MdAdd />
               </button>
-            </div>
-
+            </div>          
             {/* Submit Button */}
-            <div className="flex justify-center bg-blue-400 border rounded-2xl" style={{backgroundColor:'#89CFF0'}}>
+            <div className="flex justify-center bg-blue-400 border rounded-2xl" style={{ backgroundColor: '#89CFF0' }}>
               <button
                 type="submit"
                 className="border-black text-green-900 flex font-bold py-2 px-4 rounded"
