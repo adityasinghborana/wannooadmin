@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import Container from '@/app/ui/dashboard/container/Container';
 import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from 'react-icons/md';
 import Select from 'react-select';
-import { GetAllCities, GetAllImages, GetAllTourTypes, UploadTourImage } from '@/lib/services';
+import { AddTour, GetAllCities, GetAllImages, GetAllTourTypes, UploadTourImage } from '@/lib/services';
 import CustomImageUpload from '../../ui/dashboard/ImageModal/ImageUpload';
 import ImageUploadModal from '../../ui/dashboard/SingleImageModal/CustomSingleImageUpload';
 // Define the schema for validation
@@ -216,7 +216,7 @@ const TourForm = () => {
     update(index, newData)
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     let user = JSON.parse(localStorage.getItem('user'))
     let datatopost = {
       ...data,
@@ -225,7 +225,7 @@ const TourForm = () => {
       countryid: countryId,
       citytourtypeid: cityToureTypeId,
     }
-    console.log(datatopost)
+    await AddTour(datatopost)
     // Send data to the API
   };
 
