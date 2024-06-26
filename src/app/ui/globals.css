@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer components{
+    .text-field {
+    @apply w-full p-2 border border-gray-200  mt-1 text-gray-600 rounded-xl ;
+}
+}
+
 :root{
     --bg: #f8f8f8;
     --bgSoft: #ecd6fd;

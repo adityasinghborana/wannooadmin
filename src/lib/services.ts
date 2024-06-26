@@ -66,25 +66,36 @@ export async function getHomePageData() {
 
 export async function getBackgroundImage() {
     try {
-        let res = await axiosInstance.get(`/bgimage`)
+        let res = await axiosInstance.get(`/library`)
         return res?.data
     } catch (error) {
         throw error
+    }   
+}
+export async function deleteBackgroundImage(path: string) {
+    try {
+        const res = await axiosInstance.delete(`/deletelibraryimage`, {
+            data: { url: path } // Assuming the API expects the ID in the request body
+        });
+        return res?.data;
+    } catch (error) {
+        throw error;
     }   
 }
 
-export async function UploadTourImage(image:any) {
-    try {
-        let res = await axiosInstance.post(`/upload`,image)
-        return res?.data
-    } catch (error) {
-        throw error
-    }   
-}
+
+// export async function UploadTourImage(image:any) {
+//     try {
+//         let res = await axiosInstance.post(`/upload`,image)
+//         return res?.data
+//     } catch (error) {
+//         throw error
+//     }   
+// }
 
 export async function UploadBackgroundImage(image:any) {
     try {
-        let res = await axiosInstance.post(`/uploadimage`,image)
+        let res = await axiosInstance.post(`/upload`,image)
         return res?.data
     } catch (error) {
         throw error
