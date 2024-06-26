@@ -51,13 +51,15 @@ const SignupForm = () => {
     } else {
       setErrors({});
       try {
-        createUserWithEmailAndPassword(formData.email, formData.password).then((res)=>{
-          if(res.status === 200){
+        await createUserWithEmailAndPassword(formData.email, formData.password).then((res)=>{
+          console.log(res ,"this is resssposne ")
+          if(res.user.accessToken!==null){
+            console.log("hello this works if ")
             const userData = {
-              "uid": res.uid,
+              "uid": res.user.uid,
               ...formData
             };
-            console.log(userData)
+            console.log(userData.uid,"this is uid ");
             // await SignUpVendor(userData);
           }else{
             console.log(res)
