@@ -83,8 +83,8 @@ const Sidebar = () => {
           icon: <MdHome />,
         },
         {
-          title: "Background Image",
-          path: "/dashboard/homepage/bgImage",
+          title: "Library",
+          path: "/dashboard/homepage/library",
           icon: <MdImage />,
         },
       ],

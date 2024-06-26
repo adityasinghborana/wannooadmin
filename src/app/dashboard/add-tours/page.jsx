@@ -348,7 +348,7 @@ const TourForm = () => {
                     )
                   } else {
                     return (
-                      <div>
+                      <div key={index}>
                         <label htmlFor="image-upload" className="block text-gray-700 text-sm font-bold mb-2">
                           Upload Image
                         </label>

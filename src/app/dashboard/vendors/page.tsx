@@ -11,7 +11,7 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  debounce
+  debounce,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import {
@@ -30,8 +30,8 @@ interface Row {
 }
 
 const Vendor = () => {
-  const Vendors = useAppSelector((state)=> state.vendor.Vendors)
-  console.log(Vendors)
+  const Vendors = useAppSelector((state) => state.vendor.Vendors);
+  console.log(Vendors);
   const [rows, setRows] = useState<Row[]>(Vendors);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
@@ -73,7 +73,7 @@ const Vendor = () => {
         return (
           <button
             onClick={() => handleOpenDialog(params.row)}
-            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+            className="flex-col mt-3 items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
           >
             <MdDelete />
           </button>

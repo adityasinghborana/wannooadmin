@@ -82,7 +82,7 @@ const Home: React.FC = () => {
                     name={key}
                     value={homepagedata[key as keyof HomePageData]}
                     onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
+                    className="w-full text-field"
                   />
                 </div>
               );

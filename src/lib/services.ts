@@ -150,7 +150,7 @@ export async function getEmail() {
 export async function getAllVendors() {
     try {
         let res = await axiosInstance.get(`/allvendors`)
-        return res?.data
+        return res?.data.data
     } catch (error) {
         throw error
     }   
