@@ -23,6 +23,16 @@ const Sidebar = () => {
         icon: <MdSupervisedUserCircle />
       },
       {
+        title: 'Bookings',
+        path:'/dashboard/bookings',
+        icon: <MdSupervisedUserCircle />
+      },
+      {
+        title: 'Vendor-Bookings',
+        path:'/dashboard/vendor-bookings',
+        icon: <MdSupervisedUserCircle />
+      },
+      {
         title: 'Vendors',
         path:'/dashboard/vendors',
         icon: <MdVerifiedUser />

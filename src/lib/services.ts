@@ -252,3 +252,21 @@ export async function AddTour(tourData:any) {
       throw error;
     }
   }
+
+export async function GetAllBookings() {
+    try {
+      const response = await axiosInstance.get('/allbookings');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  export async function GetVendorBookings(vendorId:any) { 
+    try {
+      const response = await axiosInstance.post('/userbookings',vendorId);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }

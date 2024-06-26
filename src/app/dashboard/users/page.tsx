@@ -31,7 +31,6 @@ interface Row {
 
 const User = () => {
   const Users = useAppSelector((state)=> state.user.Users)
-  console.log(Users)
   const [rows, setRows] = useState<Row[]>(Users);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [selectedRow, setSelectedRow] = useState<Row | null>(null);
@@ -86,7 +85,7 @@ const User = () => {
 
   useEffect(()=>{
     Users.length === 0 && getAllUsers().then((data)=>setRows(data))
-  })
+  },[])
 
   const handleOpenDialog = (row?: Row) => {
     row && setSelectedRow(row);
