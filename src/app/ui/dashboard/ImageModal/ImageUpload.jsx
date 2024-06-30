@@ -76,7 +76,7 @@ const CustomImageUpload = ({ onImageSelect, Images }) => {
       <div className="mb-4">
         <div
           onClick={() => setIsModalOpen(true)}
-          className="w-full p-2 border border-gray-300 rounded mt-1 cursor-pointer"
+          className="w-full p-2  border border-gray-300 rounded mt-1 cursor-pointer"
         >
           Select or Upload Images
         </div>

@@ -1,11 +1,16 @@
 import {
+  MdAddCard,
   MdApi,
   MdDashboard,
+  MdEmail,
+  MdEvent,
+  MdFestival,
   MdHome,
   MdImage,
   MdLogout,
   MdPending,
   MdSupervisedUserCircle,
+  MdTour,
   MdVerifiedUser,
   MdWorkHistory,
 } from "react-icons/md";
@@ -49,18 +54,23 @@ const Sidebar = () => {
         {
           title: "Tours",
           path: "/dashboard/tours",
-          icon: <MdWorkHistory />,
+          icon: <MdTour />,
         },
 
         {
           title: "Add Tours",
           path: "/dashboard/add-tours",
-          icon: <MdWorkHistory />,
+          icon: <MdAddCard />,
         },
         {
           title: "Events",
           path: "/dashboard/events",
-          icon: <MdWorkHistory />,
+          icon: <MdFestival />,
+        },
+        {
+          title: "Add Event",
+          path: "/dashboard/addevents",
+          icon: <MdEvent />,
         },
       ],
     },
@@ -70,7 +80,7 @@ const Sidebar = () => {
         {
           title: "Email Templates",
           path: "/dashboard/email",
-          icon: <MdWorkHistory />,
+          icon: <MdEmail />,
         },
       ],
     },
