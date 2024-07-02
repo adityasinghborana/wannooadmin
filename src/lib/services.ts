@@ -257,9 +257,12 @@ export async function getForms() {
 
 export async function AddTour(tourData:any) {
     try {
+        console.log("hello api")
       const response = await axiosInstance.post('/addtour', tourData);
+      console.log(response.data)
       return response.data;
     } catch (error) {
+        console.log(error);
       throw error;
     }
   }

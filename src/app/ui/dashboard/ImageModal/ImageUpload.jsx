@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ImageModal from "./ImageModal";
-import { UploadTourImage } from "@/lib/services";
+import {UploadBackgroundImage } from "@/lib/services";
+import { Button } from "@/components/ui/button";
 
 const CustomImageUpload = ({ onImageSelect, Images }) => {
     const [selectedImages, setSelectedImages] = useState([]);
@@ -54,7 +55,7 @@ const CustomImageUpload = ({ onImageSelect, Images }) => {
         uploadedImages.forEach((image) => {
         formData.append("image", image);
         });
-      await UploadTourImage(formData)
+      await UploadBackgroundImage(formData)
       getImages()}      
       closeModal()
     }
@@ -74,12 +75,9 @@ const CustomImageUpload = ({ onImageSelect, Images }) => {
   
     return (
       <div className="mb-4">
-        <div
-          onClick={() => setIsModalOpen(true)}
-          className="w-full p-2  border border-gray-300 rounded mt-1 cursor-pointer"
-        >
-          Select or Upload Images
-        </div>
+        <Button variant={"outline"}  onClick={() => setIsModalOpen(true)}
+          className="rounded-xl">    Select or Upload Images</Button>
+
   
         {isModalOpen && (
           <ImageModal

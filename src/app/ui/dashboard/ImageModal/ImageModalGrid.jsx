@@ -44,7 +44,7 @@ const ImageModalGrid = ({ images, handleImageSelect, selectedImages, currentPage
         <div key={index} style={style.imageContainer}>
           <img
             src={process.env.NEXT_PUBLIC_URL + image.url}
-            alt={image.name}
+            alt={image.url}
             style={style.image}
             onClick={() => handleImageSelect(image.url)}
           />
