@@ -8,6 +8,7 @@ import {
   Control,
   FieldValues,
   FieldErrors,
+  useFieldArray,
 } from "react-hook-form";
 import * as yup from "yup";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,17 @@ const tourSchema = yup.object().shape({
   isprivate: yup.boolean().required(),
   isonlychild: yup.boolean().required(),
   imagepath: yup.string().required(),
+  optionlist: yup.array().of(
+    yup.object().shape({
+      optionname: yup.string().required(),
+      childage: yup.string().required(),
+      infantage: yup.string().required(),
+      minpax: yup.number().required(),
+      maxpax: yup.number().required(),
+      duration: yup.string().required(),
+      optiondescription: yup.string().required(),
+    })
+  ),
 });
 
 type TourSchemaType = yup.InferType<typeof tourSchema>;
@@ -61,6 +73,20 @@ type ImageUploadModalProps = {
   onConfirm: () => void;
   imagePreview: string | ArrayBuffer | null;
 };
+type Option = {
+  optionname: string;
+  childage: string;
+  infantage: string;
+  minpax: number;
+  maxpax: number;
+  duration: string;
+  optiondescription: string;
+};
+
+type FormValues = {
+  optionlist: Option[];
+};
+
 type SelectFieldProps = {
   control: Control<any>;
   name: string;
@@ -74,6 +100,7 @@ type CheckboxFieldProps = {
   label: string;
   control: Control<any>;
 };
+
 const AddEvents = () => {
   useEffect(() => {
     const fetchData = async () => {
@@ -107,6 +134,17 @@ const AddEvents = () => {
   const form = useForm<TourSchemaType>({
     resolver: yupResolver(tourSchema),
   });
+
+  const {
+    control,
+    formState: { errors },
+  } = form;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "optionlist",
+  });
+
   const handleValueChange = (value: string) => {
     const selectedCity = cities.find((city) => city.CityName === value);
     if (selectedCity) {
@@ -257,6 +295,156 @@ const AddEvents = () => {
                 imagePreview={imagePreview}
               />
             </div>
+          </div>
+
+          <div>
+            {fields.map((item, index) => (
+              <div key={item.id} className="mb-4">
+                <label className="block bg-primary py-4 px-4 text-primary-bodytext rounded-2xl text-gray-700 text-sm font-bold mb-2">
+                  Option {index + 1}
+                </label>
+                <Controller
+                  name={`optionlist.${index}.optionname`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Option Name
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Option Name"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                <Controller
+                  name={`optionlist.${index}.childage`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Child Age
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Child Age"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                {/* Repeat the above Controller structure for other fields like infantage, minpax, maxpax, duration, optiondescription */}
+                <Controller
+                  name={`optionlist.${index}.infantage`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Infant Age
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Infant Age"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                <Controller
+                  name={`optionlist.${index}.minpax`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Min Pax
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Min Pax"
+                        type="number"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                <Controller
+                  name={`optionlist.${index}.maxpax`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Max Pax
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Max Pax"
+                        type="number"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                <Controller
+                  name={`optionlist.${index}.duration`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Duration
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Duration"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                <Controller
+                  name={`optionlist.${index}.optiondescription`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Option Description
+                      </label>
+                      <input
+                        {...field}
+                        placeholder="Option Description"
+                        className="text-fieldutilities"
+                      />
+                    </div>
+                  )}
+                />
+                <Button
+                  className="border-primary rounded-2xl text-white"
+                  variant="default"
+                  onClick={() => remove(index)}
+                >
+                  Remove Option
+                </Button>
+              </div>
+            ))}
+            <Button
+              className="border-primary rounded-2xl"
+              variant="outline"
+              type="button"
+              onClick={() =>
+                append({
+                  optionname: "",
+                  childage: "",
+                  infantage: "",
+                  minpax: 0,
+                  maxpax: 0,
+                  duration: "",
+                  optiondescription: "",
+                })
+              }
+            >
+              Add Option
+            </Button>
           </div>
           <Button type="submit">Submit</Button>
         </form>

@@ -245,8 +245,7 @@ const TourForm = () => {
 
   const onSubmit = async (data) => {
     let user = JSON.parse(localStorage.getItem("user"));
-
-    console.log(data.TimeSlot);
+    console.log(data);
     console.log(user);
     let datatopost = {
       ...data,
@@ -255,7 +254,7 @@ const TourForm = () => {
       countryid: countryId,
       citytourtypeid: cityToureTypeId,
     };
-    console.log(datatopost.data);
+    console.log(datatopost);
     await AddTour(datatopost);
     // Send data to the API
   };
