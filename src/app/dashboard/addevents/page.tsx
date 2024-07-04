@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import {
   useForm,
   SubmitHandler,
@@ -50,15 +51,30 @@ const tourSchema = yup.object().shape({
   isonlychild: yup.boolean().required(),
   imagepath: yup.string().required(),
   optionlist: yup.array().of(
-    yup.object().shape({
-      optionname: yup.string().required(),
-      childage: yup.string().required(),
-      infantage: yup.string().required(),
-      minpax: yup.number().required(),
-      maxpax: yup.number().required(),
-      duration: yup.string().required(),
-      optiondescription: yup.string().required(),
-    })
+    yup
+      .object()
+      .shape({
+        optionname: yup.string().required(),
+        childage: yup.string().required(),
+        infantage: yup.string().required(),
+        minpax: yup.number().required(),
+        maxpax: yup.number().required(),
+        duration: yup.string().required(),
+        optiondescription: yup.string().required(),
+        operationDays: yup
+          .object()
+          .shape({
+            monday: yup.number().required(),
+            tuesday: yup.number().required(),
+            wednesday: yup.number().required(),
+            thursday: yup.number().required(),
+            friday: yup.number().required(),
+            saturday: yup.number().required(),
+            sunday: yup.number().required(),
+          })
+          .required(),
+      })
+      .required()
   ),
 });
 
@@ -73,19 +89,25 @@ type ImageUploadModalProps = {
   onConfirm: () => void;
   imagePreview: string | ArrayBuffer | null;
 };
-type Option = {
-  optionname: string;
-  childage: string;
-  infantage: string;
-  minpax: number;
-  maxpax: number;
-  duration: string;
-  optiondescription: string;
-};
-
-type FormValues = {
-  optionlist: Option[];
-};
+// type Option = {
+//   optionname: string;
+//   childage: string;
+//   infantage: string;
+//   minpax: number;
+//   maxpax: number;
+//   duration: string;
+//   optiondescription: string;
+//   operationDays: OperationDays;
+// // };
+// type OperationDays = {
+//   monday: number;
+//   tuesday: number;
+//   wednesday: number;
+//   thursday: number;
+//   friday: number;
+//   saturday: number;
+//   sunday: number;
+// };
 
 type SelectFieldProps = {
   control: Control<any>;
@@ -100,6 +122,16 @@ type CheckboxFieldProps = {
   label: string;
   control: Control<any>;
 };
+
+const daysOfWeekOptions = [
+  { value: "monday", label: "Monday" },
+  { value: "tuesday", label: "Tuesday" },
+  { value: "wednesday", label: "Wednesday" },
+  { value: "thursday", label: "Thursday" },
+  { value: "friday", label: "Friday" },
+  { value: "saturday", label: "Saturday" },
+  { value: "sunday", label: "Sunday" },
+];
 
 const AddEvents = () => {
   useEffect(() => {
@@ -182,6 +214,26 @@ const AddEvents = () => {
       reader.readAsDataURL(file);
     }
   };
+  const handleAddOption = () => {
+    append({
+      optionname: "",
+      childage: "",
+      infantage: "",
+      minpax: 0,
+      maxpax: 0,
+      duration: "",
+      optiondescription: "",
+      operationDays: {
+        monday: 0,
+        tuesday: 0,
+        wednesday: 0,
+        thursday: 0,
+        friday: 0,
+        saturday: 0,
+        sunday: 0,
+      },
+    });
+  };
 
   const handleConfirm = async () => {
     if (!selectedImage) return;
@@ -211,6 +263,7 @@ const AddEvents = () => {
               name="countryname"
               label="Country Name"
               placeholder="Select Country"
+              onValueChange={handleValueChange}
               options={countries.map((country) => ({
                 key: country.CountryId,
                 value: country.CountryName,
@@ -222,6 +275,7 @@ const AddEvents = () => {
               name="cityname"
               label="City Name"
               placeholder="Select City"
+              onValueChange={handleValueChange}
               options={cities.map((city) => ({
                 key: city.CityId,
                 value: city.CityName,
@@ -233,6 +287,7 @@ const AddEvents = () => {
               name="citytourtype"
               label="Tour Type"
               placeholder="Select Tour Type"
+              onValueChange={handleValueChange}
               options={tourType.map((type) => ({
                 key: type.cityTourType,
                 value: type.cityTourType,
@@ -300,12 +355,12 @@ const AddEvents = () => {
           <div>
             {fields.map((item, index) => (
               <div key={item.id} className="mb-4">
-                <label className="block bg-primary py-4 px-4 text-primary-bodytext rounded-2xl text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
                   Option {index + 1}
                 </label>
                 <Controller
                   name={`optionlist.${index}.optionname`}
-                  control={form.control}
+                  control={control}
                   render={({ field }) => (
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -316,12 +371,17 @@ const AddEvents = () => {
                         placeholder="Option Name"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.optionname && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].optionname?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
                 <Controller
                   name={`optionlist.${index}.childage`}
-                  control={form.control}
+                  control={control}
                   render={({ field }) => (
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -332,13 +392,17 @@ const AddEvents = () => {
                         placeholder="Child Age"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.childage && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].childage?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
-                {/* Repeat the above Controller structure for other fields like infantage, minpax, maxpax, duration, optiondescription */}
                 <Controller
                   name={`optionlist.${index}.infantage`}
-                  control={form.control}
+                  control={control}
                   render={({ field }) => (
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -349,12 +413,17 @@ const AddEvents = () => {
                         placeholder="Infant Age"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.infantage && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].infantage?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
                 <Controller
                   name={`optionlist.${index}.minpax`}
-                  control={form.control}
+                  control={control}
                   render={({ field }) => (
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -366,12 +435,17 @@ const AddEvents = () => {
                         type="number"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.minpax && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].minpax?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
                 <Controller
                   name={`optionlist.${index}.maxpax`}
-                  control={form.control}
+                  control={control}
                   render={({ field }) => (
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -383,12 +457,17 @@ const AddEvents = () => {
                         type="number"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.maxpax && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].maxpax?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
                 <Controller
                   name={`optionlist.${index}.duration`}
-                  control={form.control}
+                  control={control}
                   render={({ field }) => (
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -399,6 +478,11 @@ const AddEvents = () => {
                         placeholder="Duration"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.duration && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].duration?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
@@ -415,21 +499,33 @@ const AddEvents = () => {
                         placeholder="Option Description"
                         className="text-fieldutilities"
                       />
+                      {errors.optionlist?.[index]?.optiondescription && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.optionlist[index].optiondescription?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 />
-                <Button
-                  className="border-primary rounded-2xl text-white"
-                  variant="default"
-                  onClick={() => remove(index)}
-                >
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Operation Days
+                  </label>
+                  {daysOfWeekOptions.map((day) => (
+                    <CheckboxField2
+                      key={day.value}
+                      name={`optionlist[${index}].operationDays.${day.value}`}
+                      label={day.label}
+                      control={form.control}
+                    />
+                  ))}
+                </div>
+                <button type="button" onClick={() => remove(index)}>
                   Remove Option
-                </Button>
+                </button>
               </div>
             ))}
-            <Button
-              className="border-primary rounded-2xl"
-              variant="outline"
+            <button
               type="button"
               onClick={() =>
                 append({
@@ -440,11 +536,20 @@ const AddEvents = () => {
                   maxpax: 0,
                   duration: "",
                   optiondescription: "",
+                  operationDays: {
+                    monday: 0,
+                    tuesday: 0,
+                    wednesday: 0,
+                    thursday: 0,
+                    friday: 0,
+                    saturday: 0,
+                    sunday: 0,
+                  },
                 })
               }
             >
               Add Option
-            </Button>
+            </button>
           </div>
           <Button type="submit">Submit</Button>
         </form>
@@ -499,6 +604,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
           <Select
             onValueChange={(value) => {
               if (onValueChange) onValueChange(value);
+
               field.onChange(value);
             }}
             defaultValue={field.value}
@@ -519,6 +625,44 @@ const SelectField: React.FC<SelectFieldProps> = ({
         </FormControl>
         <FormMessage />
       </FormItem>
+    )}
+  />
+);
+const CheckboxField2: React.FC<CheckboxFieldProps> = ({
+  name,
+  label,
+  control,
+}) => (
+  <Controller
+    name={name}
+    control={control}
+    render={({ field }) => (
+      <div>
+        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md">
+          <FormControl>
+            <Checkbox
+              checked={field.value === 1} // Check if field value is 1
+              onCheckedChange={(isChecked) => {
+                field.onChange(isChecked ? 1 : 0); // Update to 1 if checked, otherwise 0
+              }}
+            />
+          </FormControl>
+          <div className="space-y-1 leading-none">
+            <FormLabel>{label}</FormLabel>
+          </div>
+        </FormItem>
+        {/* <label>
+          <input
+            type="checkbox"
+            {...field}
+            onChange={(e) => {
+              const isChecked = e.target.checked;
+              field.onChange(isChecked ? 1 : 0); // Update to 1 if checked, otherwise 0
+            }}
+          />
+          {label}
+        </label> */}
+      </div>
     )}
   />
 );

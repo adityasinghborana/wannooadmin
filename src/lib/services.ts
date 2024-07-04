@@ -98,6 +98,7 @@ export async function UploadBackgroundImage(image:any) {
         let res = await axiosInstance.post(`/upload`,image)
         return res?.data
     } catch (error) {
+        console.log(error)
         throw error
     }   
 }
