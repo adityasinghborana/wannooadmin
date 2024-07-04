@@ -261,6 +261,7 @@ const TourForm = () => {
 
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
+    console.log('first')
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -453,23 +454,31 @@ const TourForm = () => {
                                 <input
                                   type="file"
                                   id="image-upload"
+                                  value={''}
                                   style={{ display: "none" }}
-                                  onChange={(e) => handleImageSelect(e)}
-                                  {...field}
+                                  onChange={(e) => {
+                                    handleImageSelect(e);
+                                    field.onChange(e); // Update the field value
+                                  }}
                                 />
 
                                 <Button
                                   variant={"outline"}
+                                  type="button"
                                   className="bg-primary text-white py-2 px-4 rounded"
                                   onClick={() =>
-                                    document
-                                      .getElementById("image-upload")
-                                      .click()
+                                    document.getElementById("image-upload").click()
                                   }
                                 >
                                   {" "}
                                   Upload Thumbnail
                                 </Button>
+                                <ImageUploadModal
+                                  isOpen={isModalOpen}
+                                  onClose={() => setIsModalOpen(false)}
+                                  onConfirm={handleConfirm}
+                                  imagePreview={imagePreview}
+                                />
                               </div>
                             )}
                           />
@@ -478,13 +487,6 @@ const TourForm = () => {
                               {errors["image-upload"].message}
                             </p>
                           )}
-
-                          <ImageUploadModal
-                            isOpen={isModalOpen}
-                            onClose={() => setIsModalOpen(false)}
-                            onConfirm={handleConfirm}
-                            imagePreview={imagePreview}
-                          />
                         </div>
                       );
                     }
@@ -531,9 +533,8 @@ const TourForm = () => {
                 <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
                   <div className="flex items-center w-full rounded-2xl px-3 mb-4 bg-primary text-primary-bodytext">
                     <h3
-                      className={`text-lg text-center text-primary-bodytext font-medium ${
-                        index !== openIndex && "text-primary-bodytext"
-                      } p-2`}
+                      className={`text-lg text-center text-primary-bodytext font-medium ${index !== openIndex && "text-primary-bodytext"
+                        } p-2`}
                       style={{ width: "100%" }}
                     >
                       Option {index + 1} {option.optionname}
@@ -573,9 +574,8 @@ const TourForm = () => {
                             return (
                               <div
                                 key={optionIndex}
-                                className={`flex space-x-2 ${
-                                  optionKey === "operationDays" && "col-span-3 "
-                                }`}
+                                className={`flex space-x-2 ${optionKey === "operationDays" && "col-span-3 "
+                                  }`}
                               >
                                 <label
                                   htmlFor={`optionlist[${index}].${optionKey}`}
@@ -736,7 +736,6 @@ const TourForm = () => {
             {/* Submit Button */}
             <div className="flex justify-center w-full">
               <Button
-                onClick={(e) => onSubmit()}
                 variant="secondary"
                 className="bg-primary w-1/2 text-primary-bodytext"
                 type="submit"
