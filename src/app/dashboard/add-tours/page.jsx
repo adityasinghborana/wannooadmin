@@ -245,8 +245,6 @@ const TourForm = () => {
 
   const onSubmit = async (data) => {
     let user = JSON.parse(localStorage.getItem("user"));
-    console.log(data);
-    console.log(user);
     let datatopost = {
       ...data,
       vendoruid: user?.uid,
@@ -254,14 +252,12 @@ const TourForm = () => {
       countryid: countryId,
       citytourtypeid: cityToureTypeId,
     };
-    console.log(datatopost);
     await AddTour(datatopost);
     // Send data to the API
   };
 
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
-    console.log('first')
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -277,9 +273,8 @@ const TourForm = () => {
     let formData = new FormData();
     formData.append("image", selectedImage);
     let imgData = await UploadBackgroundImage(formData);
-    console.log(imgData.image.url);
     // Assuming you're storing image paths in a field named "imagepaths"
-    setValue("imagepath", imgData?.image?.url);
+    setValue("imagepath", imgData?.path);
     setIsModalOpen(false);
   };
 

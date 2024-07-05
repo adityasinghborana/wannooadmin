@@ -4,8 +4,6 @@ import React, { useEffect } from 'react';
 import Modal from 'react-modal';
 
 const ImageUploadModal = ({ isOpen, onClose, imagePreview, onConfirm }) => {
-  
-    console.log(isOpen)
   return (
     <Modal
       isOpen={isOpen}
