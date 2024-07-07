@@ -248,8 +248,8 @@ const TourForm = () => {
     let datatopost = {
       ...data,
       vendoruid: user?.uid,
-      cityid: cityId,
-      countryid: countryId,
+      cityid: parseInt(cityId),
+      countryid: 13063,
       citytourtypeid: cityToureTypeId,
     };
     await AddTour(datatopost);
