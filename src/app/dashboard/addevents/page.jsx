@@ -101,7 +101,7 @@ const EventForm = () => {
       lastbookingtime: "",
       eventSelling: false,
       ischildallowed: false,
-      isadultallowed: false,
+      isadultallowed: true,
       isinfantallowed: false,
       duration: "",
       eventoptions: [
@@ -233,16 +233,16 @@ const EventForm = () => {
     let user = JSON.parse(localStorage.getItem("user"));
     const formattedData = {
       vendoruid: user?.uid,
-      isVisible: data?.isVisible,
-      isVisibleHome: data?.isVisibleHome,
+      isVisible: data?.isVisible === 'true' ? true : false,
+      isVisibleHome: data?.isVisibleHome === 'true' ? true : false,
       cityId: data?.cityId,
       eventName: data?.eventName,
       duration: data?.duration,
       imagePath: data?.imagePath,
       eventType: data?.eventType,
-      isSlot: data?.isSlot,
-      onlyChild: data?.onlyChild,
-      recommended: data?.recommended,
+      isSlot: data?.isSlot === 'true' ? true : false,
+      onlyChild: data?.onlyChild === 'true' ? true : false,
+      recommended: data?.recommended === 'true' ? true : false,
       eventDetail: {
         eventName: data?.eventDetail?.eventName,
         description: data?.eventDetail?.description,
@@ -255,10 +255,10 @@ const EventForm = () => {
         artistname: data?.eventDetail?.artistname,
         artistimage: data?.eventDetail?.artistimage,
         lastbookingtime: data?.eventDetail?.lastbookingtime,
-        eventSelling: data?.eventDetail?.eventSelling,
-        ischildallowed: data?.eventDetail?.ischildallowed,
-        isadultallowed: data?.eventDetail?.isadultallowed,
-        isinfantallowed: data?.eventDetail?.isinfantallowed,
+        eventSelling: data?.eventSelling === 'true' ? true : false,
+        ischildallowed: data?.ischildallowed === 'true' ? true : false,
+        isadultallowed: data?.isadultallowed === 'true' ? true : false,
+        isinfantallowed: data?.isinfantallowed === 'true' ? true : false,
         duration: data?.eventDetail?.duration,
         images: data?.eventDetail?.images?.map((image) => ({
           imagePath: image,
@@ -279,12 +279,32 @@ const EventForm = () => {
         }))
       }
     }
+    console.log(data)
+    console.log(formattedData)
     try {
     await addEvent(formattedData);
-    toast.success("Event added successfully");
-    router.push("/admin/events");
+    toast.success('Event added successfully!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
   } catch (error) {
-    toast.error(error.message);
+    toast.error(`${error.message}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+      });
   }
   };
 

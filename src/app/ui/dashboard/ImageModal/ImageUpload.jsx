@@ -75,7 +75,7 @@ const CustomImageUpload = ({ onImageSelect, Images }) => {
   
     return (
       <div className="mb-4">
-        <Button variant={"outline"}  onClick={() => setIsModalOpen(true)}
+        <Button variant={"outline"} type="button"  onClick={() => setIsModalOpen(true)}
           className="rounded-xl">    Select or Upload Images</Button>
 
   
