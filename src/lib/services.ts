@@ -293,3 +293,12 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+  
+  export async function GetEventTypes() { 
+    try {
+      const response = await axiosInstance.get('/eventtypes');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
