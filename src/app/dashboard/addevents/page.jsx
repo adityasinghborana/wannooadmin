@@ -1,22 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import Container from "@/app/ui/dashboard/container/Container";
-import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
-import Select from "react-select";
+import { Button } from "@/components/ui/button";
 import {
-  AddTour,
   GetAllCities,
   GetAllImages,
-  GetAllTourTypes,
   GetEventTypes,
   UploadBackgroundImage,
+  addEvent
 } from "@/lib/services"; //Todo make Upload Tour Image function in backend
+import { useEffect, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
+import Select from "react-select";
+import { toast } from 'react-toastify';
+import * as yup from "yup";
 import CustomImageUpload from "../../ui/dashboard/ImageModal/ImageUpload";
 import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
-import { Button } from "@/components/ui/button";
 
 // Define the schema for validation
 const eventSchema = yup.object().shape({
@@ -132,14 +131,8 @@ const EventForm = () => {
   };
 
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm({
-    resolver: yupResolver(eventSchema),
-    defaultEventValues,
+  const { control, handleSubmit, formState: { errors }, setValue } = useForm({
+    defaultValues: defaultEventValues,
   });
 
   const {
@@ -238,15 +231,61 @@ const EventForm = () => {
 
   const onSubmit = async (data) => {
     let user = JSON.parse(localStorage.getItem("user"));
-    let datatopost = {
-      ...data,
+    const formattedData = {
       vendoruid: user?.uid,
-      cityid: cityId,
-      countryid: countryId,
-      citytourtypeid: cityToureTypeId,
-    };
-    await AddTour(datatopost);
-    // Send data to the API
+      isVisible: data?.isVisible,
+      isVisibleHome: data?.isVisibleHome,
+      cityId: data?.cityId,
+      eventName: data?.eventName,
+      duration: data?.duration,
+      imagePath: data?.imagePath,
+      eventType: data?.eventType,
+      isSlot: data?.isSlot,
+      onlyChild: data?.onlyChild,
+      recommended: data?.recommended,
+      eventDetail: {
+        eventName: data?.eventDetail?.eventName,
+        description: data?.eventDetail?.description,
+        date: data?.eventDetail?.date,
+        location: data?.eventDetail?.location,
+        googlemapurl: data?.eventDetail?.googlemapurl,
+        minage: data?.eventDetail?.minage,
+        moreinfo: data?.eventDetail?.moreinfo,
+        ticketinfo: data?.eventDetail?.ticketinfo,
+        artistname: data?.eventDetail?.artistname,
+        artistimage: data?.eventDetail?.artistimage,
+        lastbookingtime: data?.eventDetail?.lastbookingtime,
+        eventSelling: data?.eventDetail?.eventSelling,
+        ischildallowed: data?.eventDetail?.ischildallowed,
+        isadultallowed: data?.eventDetail?.isadultallowed,
+        isinfantallowed: data?.eventDetail?.isinfantallowed,
+        duration: data?.eventDetail?.duration,
+        images: data?.eventDetail?.images?.map((image) => ({
+          imagePath: image,
+        })),
+        eventoptions: data?.optionlist?.map((option) => ({
+          optionname: option.optionname,
+          adultprice: option.adultprice,
+          childprice: option.childprice,
+          infantprice: option.infantprice,
+          optiondescription: option.optiondescription,
+          available: option.available,
+          timeslots: option.timeslots.map((timeSlot) => ({
+            timeSlot: timeSlot.timeSlot,
+            available: timeSlot.available,
+            adultPrice: timeSlot.adultPrice,
+            childPrice: timeSlot.childPrice,
+          })),
+        }))
+      }
+    }
+    try {
+    await addEvent(formattedData);
+    toast.success("Event added successfully");
+    router.push("/admin/events");
+  } catch (error) {
+    toast.error(error.message);
+  }
   };
 
   const handleImageSelect = (e) => {
@@ -267,12 +306,12 @@ const EventForm = () => {
     formData.append("image", selectedImage);
     let imgData = await UploadBackgroundImage(formData);
     // Assuming you're storing image paths in a field named "imagepaths"
-    setValue("imagepath", imgData?.path);
+    setValue("imagePath", imgData?.path);
     setIsModalOpen(false);
   };
 
   useEffect(() => {
-    setValue("imagepaths", [...imagepaths]);
+    setValue("eventDetail.images", [...imagepaths]);
   }, [imagepaths]);
 
   return (
@@ -388,34 +427,57 @@ const EventForm = () => {
                       </div>
                     );
                   } else if (["imagePath"].includes(key)) {
-                    if (key === "imagepaths") {
+                    if (key === "imagePath") {
                       return (
-                        <div key={index} className="mb-4">
+                        <div key={index}>
                           <label
-                            htmlFor={key}
+                            htmlFor="image-upload"
                             className="block text-gray-700 text-sm font-bold mb-2"
                           >
-                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                            Upload Image
                           </label>
-                          {
-                            <Controller
-                              name={key}
-                              control={control}
-                              render={({ field }) => (
-                                <CustomImageUpload
-                                  onImageSelect={setImagePaths}
-                                  Images={GetAllImages}
+                          <Controller
+                            name="image-upload"
+                            control={control}
+                            render={({ field }) => (
+                              <div>
+                                <input
+                                  type="file"
+                                  id="image-upload"
+                                  value={''}
+                                  style={{ display: "none" }}
+                                  onChange={(e) => {
+                                    handleImageSelect(e);
+                                  }}
                                 />
-                              )}
-                            />
-                          }
-                          {errors[key]?.message && (
+
+                                <Button
+                                  variant={"outline"}
+                                  type="button"
+                                  className="bg-primary text-white py-2 px-4 rounded"
+                                  onClick={() =>
+                                    document.getElementById("image-upload").click()
+                                  }
+                                >
+                                  {" "}
+                                  Upload Thumbnail
+                                </Button>
+                                <ImageUploadModal
+                                  isOpen={isModalOpen}
+                                  onClose={() => setIsModalOpen(false)}
+                                  onConfirm={handleConfirm}
+                                  imagePreview={imagePreview}
+                                />
+                              </div>
+                            )}
+                          />
+                          {errors["image-upload"] && (
                             <p className="text-red-500 text-xs mt-1">
-                              {errors[key].message}
+                              {errors["image-upload"].message}
                             </p>
                           )}
                         </div>
-                      );
+                      );  
                     }
                   } else if (key === "eventDetail") {
                     return (
@@ -425,56 +487,32 @@ const EventForm = () => {
                           if(detailKey === 'eventoptions') return null;
                           if (detailKey === "images") {
                             return (
-                              <div key={index}>
+                              <div key={index} className="mb-4">
                                 <label
-                                  htmlFor="image-upload"
+                                  htmlFor={detailKey}
                                   className="block text-gray-700 text-sm font-bold mb-2"
                                 >
-                                  Upload Image
+                                  {key.charAt(0).toUpperCase() + key.slice(1)}
                                 </label>
-                                <Controller
-                                  name="image-upload"
-                                  control={control}
-                                  render={({ field }) => (
-                                    <div>
-                                      <input
-                                        type="file"
-                                        id="image-upload"
-                                        value={''}
-                                        style={{ display: "none" }}
-                                        onChange={(e) => {
-                                          handleImageSelect(e);
-                                          field.onChange(e); // Update the field value
-                                        }}
+                                {
+                                  <Controller
+                                    name={detailKey}
+                                    control={control}
+                                    render={({ field }) => (
+                                      <CustomImageUpload
+                                        onImageSelect={setImagePaths}
+                                        Images={GetAllImages}
                                       />
-
-                                      <Button
-                                        variant={"outline"}
-                                        type="button"
-                                        className="bg-primary text-white py-2 px-4 rounded"
-                                        onClick={() =>
-                                          document.getElementById("image-upload").click()
-                                        }
-                                      >
-                                        {" "}
-                                        Upload Thumbnail
-                                      </Button>
-                                      <ImageUploadModal
-                                        isOpen={isModalOpen}
-                                        onClose={() => setIsModalOpen(false)}
-                                        onConfirm={handleConfirm}
-                                        imagePreview={imagePreview}
-                                      />
-                                    </div>
-                                  )}
-                                />
-                                {errors["image-upload"] && (
+                                    )}
+                                  />
+                                }
+                                {errors[detailKey]?.message && (
                                   <p className="text-red-500 text-xs mt-1">
-                                    {errors["image-upload"].message}
+                                    {errors[detailKey].message}
                                   </p>
                                 )}
                               </div>
-                            );
+                            );                            
                           } else if(
                             [
                               "eventSelling",
@@ -752,7 +790,7 @@ const EventForm = () => {
                                         rules={{ required: true }}
                                         render={({ field }) => (
                                           <input
-                                            value={field.value || ""}
+                                              value={field.value || ""}
                                             type="text"
                                             {...field}
                                             className="text-fieldutilities"

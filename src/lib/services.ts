@@ -302,3 +302,12 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+  
+  export async function addEvent(dataToPost:any) { 
+    try {
+      const response = await axiosInstance.post('/addevent', dataToPost);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
