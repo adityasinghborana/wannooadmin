@@ -1,34 +1,34 @@
-'use client'
+"use client";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "../ui/dashboard/navbar/Navbar";
 import Sidebar from "../ui/dashboard/sidebar/Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
 import { useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-
+import { ToastContainer, toast } from "react-toastify";
 
 const DashboardLayout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const pathName = usePathname();
-  const router = useRouter()
+  const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
-  
-  if (!user && !loading && !error && !pathName.includes('/signIn')) {
-    router.replace('/signIn');
+
+  if (!user && !loading && !error && !pathName.includes("/signIn")) {
+    router.replace("/signIn");
     return null; // Render nothing while redirecting
   }
 
-  if(user){
+  if (user) {
     return (
-      <div className="flex md:flex-row md:gap-5 min-w-full overflow-hidden" >
+      <div className="flex md:flex-row md:gap-5 min-w-full overflow-hidden">
         {pathName.includes("tours/") ? (
-          <div className="flex flex-col w-full h-full">
-            {children}
-          </div>
+          <div className="flex flex-col w-full h-full">{children}</div>
         ) : (
-          <div className="flex flex-row w-full" style={{maxHeight:"calc(100vh)"}}>
+          <div
+            className="flex flex-row w-full"
+            style={{ maxHeight: "calc(100vh)" }}
+          >
             <div className="shadow-2xl w-full pr-2 md:w-1/6 bg-primary-foreground hidden md:block rounded-r-3xl">
               <Sidebar />
             </div>
@@ -39,7 +39,7 @@ const DashboardLayout: React.FC<{
               </div>
             </div>
           </div>
-        )}        
+        )}
       </div>
     );
   }

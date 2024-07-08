@@ -242,7 +242,7 @@ const TourForm = () => {
     newData.timeSlots.splice(index, 1);
     update(index, newData);
   };
-
+  const excludedFields = ["bookingResult", "adultRate", "childRate"];
   const onSubmit = async (data) => {
     let user = JSON.parse(localStorage.getItem("user"));
     let datatopost = {
@@ -449,7 +449,7 @@ const TourForm = () => {
                                 <input
                                   type="file"
                                   id="image-upload"
-                                  value={''}
+                                  value={""}
                                   style={{ display: "none" }}
                                   onChange={(e) => {
                                     handleImageSelect(e);
@@ -462,7 +462,9 @@ const TourForm = () => {
                                   type="button"
                                   className="bg-primary text-white py-2 px-4 rounded"
                                   onClick={() =>
-                                    document.getElementById("image-upload").click()
+                                    document
+                                      .getElementById("image-upload")
+                                      .click()
                                   }
                                 >
                                   {" "}
@@ -528,8 +530,9 @@ const TourForm = () => {
                 <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
                   <div className="flex items-center w-full rounded-2xl px-3 mb-4 bg-primary text-primary-bodytext">
                     <h3
-                      className={`text-lg text-center text-primary-bodytext font-medium ${index !== openIndex && "text-primary-bodytext"
-                        } p-2`}
+                      className={`text-lg text-center text-primary-bodytext font-medium ${
+                        index !== openIndex && "text-primary-bodytext"
+                      } p-2`}
                       style={{ width: "100%" }}
                     >
                       Option {index + 1} {option.optionname}
@@ -569,8 +572,9 @@ const TourForm = () => {
                             return (
                               <div
                                 key={optionIndex}
-                                className={`flex space-x-2 ${optionKey === "operationDays" && "col-span-3 "
-                                  }`}
+                                className={`flex space-x-2 ${
+                                  optionKey === "operationDays" && "col-span-3 "
+                                }`}
                               >
                                 <label
                                   htmlFor={`optionlist[${index}].${optionKey}`}

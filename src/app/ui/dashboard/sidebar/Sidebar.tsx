@@ -119,21 +119,21 @@ const Sidebar = () => {
         },
       ],
     },
-    // {
-    //   title:'Bookings',
-    //   list:[
-    //     {
-    //       title: 'Confirmed Bookings',
-    //       path:'/dashboard/tours',
-    //       icon: <MdWorkHistory />
-    //     },
-    //     {
-    //       title: 'Canceled Bookings ',
-    //       path:'/dashboard/tours',
-    //       icon: <MdWorkHistory />
-    //     },
-    //   ]
-    // },
+    {
+      title: "Bookings",
+      list: [
+        {
+          title: "Bookings",
+          path: "/dashboard/bookings",
+          icon: <MdWorkHistory />,
+        },
+        // {
+        //   title: "Canceled Bookings ",
+        //   path: "/dashboard/tours",
+        //   icon: <MdWorkHistory />,
+        // },
+      ],
+    },
     {
       title: "API",
       list: [

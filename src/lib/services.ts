@@ -321,9 +321,12 @@ export async function GetAllBookings() {
     }
   }
   
-  export async function addEvent(dataToPost:any) { 
+ 
+  
+  export async function GetBookingDetail(id:number) { 
+    console.log(id);
     try {
-      const response = await axiosInstance.post('/addevent', dataToPost);
+      const response = await axiosInstance.post('/bookingdetail', { id });
       return response.data;
     } catch (error) {
       throw error;
