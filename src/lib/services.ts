@@ -293,9 +293,19 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+  
   export async function Getevents() { 
     try {
       const response = await axiosInstance.get('/events');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  export async function GetEventByID(Id:any) { 
+    try {
+      const response = await axiosInstance.post('/event', Id);
       return response.data;
     } catch (error) {
       throw error;
