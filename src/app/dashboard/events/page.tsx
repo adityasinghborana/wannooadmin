@@ -37,7 +37,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="scrollable-container my-10 bg-white rounded-2xl px-6">
+    <div className="scrollable-container my-10 bg-white rounded-2xl px-6 container" >
       <DataTable columns={columns} data={events} />
     </div>
   );

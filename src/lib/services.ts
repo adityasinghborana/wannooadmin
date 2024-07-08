@@ -147,6 +147,14 @@ export async function getEmail() {
         throw error
     }   
 }
+export async function updateEmail(dataToPost:any) {
+    try {
+        let res = await axiosInstance.patch(`/update-email`,dataToPost)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
 
 export async function getAllVendors() {
     try {
