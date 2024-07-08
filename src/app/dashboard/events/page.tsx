@@ -1,13 +1,10 @@
 "use client";
 // App.tsx
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Event } from "../../../lib/interfaces/eventinterface";
-import EventComponent from "../../../components/eventcomponent";
 import { Getevents } from "@/lib/services";
+import React, { useEffect, useState } from "react";
+import { Event } from "../../../lib/interfaces/eventinterface";
 import { columns } from "./columns";
 import { DataTable } from "./datatable";
-import { Container } from "@mui/material";
 
 const App: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);

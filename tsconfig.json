@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/dashboard/bookings/page.jsx", "src/app/signUp/page.jsx", "src/app/dashboard/addevents/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/dashboard/bookings/page.jsx", "src/app/signUp/page.jsx", "src/app/dashboard/addevents/page.jsx", "src/app/dashboard/events/[id]/page.jsx"],
   "exclude": ["node_modules"]
 }

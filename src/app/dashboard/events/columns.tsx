@@ -75,18 +75,18 @@ export const columns: ColumnDef<Event, any>[] = [
     },
   },
   {
-    accessorKey: "Actions",
-    cell: (row: any) => (
-      <>
-      <div className="flex max-w-full gap-2 h-full items-center justify-center">
+    accessorKey: 'Actions',
+    cell: (row: any) => {
+      return (
+        <div className="flex max-w-full gap-2 h-full items-center justify-center">
           <Link
-            href={`/dashboard/events/${row?.row?.id}`}
+            href={`/dashboard/events/${row?.row?.original?.eventdetail[0]?.id}`}
             className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
           >
             <MdEdit />
           </Link>
           <Link
-            href={`/dashboard/events/view${row?.row?.id}`}
+            href={`/dashboard/events/view?data=${row?.row?.original?.Id}`}
             className="flex items-center justify-center px-2 py-1 rounded bg-yellow-300 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
           >
             <MdViewAgenda />
@@ -95,8 +95,8 @@ export const columns: ColumnDef<Event, any>[] = [
             <MdDelete />
           </button>
         </div>
-      </>
-    ),
+      );
+    },
   },
 
   // Add more columns as needed for your Event model
