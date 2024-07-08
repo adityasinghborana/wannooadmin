@@ -24,6 +24,7 @@ const ImageModalContent = ({ availableImages, handleImageSelect, selectedImages,
           Select or Upload Images
         </h2>
         <button
+          type="button"
           onClick={() => setIsModalOpen()}
           className="text-gray-500 hover:text-gray-700"
         >

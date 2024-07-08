@@ -2,7 +2,9 @@
 import React, { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/config';
-import { SignUpVendor } from "@/lib/services";
+import { SignUpVendor, UploadBackgroundImage } from "@/lib/services";
+import ImageUploadModal from "../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
+import { Button } from "@/components/ui/button";
 
 const initialFormData = {
   username: "",
@@ -20,18 +22,28 @@ const initialFormData = {
   mobile: "",
   document_tradelicense: null,
   document_other: null,
+  document_bank: null,
+  document_vat: null,
 };
 
 const SignupForm = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth);
+  const [isModalOpen, setIsModalOpen] = useState({
+    document_tradelicense: false,
+    document_other: false,
+    document_bank: false,
+    document_vat: false,
+  });
+  const [selectedImage, setSelectedImage] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,      
+      [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,
     }));
   };
 
@@ -39,10 +51,10 @@ const SignupForm = () => {
     e.preventDefault();
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
-      if(key !== 'isAdmin' && key !== 'isVendor' ){
+      if (key !== 'isAdmin' && key !== 'isVendor') {
         if (!formData[key]) {
-        newErrors[key] = `${key.replace('_', ' ')} is required`;
-      }
+          newErrors[key] = `${key.replace('_', ' ')} is required`;
+        }
       }
     });
 
@@ -51,25 +63,56 @@ const SignupForm = () => {
     } else {
       setErrors({});
       try {
-        await createUserWithEmailAndPassword(formData.email, formData.password).then((res)=>{
-          console.log(res ,"this is resssposne ")
-          if(res.user.accessToken!==null){
+        await createUserWithEmailAndPassword(formData.email, formData.password).then(async (res) => {
+          console.log(res, "this is resssposne ")
+          if (res.user.accessToken !== null) {
             console.log("hello this works if ")
             const userData = {
               "uid": res.user.uid,
               ...formData
             };
-            console.log(userData.uid,"this is uid ");
-            // await SignUpVendor(userData);
-          }else{
+            // console.log(userData.uid,"this is uid ");
+            await SignUpVendor(userData);
+          } else {
             console.log(res)
           }
-        });        
+        });
       } catch (error) {
         console.error("Error signing up with email and password", error);
       }
     }
   };
+
+  const handleImageSelect = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setSelectedImage(file);
+        setIsModalOpen((prevState) => ({ ...prevState, [type]: true }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleConfirm = async (name) => {
+    let formData = new FormData();
+    formData.append("image", selectedImage);
+    let imgData = await UploadBackgroundImage(formData);
+    // Assuming you're storing image paths in a field named "imagepaths"
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: imgData?.path,
+    }));
+    setIsModalOpen({
+      document_tradelicense: false,
+      document_other: false,
+      document_bank: false,
+      document_vat: false,
+    });
+  };
+
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-primary p-4">
@@ -211,57 +254,146 @@ const SignupForm = () => {
             {errors.services_description && <span className="text-red-500 text-sm">{errors.services_description}</span>}
           </div>
 
-          {/* <div className="grid grid-cols-2 gap-6 mb-4">
-            <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Role</label>
-              <div className="flex items-center mt-1">
-                <label className="mr-4 text-gray-700">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="admin"
-                    checked={formData.isAdmin}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  Admin
-                </label>
-                <label className="text-gray-700">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="vendor"
-                    checked={formData.isVendor}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  Vendor
-                </label>
-              </div>
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div>
+              <input
+                type="file"
+                id="document_tradelicense"
+                style={{ display: 'none' }}
+                onChange={(e) => handleImageSelect(e, 'document_tradelicense')}
+              />
+
+              <Button
+                variant={"outline"}
+                type="button"
+                className="bg-primary text-white py-2 px-4 rounded"
+                onClick={() =>
+                  document.getElementById('document_tradelicense').click()
+                }
+              >
+                Upload Trade License Document
+              </Button>
+              <ImageUploadModal
+                isOpen={isModalOpen.document_tradelicense}
+                onClose={() =>
+                  setIsModalOpen((prevState) => ({
+                    ...prevState,
+                    document_tradelicense: false,
+                  }))
+                }
+                onConfirm={handleConfirm}
+                imagePreview={imagePreview}
+                name="document_tradelicense"
+              />
+              {errors.document_tradelicense && (
+                <span className="text-red-500 text-sm">
+                  {errors.document_tradelicense}
+                </span>
+              )}
             </div>
-          </div> */}
 
-          <div className="mb-4">
-            <label className="block text-gray-700">Trade License Document</label>
-            <input
-              type="file"
-              name="document_tradelicense"
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
-            />
-            {errors.document_tradelicense && <span className="text-red-500 text-sm">{errors.document_tradelicense}</span>}
+            <div>
+              <input
+                type="file"
+                id="document_other"
+                style={{ display: 'none' }}
+                onChange={(e) => handleImageSelect(e, 'document_other')}
+              />
+
+              <Button
+                variant={"outline"}
+                type="button"
+                className="bg-primary text-white py-2 px-4 rounded"
+                onClick={() => document.getElementById('document_other').click()}
+              >
+                Upload Other Supporting Document
+              </Button>
+              <ImageUploadModal
+                isOpen={isModalOpen.document_other}
+                onClose={() =>
+                  setIsModalOpen((prevState) => ({
+                    ...prevState,
+                    document_other: false,
+                  }))
+                }
+                onConfirm={handleConfirm}
+                imagePreview={imagePreview}
+                name="document_other"
+              />
+              {errors.document_other && (
+                <span className="text-red-500 text-sm">
+                  {errors.document_other}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <input
+                type="file"
+                id="document_bank"
+                style={{ display: 'none' }}
+                onChange={(e) => handleImageSelect(e, 'document_bank')}
+              />
+
+              <Button
+                variant={"outline"}
+                type="button"
+                className="bg-primary text-white py-2 px-4 rounded"
+                onClick={() => document.getElementById('document_bank').click()}
+              >
+                Upload Bank Documents
+              </Button>
+              <ImageUploadModal
+                isOpen={isModalOpen.document_bank}
+                onClose={() =>
+                  setIsModalOpen((prevState) => ({
+                    ...prevState,
+                    document_bank: false,
+                  }))
+                }
+                onConfirm={handleConfirm}
+                imagePreview={imagePreview}
+                name="document_bank"
+              />
+              {errors.document_bank && (
+                <span className="text-red-500 text-sm">{errors.document_bank}</span>
+              )}
+            </div>
+
+            <div>
+              <input
+                type="file"
+                id="document_vat"
+                style={{ display: 'none' }}
+                onChange={(e) => handleImageSelect(e, 'document_vat')}
+              />
+
+              <Button
+                variant={"outline"}
+                type="button"
+                className="bg-primary text-white py-2 px-4 rounded"
+                onClick={() => document.getElementById('document_vat').click()}
+              >
+                Upload Bank Documents
+              </Button>
+              <ImageUploadModal
+                isOpen={isModalOpen.document_vat}
+                onClose={() =>
+                  setIsModalOpen((prevState) => ({
+                    ...prevState,
+                    document_vat: false,
+                  }))
+                }
+                onConfirm={handleConfirm}
+                imagePreview={imagePreview}
+                name="document_vat"
+              />
+              {errors.document_vat && (
+                <span className="text-red-500 text-sm">{errors.document_vat}</span>
+              )}
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700">Other Supporting Document</label>
-            <input
-              type="file"
-              name="document_other"
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
-            />
-            {errors.document_other && <span className="text-red-500 text-sm">{errors.document_other}</span>}
-          </div>
 
           <div className="flex justify-center">
             <button

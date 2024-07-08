@@ -13,9 +13,9 @@ interface Row {
   email: string;
   firstName: string;
   tourdetails: {
-    imagePath: string
+    imagePath: string;
   };
-  tourShortDescription:string
+  tourShortDescription: string;
 }
 
 const Tours: FC = () => {
@@ -23,19 +23,30 @@ const Tours: FC = () => {
   const [rows, setRows] = useState<Row[]>(Tours);
 
   useEffect(() => {
-    Tours.length === 0 && getAllTours().then((data)=>setRows(data))
-  }, [])
+    Tours.length === 0 && getAllTours().then((data) => setRows(data));
+  }, []);
 
-  const columns: GridColDef<typeof rows[number]>[] = [
+  const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "thumbnail",
       headerName: "Thumbnail",
       flex: 1,
       renderCell: (params) => {
         const imagePath = params.row.tourdetails?.imagePath;
-        return <><div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <img src={imagePath} alt={imagePath} height={130} width={130} />
-        </div></>
+        return (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <img src={imagePath} alt={imagePath} height={130} width={130} />
+            </div>
+          </>
+        );
       },
     },
     {
@@ -66,9 +77,7 @@ const Tours: FC = () => {
           >
             <MdViewAgenda />
           </Link>
-          <button
-            className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
-          >
+          <button className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600">
             <MdDelete />
           </button>
         </div>

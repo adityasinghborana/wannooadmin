@@ -1,162 +1,148 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import Container from "@/app/ui/dashboard/container/Container";
-import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
-import Select from "react-select";
+import { Button } from "@/components/ui/button";
 import {
-  AddTour,
   GetAllCities,
   GetAllImages,
-  GetAllTourTypes,
+  GetEventTypes,
   UploadBackgroundImage,
+  addEvent
 } from "@/lib/services"; //Todo make Upload Tour Image function in backend
+import { useEffect, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
+import Select from "react-select";
+import { toast } from 'react-toastify';
+import * as yup from "yup";
 import CustomImageUpload from "../../ui/dashboard/ImageModal/ImageUpload";
 import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
-import { Button } from "@/components/ui/button";
 
 // Define the schema for validation
-const tourSchema = yup.object().shape({
-  countryname: yup.string().required(),
-  cityname: yup.string().required(),
-  tourname: yup.string().required(),
+const eventSchema = yup.object().shape({
+  isVisible: yup.boolean().required(),
+  isVisibleHome: yup.boolean().required(),
+  cityId: yup.number().required(),
+  eventName: yup.string().required(),
   duration: yup.string().required(),
-  imagepath: yup.string().required(),
-  citytourtype: yup.string().required(),
-  contractid: yup.number().required(),
-  isrecommended: yup.boolean().required(),
-  isprivate: yup.boolean().required(),
-  isslot: yup.boolean().required(),
-  tourdescription: yup.string().required(),
-  tourinclusion: yup.string().required(),
-  shortdescription: yup.string().required(),
-  importantinformation: yup.string().required(),
-  itenararydescription: yup.string().required(),
-  usefulinformation: yup.string().required(),
-  childage: yup.string().required(),
-  infantage: yup.string().required(),
-  infantcount: yup.number().required(),
-  isonlychild: yup.boolean().required(),
-  starttime: yup.string().required(),
-  meal: yup.string(),
-  googlemapurl: yup.string().url(),
-  tourexclusion: yup.string(),
-  adultprice: yup.number().required(),
-  childprice: yup.number().required(),
-  infantprice: yup.number().required(),
-  amount: yup.number().required(),
-  imagepaths: yup.array().of(yup.string()).required(),
-  optionlist: yup.array().of(
-    yup.object().shape({
-      optionname: yup.string().required(),
-      childage: yup.string().required(),
-      infantage: yup.string().required(),
-      minpax: yup.number().required(),
-      maxpax: yup.number().required(),
-      duration: yup.string().required(),
-      optiondescription: yup.string().required(),
-      operationDays: yup.object().shape({
-        monday: yup.number().required(),
-        tuesday: yup.number().required(),
-        wednesday: yup.number().required(),
-        thursday: yup.number().required(),
-        friday: yup.number().required(),
-        saturday: yup.number().required(),
-        sunday: yup.number().required(),
-      }),
-      timeSlots: yup.array().of(
-        yup.object().shape({
-          timeSlot: yup.string().required(),
-          available: yup.number().required(),
-          adultPrice: yup.number().required(),
-          childPrice: yup.number().required(),
-        })
-      ),
-    })
-  ),
+  imagePath: yup.string().required(),
+  eventType: yup.string().required(),
+  isSlot: yup.boolean().required(),
+  vendorUid: yup.string().uuid().required(),
+  onlyChild: yup.boolean().required(),
+  recommended: yup.boolean().required(),
+  eventDetail: yup.object().shape({
+    eventName: yup.string().required(),
+    description: yup.string().required(),
+    date: yup.date().required(),
+    location: yup.string().required(),
+    googlemapurl: yup.string().url().required(),
+    minage: yup.number().required(),
+    moreinfo: yup.string().required(),
+    ticketinfo: yup.string().required(),
+    artistname: yup.string().required(),
+    artistimage: yup.string().required(),
+    lastbookingtime: yup.date().required(),
+    eventSelling: yup.boolean().required(),
+    ischildallowed: yup.boolean().required(),
+    isadultallowed: yup.boolean().required(),
+    isinfantallowed: yup.boolean().required(),
+    duration: yup.string().required(),
+    eventoptions: yup.array().of(
+      yup.object().shape({
+        optionname: yup.string().required(),
+        adultprice: yup.number().required(),
+        childprice: yup.number().required(),
+        infantprice: yup.number().required(),
+        optiondescription: yup.string().required(),
+        available: yup.number().required(),
+        timeslots: yup.array().of(
+          yup.object().shape({
+            timeSlot: yup.string().required(),
+            available: yup.number().required(),
+            adultPrice: yup.number().required(),
+            childPrice: yup.number().required(),
+          })
+        ).required()
+      })
+    ).required(),
+    images: yup.array().of(
+      yup.object().shape({
+        imagePath: yup.string().required()
+      })
+    ).required()
+  }).required()
 });
 
-const TourForm = () => {
-  const defaultValues = {
-    countryname: "",
-    cityname: "",
-    tourname: "",
+
+const EventForm = () => {
+  const defaultEventValues = {
+    isVisible: false,
+    isVisibleHome: false,
+    cityId: 0,
+    eventName: "",
     duration: "",
-    imagepath: "",
-    citytourtype: "",
-    contractid: 0,
-    isrecommended: false,
-    isprivate: false,
-    isslot: false,
-    tourdescription: "",
-    tourinclusion: "",
-    shortdescription: "",
-    importantinformation: "",
-    itenararydescription: "",
-    usefulinformation: "",
-    childage: "",
-    infantage: "",
-    infantcount: 0,
-    isonlychild: false,
-    starttime: "",
-    meal: "",
-    googlemapurl: "",
-    tourexclusion: "",
-    adultprice: 0,
-    childprice: 0,
-    infantprice: 0,
-    amount: 0,
-    imagepaths: "",
-    optionlist: [
-      {
-        optionname: "",
-        childage: "",
-        infantage: "",
-        minpax: 0,
-        maxpax: 0,
-        duration: "",
-        optiondescription: "",
-        operationDays: {
-          monday: 1,
-          tuesday: 0,
-          wednesday: 0,
-          thursday: 0,
-          friday: 0,
-          saturday: 0,
-          sunday: 0,
+    imagePath: "",
+    eventType: "",
+    isSlot: false,
+    vendorUid: "",
+    onlyChild: false,
+    recommended: false,
+    eventDetail: {
+      eventName: "",
+      description: "",
+      date: "",
+      location: "",
+      googlemapurl: "",
+      minage: 0,
+      moreinfo: "",
+      ticketinfo: "",
+      artistname: "",
+      artistimage: "",
+      lastbookingtime: "",
+      eventSelling: false,
+      ischildallowed: false,
+      isadultallowed: true,
+      isinfantallowed: false,
+      duration: "",
+      eventoptions: [
+        {
+          optionname: "",
+          adultprice: 0.0,
+          childprice: 0.0,
+          infantprice: 0.0,
+          optiondescription: "",
+          available: 0,
+          timeslots: [
+            {
+              timeSlot: "",
+              available: 0,
+              adultPrice: 0.0,
+              childPrice: 0.0,
+            },
+          ],
         },
-        timeSlots: [
-          {
-            timeSlot: "",
-            available: 0,
-            adultPrice: 0,
-            childPrice: 0,
-          },
-        ],
-      },
-    ],
+      ],
+      images: [
+        {
+          imagePath: "",
+        },
+      ],
+    },
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm({
-    resolver: yupResolver(tourSchema),
-    defaultValues,
+
+  const { control, handleSubmit, formState: { errors }, setValue } = useForm({
+    defaultValues: defaultEventValues,
   });
 
   const {
-    fields: optionFields,
+    fields: eventoptions,
     append,
     remove,
     update,
   } = useFieldArray({
     control,
-    name: "optionlist",
+    name: "eventoptions",
   });
 
   const daysOfWeekOptions = [
@@ -171,7 +157,7 @@ const TourForm = () => {
 
   const [openIndex, setOpenIndex] = useState(null);
   const [cities, setCities] = useState([]);
-  const [tourType, setTourType] = useState([]);
+  const [eventType, setEventType] = useState([]);
   const [cityId, setCityId] = useState();
   const [countryId, setCountryId] = useState();
   const [cityToureTypeId, setCityTourTypeId] = useState();
@@ -184,13 +170,13 @@ const TourForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       const citiesPromise = GetAllCities();
-      const tourTypesPromise = GetAllTourTypes();
-      const [cities, tourTypes] = await Promise.all([
+      const eventTypesPromise = GetEventTypes();
+      const [cities, eventTypes] = await Promise.all([
         citiesPromise,
-        tourTypesPromise,
+        eventTypesPromise,
       ]);
       setCities(cities);
-      setTourType(tourTypes);
+      setEventType(eventTypes);
     };
     fetchData();
   }, []);
@@ -198,22 +184,33 @@ const TourForm = () => {
   const handleAddOption = () => {
     append({
       optionname: "",
-      childage: "",
-      infantage: "",
-      minpax: "",
-      maxpax: "",
-      duration: "",
+      adultprice: 0.0,
+      childprice: 0.0,
+      infantprice: 0.0,
       optiondescription: "",
-      operationDays: {
-        monday: 0,
-        tuesday: 0,
-        wednesday: 0,
-        thursday: 0,
-        friday: 0,
-        saturday: 0,
-        sunday: 0,
-      },
-      timeSlots: [
+      available: 0,
+      timeslots: [
+        {
+          timeSlot: "",
+          available: 0,
+          adultPrice: 0.0,
+          childPrice: 0.0,
+        },
+      ],
+    });
+  };
+ 
+  
+  const handleRemoveOption = (index) => {
+    remove(index);
+  };
+
+  const handleAddTimeSlot = (optionIndex) => {
+    const option = eventoptions[optionIndex];
+    update(optionIndex, {
+      ...option,
+      timeslots: [
+        ...option.timeslots,
         {
           timeSlot: "",
           available: 0,
@@ -223,37 +220,92 @@ const TourForm = () => {
       ],
     });
   };
-  const handleRemoveOption = (index) => {
-    remove(index);
-  };
-
-  const handleAddTimeSlot = (index) => {
-    let newData = optionFields[index];
-    newData?.timeSlots.push({
-      timeSlot: "",
-      available: 0,
-      adultPrice: 0,
-      childPrice: 0,
+  
+  const handleRemoveTimeSlot = (optionIndex, timeSlotIndex) => {
+    const option = eventoptions[optionIndex];
+    update(optionIndex, {
+      ...option,
+      timeslots: option.timeslots.filter((_, idx) => idx !== timeSlotIndex),
     });
-    update(index, newData);
-  };
-  const handleRemoveTimeSlot = (index) => {
-    let newData = optionFields[index];
-    newData.timeSlots.splice(index, 1);
-    update(index, newData);
   };
 
   const onSubmit = async (data) => {
     let user = JSON.parse(localStorage.getItem("user"));
-    let datatopost = {
-      ...data,
+    const formattedData = {
       vendoruid: user?.uid,
-      cityid: parseInt(cityId),
-      countryid: 13063,
-      citytourtypeid: cityToureTypeId,
-    };
-    await AddTour(datatopost);
-    // Send data to the API
+      isVisible: data?.isVisible === 'true' ? true : false,
+      isVisibleHome: data?.isVisibleHome === 'true' ? true : false,
+      cityId: data?.cityId,
+      eventName: data?.eventName,
+      duration: data?.duration,
+      imagePath: data?.imagePath,
+      eventType: data?.eventType,
+      isSlot: data?.isSlot === 'true' ? true : false,
+      onlyChild: data?.onlyChild === 'true' ? true : false,
+      recommended: data?.recommended === 'true' ? true : false,
+      eventDetail: {
+        eventName: data?.eventDetail?.eventName,
+        description: data?.eventDetail?.description,
+        date: data?.eventDetail?.date,
+        location: data?.eventDetail?.location,
+        googlemapurl: data?.eventDetail?.googlemapurl,
+        minage: data?.eventDetail?.minage,
+        moreinfo: data?.eventDetail?.moreinfo,
+        ticketinfo: data?.eventDetail?.ticketinfo,
+        artistname: data?.eventDetail?.artistname,
+        artistimage: data?.eventDetail?.artistimage,
+        lastbookingtime: data?.eventDetail?.lastbookingtime,
+        eventSelling: data?.eventSelling === 'true' ? true : false,
+        ischildallowed: data?.ischildallowed === 'true' ? true : false,
+        isadultallowed: data?.isadultallowed === 'true' ? true : false,
+        isinfantallowed: data?.isinfantallowed === 'true' ? true : false,
+        duration: data?.eventDetail?.duration,
+        images: data?.eventDetail?.images?.map((image) => ({
+          imagePath: image,
+        })),
+        eventoptions: data?.optionlist?.map((option) => ({
+          optionname: option.optionname,
+          adultprice: option.adultprice,
+          childprice: option.childprice,
+          infantprice: option.infantprice,
+          optiondescription: option.optiondescription,
+          available: option.available,
+          timeslots: option.timeslots.map((timeSlot) => ({
+            timeSlot: timeSlot.timeSlot,
+            available: timeSlot.available,
+            adultPrice: timeSlot.adultPrice,
+            childPrice: timeSlot.childPrice,
+          })),
+        }))
+      }
+    }
+    console.log(data)
+    console.log(formattedData)
+    try {
+    await addEvent(formattedData);
+    toast.success('Event added successfully!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+  } catch (error) {
+    toast.error(`${error.message}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+      });
+  }
   };
 
   const handleImageSelect = (e) => {
@@ -274,12 +326,12 @@ const TourForm = () => {
     formData.append("image", selectedImage);
     let imgData = await UploadBackgroundImage(formData);
     // Assuming you're storing image paths in a field named "imagepaths"
-    setValue("imagepath", imgData?.path);
+    setValue("imagePath", imgData?.path);
     setIsModalOpen(false);
   };
 
   useEffect(() => {
-    setValue("imagepaths", [...imagepaths]);
+    setValue("eventDetail.images", [...imagepaths]);
   }, [imagepaths]);
 
   return (
@@ -292,25 +344,21 @@ const TourForm = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Basic tour data fields */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {Object.keys(tourSchema.fields)
+              {Object.keys(eventSchema?.fields)
                 .filter(
                   (key) =>
                     ![
-                      "optionlist",
-                      "vendoruid",
-                      "countryid",
-                      "cityid",
-                      "citytourtypeid",
+                      "vendorUid",
                     ].includes(key)
                 )
                 .map((key, index) => {
                   if (
                     [
-                      "isprivate",
-                      "isrecommended",
-                      "isslot",
-                      "isvendortour",
-                      "isonlychild",
+                      "onlyChild",
+                      "recommended",
+                      "isSlot",
+                      "isVisible",
+                      "isVisibleHome",
                     ].includes(key)
                   ) {
                     return (
@@ -344,7 +392,7 @@ const TourForm = () => {
                       </div>
                     );
                   } else if (
-                    ["countryname", "cityname", "citytourtype"].includes(key)
+                    ["cityId", "eventType"].includes(key)
                   ) {
                     return (
                       <div key={index} className="mb-4 rounded ">
@@ -360,12 +408,8 @@ const TourForm = () => {
                           render={({ field }) => (
                             <select
                               onClick={(e) => {
-                                if (key === "cityname") {
+                                if (key === "cityId") {                                  
                                   setCityId(e?.target?.selectedOptions[0]?.id);
-                                } else if (key === "countryname") {
-                                  setCountryId(e.target.value);
-                                } else if (key === "citytourtype") {
-                                  setCityTourTypeId(e.target.value);
                                 }
                               }}
                               id={key}
@@ -373,24 +417,23 @@ const TourForm = () => {
                               {...field}
                             >
                               <option>Select</option>
-                              {key === "cityname" &&
+                              {key === "cityId" &&
                                 cities?.map((city) => (
                                   <option
                                     key={city.CityId}
-                                    value={city.CityName}
+                                    value={city.CityId}
                                     id={city.CityId}
                                   >
                                     {city.CityName}
                                   </option>
                                 ))}
-                              {key === "countryname" && <option>Dubai</option>}
-                              {key === "citytourtype" &&
-                                tourType?.map((tour) => (
+                                {key === "eventType" &&
+                                eventType?.map((event) => (
                                   <option
-                                    key={tour.cityTourType}
-                                    value={tour.cityTourType}
+                                    key={event.id}
+                                    value={event.eventtype}
                                   >
-                                    {tour.cityTourType}
+                                    {event.eventtype}
                                   </option>
                                 ))}
                             </select>
@@ -403,36 +446,8 @@ const TourForm = () => {
                         )}
                       </div>
                     );
-                  } else if (["imagepaths", "imagepath"].includes(key)) {
-                    if (key === "imagepaths") {
-                      return (
-                        <div key={index} className="mb-4">
-                          <label
-                            htmlFor={key}
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            {key.charAt(0).toUpperCase() + key.slice(1)}
-                          </label>
-                          {
-                            <Controller
-                              name={key}
-                              control={control}
-                              render={({ field }) => (
-                                <CustomImageUpload
-                                  onImageSelect={setImagePaths}
-                                  Images={GetAllImages}
-                                />
-                              )}
-                            />
-                          }
-                          {errors[key]?.message && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {errors[key].message}
-                            </p>
-                          )}
-                        </div>
-                      );
-                    } else {
+                  } else if (["imagePath"].includes(key)) {
+                    if (key === "imagePath") {
                       return (
                         <div key={index}>
                           <label
@@ -453,7 +468,6 @@ const TourForm = () => {
                                   style={{ display: "none" }}
                                   onChange={(e) => {
                                     handleImageSelect(e);
-                                    field.onChange(e); // Update the field value
                                   }}
                                 />
 
@@ -483,10 +497,104 @@ const TourForm = () => {
                             </p>
                           )}
                         </div>
-                      );
+                      );  
                     }
+                  } else if (key === "eventDetail") {
+                    return (
+                      <>
+                        {/* Render eventDetail fields */}
+                        {Object.keys(eventSchema.fields.eventDetail.fields).map((detailKey, detailIndex) => {
+                          if(detailKey === 'eventoptions') return null;
+                          if (detailKey === "images") {
+                            return (
+                              <div key={index} className="mb-4">
+                                <label
+                                  htmlFor={detailKey}
+                                  className="block text-gray-700 text-sm font-bold mb-2"
+                                >
+                                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                                </label>
+                                {
+                                  <Controller
+                                    name={detailKey}
+                                    control={control}
+                                    render={({ field }) => (
+                                      <CustomImageUpload
+                                        onImageSelect={setImagePaths}
+                                        Images={GetAllImages}
+                                      />
+                                    )}
+                                  />
+                                }
+                                {errors[detailKey]?.message && (
+                                  <p className="text-red-500 text-xs mt-1">
+                                    {errors[detailKey].message}
+                                  </p>
+                                )}
+                              </div>
+                            );                            
+                          } else if(
+                            [
+                              "eventSelling",
+                              "ischildallowed",
+                              "isadultallowed",
+                              "isinfantallowed",
+                            ].includes(detailKey)
+                          ){                                                        
+                              {
+                              return (
+                                <div key={index} className="mb-4">
+                                  <label
+                                    htmlFor={detailKey}
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                  >
+                                    {detailKey.charAt(0).toUpperCase() + detailKey.slice(1)}
+                                  </label>
+                                  <Controller
+                                    name={detailKey}
+                                    control={control}
+                                    render={({ field }) => (
+                                      <select
+                                        id={detailKey}
+                                        className="text-fieldutilities"
+                                        {...field}
+                                      >
+                                        <option>Select</option>
+                                        <option value="true">True</option>
+                                        <option value="false">False</option>
+                                      </select>
+                                    )}
+                                  />
+                                  {errors[detailKey]?.message && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                      {errors[detailKey].message}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            }
+                          } else {
+                            return <div key={detailIndex} className="mb-4">
+                              <label htmlFor={`eventDetail.${detailKey}`} className="block text-gray-700 text-sm font-bold mb-2">
+                                {detailKey.charAt(0).toUpperCase() + detailKey.slice(1)}
+                              </label>
+                              <Controller
+                                name={`eventDetail.${detailKey}`}
+                                control={control}
+                                render={({ field }) => (
+                                  <input type="text" {...field} className="text-fieldutilities" />
+                                )}
+                              />
+                              {errors.eventDetail?.[detailKey]?.message && (
+                                <p className="text-red-500 text-xs mt-1">{errors.eventDetail[detailKey].message}</p>
+                              )}
+                            </div>
+                          }
+                        })}
+                      </>
+                    )
                   } else {
-                    const field = tourSchema.fields[key];
+                    const field = eventSchema.fields[key]
                     return (
                       <div key={index} className="mb-4">
                         <label
@@ -524,7 +632,7 @@ const TourForm = () => {
 
             {/* Option List */}
             <div className="space-y-4">
-              {optionFields.map((option, index) => (
+              {eventoptions.map((option, index) => (
                 <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
                   <div className="flex items-center w-full rounded-2xl px-3 mb-4 bg-primary text-primary-bodytext">
                     <h3
@@ -548,7 +656,7 @@ const TourForm = () => {
                           <MdExpandMore />
                         )}
                       </button>
-                      {optionFields.length > 1 && (
+                      {eventoptions.length > 1 && (
                         <button
                           type="button"
                           className="text-red-500 hover:text-red-700"
@@ -563,8 +671,8 @@ const TourForm = () => {
                     <div className="space-y-4 mx-auto" style={{ width: "90%" }}>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {Object.keys(option).map((optionKey, optionIndex) => {
-                          if (optionKey === "timeSlots") return null; // Skip rendering timeSlots here
-                          if (optionKey === "id") return null; // Skip rendering timeSlots here
+                          if (optionKey === "timeslots") return null; // Skip rendering timeslots here
+                          if (optionKey === "id") return null; // Skip rendering timeslots here
                           if (optionKey === "operationDays") {
                             return (
                               <div
@@ -654,7 +762,7 @@ const TourForm = () => {
                           Time Slots
                         </h4>
                         <div className="px-2 py-2">
-                          {option?.timeSlots?.map((timeSlot, timeSlotIndex) => (
+                          {option?.timeslots?.map((timeSlot, timeSlotIndex) => (
                             <div
                               key={timeSlotIndex}
                               className="my-2 border p-2"
@@ -669,12 +777,12 @@ const TourForm = () => {
                                   >
                                     <MdAdd />
                                   </button>
-                                  {option.timeSlots.length > 1 && (
+                                  {option.timeslots.length > 1 && (
                                     <button
                                       type="button"
                                       className="bg-red-500 hover:bg-red-700 text-white rounded px-2 py-1"
                                       onClick={() =>
-                                        handleRemoveTimeSlot(index)
+                                        handleRemoveTimeSlot(index,timeSlotIndex)
                                       }
                                     >
                                       <MdDelete />
@@ -690,18 +798,19 @@ const TourForm = () => {
                                   return (
                                     <div key={i}>
                                       <label
-                                        htmlFor={`optionlist[${index}].timeSlots[${timeSlotIndex}].${field}`}
+                                        htmlFor={`optionlist[${index}].timeslots[${timeSlotIndex}].${field}`}
                                         className="text-sm font-medium text-gray-700"
                                       >
                                         {field.charAt(0).toUpperCase() +
                                           field.slice(1)}
                                       </label>
                                       <Controller
-                                        name={`optionlist[${index}].timeSlots[${timeSlotIndex}].${field}`}
+                                        name={`optionlist[${index}].timeslots[${timeSlotIndex}].${field}`}
                                         control={control}
                                         rules={{ required: true }}
                                         render={({ field }) => (
                                           <input
+                                              value={field.value || ""}
                                             type="text"
                                             {...field}
                                             className="text-fieldutilities"
@@ -723,6 +832,7 @@ const TourForm = () => {
               <Button
                 variant="secondary"
                 className="bg-primary"
+                type="button"
                 onClick={() => handleAddOption()}
               >
                 Add Option
@@ -746,4 +856,4 @@ const TourForm = () => {
   );
 };
 
-export default TourForm;
+export default EventForm;

@@ -2,13 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer components{
-    .text-field {
-    @apply w-full p-2 border border-gray-200  mt-1 text-gray-600 rounded-xl ;
-}
-}
-
+  .text-field {
+  @apply w-full p-2 border border-gray-200  mt-1 text-gray-600 rounded-xl ;
+}}
+@layer utilities{
+  .text-fieldutilities {
+  @apply w-full p-2 border border-gray-400  mt-1 text-gray-600 rounded-xl ;
+}}
 :root{
     --bg: #f8f8f8;
     --bgSoft: #ecd6fd;
@@ -16,7 +17,7 @@
     --textSoft:#ededed;
     --primary:#fb89ff;
     --global-padding: 1rem; /* Default global padding */
-
+      
 }
 
 *{
@@ -40,4 +41,8 @@ body{
   * {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+  }
+  .scrollable-container {
+    max-height: 80vh; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
   }

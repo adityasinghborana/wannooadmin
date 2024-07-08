@@ -98,6 +98,7 @@ export async function UploadBackgroundImage(image:any) {
         let res = await axiosInstance.post(`/upload`,image)
         return res?.data
     } catch (error) {
+        console.log(error)
         throw error
     }   
 }
@@ -141,6 +142,14 @@ export async function UpdateStripeApi(newKey:any) {
 export async function getEmail() {
     try {
         let res = await axiosInstance.get(`/email`)
+        return res?.data
+    } catch (error) {
+        throw error
+    }   
+}
+export async function updateEmail(dataToPost:any) {
+    try {
+        let res = await axiosInstance.patch(`/update-email`,dataToPost)
         return res?.data
     } catch (error) {
         throw error
@@ -257,9 +266,12 @@ export async function getForms() {
 
 export async function AddTour(tourData:any) {
     try {
+        console.log("hello api")
       const response = await axiosInstance.post('/addtour', tourData);
+      console.log(response.data)
       return response.data;
     } catch (error) {
+        console.log(error);
       throw error;
     }
   }
@@ -276,6 +288,32 @@ export async function GetAllBookings() {
   export async function GetVendorBookings(vendorId:any) { 
     try {
       const response = await axiosInstance.post('/userbookings',vendorId);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  export async function Getevents() { 
+    try {
+      const response = await axiosInstance.get('/events');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  export async function GetEventTypes() { 
+    try {
+      const response = await axiosInstance.get('/eventtypes');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  export async function addEvent(dataToPost:any) { 
+    try {
+      const response = await axiosInstance.post('/addevent', dataToPost);
       return response.data;
     } catch (error) {
       throw error;

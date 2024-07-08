@@ -1,13 +1,13 @@
-const { text } = require('stream/consumers');
+const { text } = require("stream/consumers");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -20,7 +20,7 @@ module.exports = {
     },
     extend: {
       spacing: {
-        'global': 'var(--global-padding)',
+        global: "var(--global-padding)",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -31,8 +31,8 @@ module.exports = {
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--bgSoft)",
-          text:"var(--text)",
-          bodytext:"var(--textSoft)"
+          text: "var(--text)",
+          bodytext: "var(--textSoft)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -81,4 +81,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

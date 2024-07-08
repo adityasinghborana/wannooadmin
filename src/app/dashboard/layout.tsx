@@ -5,6 +5,8 @@ import Sidebar from "../ui/dashboard/sidebar/Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
 import { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const DashboardLayout: React.FC<{
   children: React.ReactNode;
@@ -37,7 +39,7 @@ const DashboardLayout: React.FC<{
               </div>
             </div>
           </div>
-        )}
+        )}        
       </div>
     );
   }
