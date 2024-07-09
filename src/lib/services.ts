@@ -329,3 +329,12 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+
+  export async function CheckIsVendor(Id:any) { 
+    try {
+      const response = await axiosInstance.post('/vendor', Id);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }

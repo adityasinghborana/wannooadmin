@@ -19,132 +19,179 @@ import { Avatar } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
-  const menuItems = [
-    {
-      title: "Pages",
-      list: [
-        {
-          title: "Dashboard",
-          path: "/dashboard",
-          icon: <MdDashboard />,
-        },
-        {
-          title: "Users",
-          path: "/dashboard/users",
-          icon: <MdSupervisedUserCircle />,
-        },
-        {
-          title: "Vendors",
-          path: "/dashboard/vendors",
-          icon: <MdVerifiedUser />,
-        },
-        {
-          title: "Pending-Requests",
-          path: "/dashboard/pending-requests",
-          icon: <MdPending />,
-        },
-      ],
-    },
-    {
-      title: "Services",
-      list: [
-        {
-          title: "Tours",
-          path: "/dashboard/tours",
-          icon: <MdTour />,
-        },
+  const CheckIsAdmin = useAppSelector((state)=> state.CheckIsAdmin.isAdmin)
+  const[menuItems, setMenuItems]= useState([{
+    title: "Pages",
+    list: [
+      {
+        title: "Dashboard",
+        path: "/dashboard",
+        icon: <MdDashboard />,
+      },      
+    ],
+  }])
 
+  useEffect(()=>{
+    if(CheckIsAdmin){
+      setMenuItems([
         {
-          title: "Add Tours",
-          path: "/dashboard/add-tours",
-          icon: <MdAddCard />,
+          title: "Pages",
+          list: [
+            {
+              title: "Dashboard",
+              path: "/dashboard",
+              icon: <MdDashboard />,
+            },
+            {
+              title: "Users",
+              path: "/dashboard/users",
+              icon: <MdSupervisedUserCircle />,
+            },
+            {
+              title: "Vendors",
+              path: "/dashboard/vendors",
+              icon: <MdVerifiedUser />,
+            },
+            {
+              title: "Pending-Requests",
+              path: "/dashboard/pending-requests",
+              icon: <MdPending />,
+            },
+          ],
         },
         {
-          title: "Events",
-          path: "/dashboard/events",
-          icon: <MdFestival />,
+          title: "Services",
+          list: [
+            {
+              title: "Tours",
+              path: "/dashboard/tours",
+              icon: <MdTour />,
+            },
+    
+            {
+              title: "Add Tours",
+              path: "/dashboard/add-tours",
+              icon: <MdAddCard />,
+            },
+            {
+              title: "Events",
+              path: "/dashboard/events",
+              icon: <MdFestival />,
+            },
+            {
+              title: "Add Event",
+              path: "/dashboard/addevents",
+              icon: <MdEvent />,
+            },
+          ],
         },
         {
-          title: "Add Event",
-          path: "/dashboard/addevents",
-          icon: <MdEvent />,
-        },
-      ],
-    },
-    {
-      title: "Email",
-      list: [
-        {
-          title: "Email Templates",
-          path: "/dashboard/email",
-          icon: <MdEmail />,
-        },
-      ],
-    },
-    {
-      title: "Home Page",
-      list: [
-        {
-          title: "Home Page Data",
-          path: "/dashboard/homepage/home",
-          icon: <MdHome />,
+          title: "Email",
+          list: [
+            {
+              title: "Email Templates",
+              path: "/dashboard/email",
+              icon: <MdEmail />,
+            },
+          ],
         },
         {
-          title: "Library",
-          path: "/dashboard/homepage/library",
-          icon: <MdImage />,
-        },
-      ],
-    },
-    {
-      title: "Other",
-      list: [
-        {
-          title: "About us",
-          path: "/dashboard/about-us",
-          icon: <MdWorkHistory />,
-        },
-        {
-          title: "Contact us",
-          path: "/dashboard/contact-us",
-          icon: <MdWorkHistory />,
+          title: "Home Page",
+          list: [
+            {
+              title: "Home Page Data",
+              path: "/dashboard/homepage/home",
+              icon: <MdHome />,
+            },
+            {
+              title: "Library",
+              path: "/dashboard/homepage/library",
+              icon: <MdImage />,
+            },
+          ],
         },
         {
-          title: "Forms Submission",
-          path: "/dashboard/forms",
-          icon: <MdWorkHistory />,
+          title: "Other",
+          list: [
+            {
+              title: "About us",
+              path: "/dashboard/about-us",
+              icon: <MdWorkHistory />,
+            },
+            {
+              title: "Contact us",
+              path: "/dashboard/contact-us",
+              icon: <MdWorkHistory />,
+            },
+            {
+              title: "Forms Submission",
+              path: "/dashboard/forms",
+              icon: <MdWorkHistory />,
+            },
+          ],
         },
-      ],
-    },
-    // {
-    //   title:'Bookings',
-    //   list:[
-    //     {
-    //       title: 'Confirmed Bookings',
-    //       path:'/dashboard/tours',
-    //       icon: <MdWorkHistory />
-    //     },
-    //     {
-    //       title: 'Canceled Bookings ',
-    //       path:'/dashboard/tours',
-    //       icon: <MdWorkHistory />
-    //     },
-    //   ]
-    // },
-    {
-      title: "API",
-      list: [
+        // {
+        //   title:'Bookings',
+        //   list:[
+        //     {
+        //       title: 'Confirmed Bookings',
+        //       path:'/dashboard/tours',
+        //       icon: <MdWorkHistory />
+        //     },
+        //     {
+        //       title: 'Canceled Bookings ',
+        //       path:'/dashboard/tours',
+        //       icon: <MdWorkHistory />
+        //     },
+        //   ]
+        // },
         {
-          title: "Api's",
-          path: "/dashboard/api",
-          icon: <MdApi />,
+          title: "API",
+          list: [
+            {
+              title: "Api's",
+              path: "/dashboard/api",
+              icon: <MdApi />,
+            },
+          ],
         },
-      ],
-    },
-  ];
+      ])
+    }else{
+      setMenuItems([
+        {
+          title: "Pages",
+          list: [
+            {
+              title: "Dashboard",
+              path: "/dashboard",
+              icon: <MdDashboard />,
+            }          
+          ],
+        },
+        {
+          title: "Services",
+          list: [
+            {
+              title: "Tours",
+              path: "/dashboard/tours",
+              icon: <MdTour />,
+            },
+            {
+              title: "Events",
+              path: "/dashboard/events",
+              icon: <MdFestival />,
+            },
+          ],
+        }
+      ])
+    }
+  },[])
+
   return (
     <div
       className="mx-1 px-global mt-4 h-full overflow-y-auto"
@@ -166,11 +213,12 @@ const Sidebar = () => {
       </div>
       <ul>
         {menuItems.map((cat, i) => (
-          <li className="list-none" key={cat.title}>
+        //@ts-ignore
+          <li className="list-none" key={cat?.title}>
             <span className="font-bold text-primary text-sm" key={i}>
-              {cat.title}
+              {cat?.title}
             </span>
-            {cat.list.map((item, i) => (
+            {cat?.list.map((item, i) => (
               <MenuLink items={item} key={i} />
             ))}
           </li>
