@@ -76,7 +76,7 @@ export function DataTable<TData extends Vendor, TValue>({
           onChange={(event) => {
             const value = event.target.value;
             setFilterValue(value);
-            table.getColumn("")?.setFilterValue(value);
+            table.getColumn("username")?.setFilterValue(value);
           }}
           className="max-w-sm text-fieldutilities"
         />
