@@ -1,6 +1,11 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { GetCoupons, GetEvents, getAllTours } from "@/lib/services";
+import {
+  GetCoupons,
+  GetEvents,
+  createCoupons,
+  getAllTours,
+} from "@/lib/services";
 import { Separator } from "@radix-ui/react-select";
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
@@ -52,11 +57,14 @@ const couponSchema = yup.object().shape({
     .required("Discount is required")
     .positive("Discount must be positive"),
   type: yup.string().required("Type is required"),
-  tourid: yup.string(),
-  eventid: yup.string(),
+  tourid: yup.number(),
+  eventid: yup.number(),
 });
 const onSubmit = (data: CouponFormData) => {
   console.log(data);
+  const res = createCoupons(data).then((value) => {
+    console.log(value);
+  });
 };
 const Coupon = () => {
   const form = useForm<CouponFormData>({
@@ -68,20 +76,23 @@ const Coupon = () => {
   const [eventData, setEventData] = useState(Tours);
 
   useEffect(() => {
-    Tours.length === 0 && getAllTours().then((data) => setTourData(data));
+    Tours.length === 0 &&
+      getAllTours().then((data) => {
+        setTourData(data);
+      });
     GetEvents().then((data) => setEventData(data));
   }, []);
 
   useEffect(() => {
-    console.log(tourData)
     const fetchCoupons = async () => {
       const data = await GetCoupons();
-      console.log;
+
       setCoupons(data.result);
     };
 
     fetchCoupons();
   }, []);
+
   return (
     <div className="h-screen">
       <ScrollArea className="h-1/2 w-full rounded-2xl border ">
@@ -90,7 +101,7 @@ const Coupon = () => {
           {coupons.map((coupon) => (
             <>
               <div
-                key={coupon.id}
+                key={coupon.id * Math.random()}
                 className="text-sm grid grid-cols-5 items-center "
               >
                 <div>{coupon.id}</div>
@@ -185,7 +196,7 @@ const Coupon = () => {
                   <FormField
                     control={form.control}
                     name="tourid"
-                    defaultValue=""
+                    defaultValue={0}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Tour</FormLabel>
@@ -197,13 +208,15 @@ const Coupon = () => {
                               <SelectValue placeholder="Select Tour" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent className="bg-white">
                             {tourData.map((tour) => (
-                                <SelectItem key={tour.id} value={`${tour.tourId}`}>
+                              <SelectItem
+                                key={tour.id}
+                                value={`${tour.tourId}`}
+                              >
                                 {tour.tourName}
-                                </SelectItem>
-                              ))
-                            }
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormItem>
@@ -212,25 +225,26 @@ const Coupon = () => {
                   <FormField
                     control={form.control}
                     name="eventid"
-                    defaultValue=""
+                    defaultValue={0}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Event</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                        >
+                        <Select onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select Event" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>                            
-                            {eventData.length > 0 && eventData.map((event) => (                              
-                              <SelectItem key={event?.eventdetail[0]?.id} value={`${event?.eventdetail[0]?.id}`}>
-                                {event?.eventName}
-                              </SelectItem>
-                            ))
-                            }
+                          <SelectContent className="bg-white">
+                            {eventData.length > 0 &&
+                              eventData.map((event) => (
+                                <SelectItem
+                                  key={event?.id * 1000}
+                                  value={`${event?.id}`}
+                                >
+                                  {event?.eventName}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                       </FormItem>

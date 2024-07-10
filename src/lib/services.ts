@@ -357,3 +357,11 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+  export async function createCoupons(data:any) { 
+    try {
+      const response = await axiosInstance.post('/createcoupons',data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
