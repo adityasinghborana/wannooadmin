@@ -120,8 +120,8 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-primary p-4">
-      <div className="bg-white p-4 shadow-lg w-full max-w-4xl rounded-2xl">
+    <div className="min-h-screen w-full flex items-center justify-center bg-primary-foreground p-4">
+      <div className="bg-white  w-1/2 px-8 shadow-lg  max-w-4xl rounded-2xl py-8">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
           Sign Up
         </h2>
@@ -134,7 +134,7 @@ const SignupForm = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.name && (
                 <span className="text-red-500 text-sm">{errors.name}</span>
@@ -147,7 +147,7 @@ const SignupForm = () => {
                 name="age"
                 value={formData.age}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.age && (
                 <span className="text-red-500 text-sm">{errors.age}</span>
@@ -163,7 +163,7 @@ const SignupForm = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.username && (
                 <span className="text-red-500 text-sm">{errors.username}</span>
@@ -176,7 +176,7 @@ const SignupForm = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.password && (
                 <span className="text-red-500 text-sm">{errors.password}</span>
@@ -192,7 +192,7 @@ const SignupForm = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.email && (
                 <span className="text-red-500 text-sm">{errors.email}</span>
@@ -205,7 +205,7 @@ const SignupForm = () => {
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.mobile && (
                 <span className="text-red-500 text-sm">{errors.mobile}</span>
@@ -220,7 +220,7 @@ const SignupForm = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+              className="text-field"
             />
             {errors.address && (
               <span className="text-red-500 text-sm">{errors.address}</span>
@@ -235,7 +235,7 @@ const SignupForm = () => {
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.city && (
                 <span className="text-red-500 text-sm">{errors.city}</span>
@@ -248,7 +248,7 @@ const SignupForm = () => {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+                className="text-field"
               />
               {errors.country && (
                 <span className="text-red-500 text-sm">{errors.country}</span>
@@ -263,7 +263,7 @@ const SignupForm = () => {
               name="license_number"
               value={formData.license_number}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+              className="text-field"
             />
             {errors.license_number && (
               <span className="text-red-500 text-sm">
@@ -278,7 +278,7 @@ const SignupForm = () => {
               name="services_description"
               value={formData.services_description}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
+              className="text-field"
             />
             {errors.services_description && (
               <span className="text-red-500 text-sm">
@@ -287,8 +287,8 @@ const SignupForm = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <div>
+          <div className="grid grid-cols-4 gap-x-12 mb-4 max-w-max">
+            <div className="flex flex-row">
               <input
                 type="file"
                 id="document_tradelicense"
@@ -299,12 +299,13 @@ const SignupForm = () => {
               <Button
                 variant={"outline"}
                 type="button"
-                className="bg-primary text-white py-2 px-4 rounded"
+                className="bg-primary w-full text-white rounded py-2 px-4  "
                 onClick={() =>
                   document.getElementById("document_tradelicense").click()
                 }
               >
-                Upload Trade License Document
+                Upload Trade
+                <br /> License
               </Button>
               <ImageUploadModal
                 isOpen={isModalOpen.document_tradelicense}
@@ -336,12 +337,14 @@ const SignupForm = () => {
               <Button
                 variant={"outline"}
                 type="button"
-                className="bg-primary text-white py-2 px-4 rounded"
+                className="bg-primary text-white py-2 px-4 rounded w-full"
                 onClick={() =>
                   document.getElementById("document_other").click()
                 }
               >
-                Upload Other Supporting Document
+                Upload Supporting
+                <br />
+                Document
               </Button>
               <ImageUploadModal
                 isOpen={isModalOpen.document_other}
@@ -373,10 +376,10 @@ const SignupForm = () => {
               <Button
                 variant={"outline"}
                 type="button"
-                className="bg-primary text-white py-2 px-4 rounded"
+                className="bg-primary text-white py-2 px-4 rounded w-full"
                 onClick={() => document.getElementById("document_bank").click()}
               >
-                Upload Bank Documents
+                Upload Bank <br /> Documents
               </Button>
               <ImageUploadModal
                 isOpen={isModalOpen.document_bank}
@@ -408,10 +411,10 @@ const SignupForm = () => {
               <Button
                 variant={"outline"}
                 type="button"
-                className="bg-primary text-white py-2 px-4 rounded"
+                className="bg-primary text-white py-2 px-4 rounded w-full"
                 onClick={() => document.getElementById("document_vat").click()}
               >
-                Upload Bank Documents
+                Upload VAT <br /> Document
               </Button>
               <ImageUploadModal
                 isOpen={isModalOpen.document_vat}

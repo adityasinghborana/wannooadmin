@@ -18,7 +18,7 @@ const SignIn = () => {
   const handleLogin = async (e: any) => {
     try {
       const res = await signInWithEmailAndPassword(username, password);
-      localStorage.setItem("user", JSON.stringify(res?.user));      
+      localStorage.setItem("user", JSON.stringify(res?.user));
       router.push("/dashboard");
       setUsername("");
       setPassword("");
@@ -28,15 +28,15 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-800">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-md w-96 text-white">
+    <div className="flex justify-center items-center h-screen bg-primary-foreground w-full">
+      <div className="bg-primary p-8 rounded-2xl shadow-md w-96 text-white">
         <h1 className="text-3xl font-bold text-center mb-8">Sign-In</h1>
         {/* <form onSubmit={handleLogin}> */}
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <div className="mb-4">
           <label
             htmlFor="username"
-            className="block text-sm font-semibold mb-2 text-gray-300"
+            className="block text-sm font-semibold mb-2 text-white"
           >
             Username
           </label>
@@ -51,7 +51,7 @@ const SignIn = () => {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="block text-sm font-semibold mb-2 text-gray-300"
+            className="block text-sm font-semibold mb-2 text-white"
           >
             Password
           </label>
@@ -67,7 +67,7 @@ const SignIn = () => {
           onClick={(e) => {
             handleLogin(e);
           }}
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out"
+          className="w-full bg-purple-500 text-white py-2 rounded-md hover:bg-purple-700 transition duration-300 ease-in-out"
         >
           Login
         </button>
