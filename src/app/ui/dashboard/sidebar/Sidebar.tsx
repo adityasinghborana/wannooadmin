@@ -138,7 +138,7 @@ const Sidebar = () => {
             },
             {
               title: "Coupons",
-              path: "/dashboard/Coupons",
+              path: "/dashboard/coupons",
               icon: <MdDiscount />,
             },
           ],
@@ -218,7 +218,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className="mx-1 px-global mt-4 h-full overflow-y-auto"
+      className="mx-1 px-global mt-4 h-screen overflow-y-auto"
       style={{ maxHeight: "calc(100vh)", scrollbarWidth: "none" }}
     >
       <div className="flex items-center gap-[20px] mb-2 flex-col md:flex-row ">

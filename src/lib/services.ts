@@ -348,4 +348,12 @@ export async function GetAllBookings() {
       throw error;
     }
   }
- 
+   
+  export async function GetCoupons() { 
+    try {
+      const response = await axiosInstance.get('/coupons');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
