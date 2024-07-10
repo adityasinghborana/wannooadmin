@@ -6,13 +6,13 @@ import {
   GetAllImages,
   GetEventTypes,
   UploadBackgroundImage,
-  addEvent
+  addEvent,
 } from "@/lib/services"; //Todo make Upload Tour Image function in backend
 import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import Select from "react-select";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import * as yup from "yup";
 import CustomImageUpload from "../../ui/dashboard/ImageModal/ImageUpload";
 import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
@@ -30,49 +30,60 @@ const eventSchema = yup.object().shape({
   vendorUid: yup.string().uuid().required(),
   onlyChild: yup.boolean().required(),
   recommended: yup.boolean().required(),
-  eventDetail: yup.object().shape({
-    eventName: yup.string().required(),
-    description: yup.string().required(),
-    date: yup.date().required(),
-    location: yup.string().required(),
-    googlemapurl: yup.string().url().required(),
-    minage: yup.number().required(),
-    moreinfo: yup.string().required(),
-    ticketinfo: yup.string().required(),
-    artistname: yup.string().required(),
-    artistimage: yup.string().required(),
-    lastbookingtime: yup.date().required(),
-    eventSelling: yup.boolean().required(),
-    ischildallowed: yup.boolean().required(),
-    isadultallowed: yup.boolean().required(),
-    isinfantallowed: yup.boolean().required(),
-    duration: yup.string().required(),
-    eventoptions: yup.array().of(
-      yup.object().shape({
-        optionname: yup.string().required(),
-        adultprice: yup.number().required(),
-        childprice: yup.number().required(),
-        infantprice: yup.number().required(),
-        optiondescription: yup.string().required(),
-        available: yup.number().required(),
-        timeslots: yup.array().of(
+  eventDetail: yup
+    .object()
+    .shape({
+      eventName: yup.string().required(),
+      description: yup.string().required(),
+      date: yup.date().required(),
+      location: yup.string().required(),
+      googlemapurl: yup.string().url().required(),
+      minage: yup.number().required(),
+      moreinfo: yup.string().required(),
+      ticketinfo: yup.string().required(),
+      artistname: yup.string().required(),
+      artistimage: yup.string().required(),
+      lastbookingtime: yup.date().required(),
+      eventSelling: yup.boolean().required(),
+      ischildallowed: yup.boolean().required(),
+      isadultallowed: yup.boolean().required(),
+      isinfantallowed: yup.boolean().required(),
+      duration: yup.string().required(),
+      eventoptions: yup
+        .array()
+        .of(
           yup.object().shape({
-            timeSlot: yup.string().required(),
+            optionname: yup.string().required(),
+            adultprice: yup.number().required(),
+            childprice: yup.number().required(),
+            infantprice: yup.number().required(),
+            optiondescription: yup.string().required(),
             available: yup.number().required(),
-            adultPrice: yup.number().required(),
-            childPrice: yup.number().required(),
+            timeslots: yup
+              .array()
+              .of(
+                yup.object().shape({
+                  timeSlot: yup.string().required(),
+                  available: yup.number().required(),
+                  adultPrice: yup.number().required(),
+                  childPrice: yup.number().required(),
+                })
+              )
+              .required(),
           })
-        ).required()
-      })
-    ).required(),
-    images: yup.array().of(
-      yup.object().shape({
-        imagePath: yup.string().required()
-      })
-    ).required()
-  }).required()
+        )
+        .required(),
+      images: yup
+        .array()
+        .of(
+          yup.object().shape({
+            imagePath: yup.string().required(),
+          })
+        )
+        .required(),
+    })
+    .required(),
 });
-
 
 const EventForm = () => {
   const defaultEventValues = {
@@ -88,7 +99,6 @@ const EventForm = () => {
     onlyChild: false,
     recommended: false,
     eventDetail: {
-      eventName: "",
       description: "",
       date: "",
       location: "",
@@ -130,8 +140,12 @@ const EventForm = () => {
     },
   };
 
-
-  const { control, handleSubmit, formState: { errors }, setValue } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
     defaultValues: defaultEventValues,
   });
 
@@ -199,8 +213,7 @@ const EventForm = () => {
       ],
     });
   };
- 
-  
+
   const handleRemoveOption = (index) => {
     remove(index);
   };
@@ -220,7 +233,7 @@ const EventForm = () => {
       ],
     });
   };
-  
+
   const handleRemoveTimeSlot = (optionIndex, timeSlotIndex) => {
     const option = eventoptions[optionIndex];
     update(optionIndex, {
@@ -233,20 +246,20 @@ const EventForm = () => {
     let user = JSON.parse(localStorage.getItem("user"));
     const formattedData = {
       vendoruid: user?.uid,
-      isVisible: data?.isVisible === 'true' ? true : false,
-      isVisibleHome: data?.isVisibleHome === 'true' ? true : false,
-      cityId: data?.cityId,
+      isVisible: data?.isVisible === "true" ? true : false,
+      isVisibleHome: data?.isVisibleHome === "true" ? true : false,
+      cityId: parseInt(data?.cityId),
       eventName: data?.eventName,
       duration: data?.duration,
       imagePath: data?.imagePath,
       eventType: data?.eventType,
-      isSlot: data?.isSlot === 'true' ? true : false,
-      onlyChild: data?.onlyChild === 'true' ? true : false,
-      recommended: data?.recommended === 'true' ? true : false,
+      isSlot: data?.isSlot === "true" ? true : false,
+      onlyChild: data?.onlyChild === "true" ? true : false,
+      recommended: data?.recommended === "true" ? true : false,
       eventDetail: {
         eventName: data?.eventDetail?.eventName,
         description: data?.eventDetail?.description,
-        date: data?.eventDetail?.date,
+        date: new Date(data?.eventDetail?.date),
         location: data?.eventDetail?.location,
         googlemapurl: data?.eventDetail?.googlemapurl,
         minage: data?.eventDetail?.minage,
@@ -255,10 +268,10 @@ const EventForm = () => {
         artistname: data?.eventDetail?.artistname,
         artistimage: data?.eventDetail?.artistimage,
         lastbookingtime: data?.eventDetail?.lastbookingtime,
-        eventSelling: data?.eventSelling === 'true' ? true : false,
-        ischildallowed: data?.ischildallowed === 'true' ? true : false,
-        isadultallowed: data?.isadultallowed === 'true' ? true : false,
-        isinfantallowed: data?.isinfantallowed === 'true' ? true : false,
+        eventSelling: data?.eventSelling === "true" ? true : false,
+        ischildallowed: data?.ischildallowed === "true" ? true : false,
+        isadultallowed: data?.isadultallowed === "true" ? true : false,
+        isinfantallowed: data?.isinfantallowed === "true" ? true : false,
         duration: data?.eventDetail?.duration,
         images: data?.eventDetail?.images?.map((image) => ({
           imagePath: image,
@@ -276,36 +289,35 @@ const EventForm = () => {
             adultPrice: timeSlot.adultPrice,
             childPrice: timeSlot.childPrice,
           })),
-        }))
-      }
-    }
-    console.log(data)
-    console.log(formattedData)
+        })),
+      },
+    };
+    console.log(data);
+    console.log(formattedData);
     try {
-    await addEvent(formattedData);
-    toast.success('Event added successfully!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
+      await addEvent(formattedData);
+      toast.success("Event added successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
-  } catch (error) {
-    toast.error(`${error.message}`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
+    } catch (error) {
+      toast.error(`${error.message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
-  }
+    }
   };
 
   const handleImageSelect = (e) => {
@@ -345,12 +357,7 @@ const EventForm = () => {
             {/* Basic tour data fields */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {Object.keys(eventSchema?.fields)
-                .filter(
-                  (key) =>
-                    ![
-                      "vendorUid",
-                    ].includes(key)
-                )
+                .filter((key) => !["vendorUid"].includes(key))
                 .map((key, index) => {
                   if (
                     [
@@ -391,9 +398,7 @@ const EventForm = () => {
                         )}
                       </div>
                     );
-                  } else if (
-                    ["cityId", "eventType"].includes(key)
-                  ) {
+                  } else if (["cityId", "eventType"].includes(key)) {
                     return (
                       <div key={index} className="mb-4 rounded ">
                         <label
@@ -408,7 +413,7 @@ const EventForm = () => {
                           render={({ field }) => (
                             <select
                               onClick={(e) => {
-                                if (key === "cityId") {                                  
+                                if (key === "cityId") {
                                   setCityId(e?.target?.selectedOptions[0]?.id);
                                 }
                               }}
@@ -427,7 +432,7 @@ const EventForm = () => {
                                     {city.CityName}
                                   </option>
                                 ))}
-                                {key === "eventType" &&
+                              {key === "eventType" &&
                                 eventType?.map((event) => (
                                   <option
                                     key={event.id}
@@ -464,7 +469,7 @@ const EventForm = () => {
                                 <input
                                   type="file"
                                   id="image-upload"
-                                  value={''}
+                                  value={""}
                                   style={{ display: "none" }}
                                   onChange={(e) => {
                                     handleImageSelect(e);
@@ -476,7 +481,9 @@ const EventForm = () => {
                                   type="button"
                                   className="bg-primary text-white py-2 px-4 rounded"
                                   onClick={() =>
-                                    document.getElementById("image-upload").click()
+                                    document
+                                      .getElementById("image-upload")
+                                      .click()
                                   }
                                 >
                                   {" "}
@@ -497,74 +504,36 @@ const EventForm = () => {
                             </p>
                           )}
                         </div>
-                      );  
+                      );
                     }
                   } else if (key === "eventDetail") {
                     return (
                       <>
                         {/* Render eventDetail fields */}
-                        {Object.keys(eventSchema.fields.eventDetail.fields).map((detailKey, detailIndex) => {
-                          if(detailKey === 'eventoptions') return null;
-                          if (detailKey === "images") {
-                            return (
-                              <div key={index} className="mb-4">
-                                <label
-                                  htmlFor={detailKey}
-                                  className="block text-gray-700 text-sm font-bold mb-2"
-                                >
-                                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                                </label>
-                                {
-                                  <Controller
-                                    name={detailKey}
-                                    control={control}
-                                    render={({ field }) => (
-                                      <CustomImageUpload
-                                        onImageSelect={setImagePaths}
-                                        Images={GetAllImages}
-                                      />
-                                    )}
-                                  />
-                                }
-                                {errors[detailKey]?.message && (
-                                  <p className="text-red-500 text-xs mt-1">
-                                    {errors[detailKey].message}
-                                  </p>
-                                )}
-                              </div>
-                            );                            
-                          } else if(
-                            [
-                              "eventSelling",
-                              "ischildallowed",
-                              "isadultallowed",
-                              "isinfantallowed",
-                            ].includes(detailKey)
-                          ){                                                        
-                              {
+                        {Object.keys(eventSchema.fields.eventDetail.fields).map(
+                          (detailKey, detailIndex) => {
+                            if (detailKey === "eventoptions") return null;
+                            if (detailKey === "images") {
                               return (
                                 <div key={index} className="mb-4">
                                   <label
                                     htmlFor={detailKey}
                                     className="block text-gray-700 text-sm font-bold mb-2"
                                   >
-                                    {detailKey.charAt(0).toUpperCase() + detailKey.slice(1)}
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}
                                   </label>
-                                  <Controller
-                                    name={detailKey}
-                                    control={control}
-                                    render={({ field }) => (
-                                      <select
-                                        id={detailKey}
-                                        className="text-fieldutilities"
-                                        {...field}
-                                      >
-                                        <option>Select</option>
-                                        <option value="true">True</option>
-                                        <option value="false">False</option>
-                                      </select>
-                                    )}
-                                  />
+                                  {
+                                    <Controller
+                                      name={detailKey}
+                                      control={control}
+                                      render={({ field }) => (
+                                        <CustomImageUpload
+                                          onImageSelect={setImagePaths}
+                                          Images={GetAllImages}
+                                        />
+                                      )}
+                                    />
+                                  }
                                   {errors[detailKey]?.message && (
                                     <p className="text-red-500 text-xs mt-1">
                                       {errors[detailKey].message}
@@ -572,29 +541,82 @@ const EventForm = () => {
                                   )}
                                 </div>
                               );
+                            } else if (
+                              [
+                                "eventSelling",
+                                "ischildallowed",
+                                "isadultallowed",
+                                "isinfantallowed",
+                              ].includes(detailKey)
+                            ) {
+                              {
+                                return (
+                                  <div key={index} className="mb-4">
+                                    <label
+                                      htmlFor={detailKey}
+                                      className="block text-gray-700 text-sm font-bold mb-2"
+                                    >
+                                      {detailKey.charAt(0).toUpperCase() +
+                                        detailKey.slice(1)}
+                                    </label>
+                                    <Controller
+                                      name={detailKey}
+                                      control={control}
+                                      render={({ field }) => (
+                                        <select
+                                          id={detailKey}
+                                          className="text-fieldutilities"
+                                          {...field}
+                                        >
+                                          <option>Select</option>
+                                          <option value="true">True</option>
+                                          <option value="false">False</option>
+                                        </select>
+                                      )}
+                                    />
+                                    {errors[detailKey]?.message && (
+                                      <p className="text-red-500 text-xs mt-1">
+                                        {errors[detailKey].message}
+                                      </p>
+                                    )}
+                                  </div>
+                                );
+                              }
+                            } else {
+                              return (
+                                <div key={detailIndex} className="mb-4">
+                                  <label
+                                    htmlFor={`eventDetail.${detailKey}`}
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                  >
+                                    {detailKey.charAt(0).toUpperCase() +
+                                      detailKey.slice(1)}
+                                  </label>
+                                  <Controller
+                                    name={`eventDetail.${detailKey}`}
+                                    control={control}
+                                    render={({ field }) => (
+                                      <input
+                                        type="text"
+                                        {...field}
+                                        className="text-fieldutilities"
+                                      />
+                                    )}
+                                  />
+                                  {errors.eventDetail?.[detailKey]?.message && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                      {errors.eventDetail[detailKey].message}
+                                    </p>
+                                  )}
+                                </div>
+                              );
                             }
-                          } else {
-                            return <div key={detailIndex} className="mb-4">
-                              <label htmlFor={`eventDetail.${detailKey}`} className="block text-gray-700 text-sm font-bold mb-2">
-                                {detailKey.charAt(0).toUpperCase() + detailKey.slice(1)}
-                              </label>
-                              <Controller
-                                name={`eventDetail.${detailKey}`}
-                                control={control}
-                                render={({ field }) => (
-                                  <input type="text" {...field} className="text-fieldutilities" />
-                                )}
-                              />
-                              {errors.eventDetail?.[detailKey]?.message && (
-                                <p className="text-red-500 text-xs mt-1">{errors.eventDetail[detailKey].message}</p>
-                              )}
-                            </div>
                           }
-                        })}
+                        )}
                       </>
-                    )
+                    );
                   } else {
-                    const field = eventSchema.fields[key]
+                    const field = eventSchema.fields[key];
                     return (
                       <div key={index} className="mb-4">
                         <label
@@ -636,8 +658,9 @@ const EventForm = () => {
                 <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
                   <div className="flex items-center w-full rounded-2xl px-3 mb-4 bg-primary text-primary-bodytext">
                     <h3
-                      className={`text-lg text-center text-primary-bodytext font-medium ${index !== openIndex && "text-primary-bodytext"
-                        } p-2`}
+                      className={`text-lg text-center text-primary-bodytext font-medium ${
+                        index !== openIndex && "text-primary-bodytext"
+                      } p-2`}
                       style={{ width: "100%" }}
                     >
                       Option {index + 1} {option.optionname}
@@ -677,8 +700,9 @@ const EventForm = () => {
                             return (
                               <div
                                 key={optionIndex}
-                                className={`flex space-x-2 ${optionKey === "operationDays" && "col-span-3 "
-                                  }`}
+                                className={`flex space-x-2 ${
+                                  optionKey === "operationDays" && "col-span-3 "
+                                }`}
                               >
                                 <label
                                   htmlFor={`optionlist[${index}].${optionKey}`}
@@ -782,7 +806,10 @@ const EventForm = () => {
                                       type="button"
                                       className="bg-red-500 hover:bg-red-700 text-white rounded px-2 py-1"
                                       onClick={() =>
-                                        handleRemoveTimeSlot(index,timeSlotIndex)
+                                        handleRemoveTimeSlot(
+                                          index,
+                                          timeSlotIndex
+                                        )
                                       }
                                     >
                                       <MdDelete />
@@ -810,7 +837,7 @@ const EventForm = () => {
                                         rules={{ required: true }}
                                         render={({ field }) => (
                                           <input
-                                              value={field.value || ""}
+                                            value={field.value || ""}
                                             type="text"
                                             {...field}
                                             className="text-fieldutilities"

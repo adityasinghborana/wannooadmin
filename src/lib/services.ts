@@ -321,7 +321,14 @@ export async function GetAllBookings() {
     }
   }
   
- 
+  export async function addEvent(dataToPost:any) { 
+    try {
+      const response = await axiosInstance.post('/addevent', dataToPost);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
   
   export async function GetBookingDetail(id:number) { 
     console.log(id);
@@ -333,11 +340,4 @@ export async function GetAllBookings() {
     }
   }
 
-  export async function CheckIsVendor(Id:any) { 
-    try {
-      const response = await axiosInstance.post('/vendor', Id);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
+ 
