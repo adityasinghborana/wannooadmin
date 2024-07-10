@@ -37,14 +37,14 @@ import {
   BiChevronLeft as DoubleArrowLeftIcon,
   BiChevronRight as DoubleArrowRightIcon,
 } from "react-icons/bi";
-import { Event } from "../../../lib/interfaces/eventinterface"; // Adjust path as needed
+import { Vendor } from "../../../lib/interfaces/vendorinterface"; // Adjust path as needed
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData extends Event, TValue>({
+export function DataTable<TData extends Vendor, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -71,12 +71,12 @@ export function DataTable<TData extends Event, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter event name..."
+          placeholder="Find Vendor..."
           value={filterValue}
           onChange={(event) => {
             const value = event.target.value;
             setFilterValue(value);
-            table.getColumn("eventName")?.setFilterValue(value);
+            table.getColumn("username")?.setFilterValue(value);
           }}
           className="max-w-sm text-fieldutilities"
         />
@@ -109,17 +109,9 @@ export function DataTable<TData extends Event, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {/* Check if the column is for image and render accordingly */}
-                      {cell.column.id === "image" ? (
-                        <img
-                          src={row.original.imagePath} // Assuming this is correct for your Event object
-                          alt="Event Image"
-                          style={{ width: "100px", height: "auto" }}
-                        />
-                      ) : (
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

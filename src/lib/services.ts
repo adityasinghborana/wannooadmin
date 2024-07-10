@@ -174,7 +174,7 @@ export async function SignUpVendor( data:any ) {
     }   
 }
 
-export async function Signin( data:any ) {
+export async function getVendorDetail( data:any ) {
     try {
         let res = await axiosInstance.post(`/vendor`,data)
         return res?.data
