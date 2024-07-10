@@ -2,6 +2,7 @@ import {
   MdAddCard,
   MdApi,
   MdDashboard,
+  MdDiscount,
   MdEmail,
   MdEvent,
   MdFestival,
@@ -135,6 +136,11 @@ const Sidebar = () => {
               path: "/dashboard/forms",
               icon: <MdWorkHistory />,
             },
+            {
+              title: "Coupons",
+              path: "/dashboard/Coupons",
+              icon: <MdDiscount />,
+            },
           ],
         },
         {
@@ -198,6 +204,11 @@ const Sidebar = () => {
               title: "Add Event",
               path: "/dashboard/addevents",
               icon: <MdEvent />,
+            },
+            {
+              title: "Coupons",
+              path: "/dashboard/coupons",
+              icon: <MdDiscount />,
             },
           ],
         },
