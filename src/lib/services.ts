@@ -176,7 +176,7 @@ export async function SignUpVendor( data:any ) {
 
 export async function getVendorDetail( data:any ) {
     try {
-        let res = await axiosInstance.post(`/vendor`,data)
+        let res = await axiosInstance.post(`/vendor`,{uid:data})
         return res?.data
     } catch (error) {
         throw error
