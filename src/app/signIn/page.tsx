@@ -1,15 +1,18 @@
 "use client"
+import { auth } from '@/firebase/config';
+import { CheckIsVendor } from '@/lib/services';
+import { CheckIsAdmin } from '@/lib/store/features/isAdmin/isAdminSlice';
+import { useAppDispatch } from '@/lib/store/hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import {useSignInWithEmailAndPassword} from 'react-firebase-hooks/auth'
-import {auth} from '@/firebase/config'
-import { stringify } from 'querystring';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 
 const SignIn = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const dispatch = useAppDispatch()
 
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth)
 
@@ -18,21 +21,18 @@ const SignIn = () => {
     try {
       const res = await signInWithEmailAndPassword(username, password)
       localStorage.setItem('user', JSON.stringify(res?.user))
+      let data = await CheckIsVendor(res?.user?.uid)
+      if(data?.data?.isAdmin){
+        dispatch(CheckIsAdmin(true))
+      }else{
+        dispatch(CheckIsAdmin(false))
+      }
       router.push('/dashboard')
       setUsername('')
       setPassword('')
     } catch (error) {
       console.error(error)
     }
-    
-    // e.preventDefault();
-    // // Basic validation
-    // if (!username || !password) {
-    //   setError('Please enter both username and password');
-    //   return;
-    // }
-    // // Perform your login logic here, for demonstration, just redirect to home page
-    // router.push('/');
   };
 
   return (
