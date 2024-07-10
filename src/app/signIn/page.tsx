@@ -12,22 +12,13 @@ const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useAppDispatch();
 
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
   const handleLogin = async (e: any) => {
     try {
       const res = await signInWithEmailAndPassword(username, password);
-      //localStorage.setItem("user", JSON.stringify(res?.user));
-      console.log(res?.user.uid);
-      let data = await CheckIsVendor(res?.user?.uid ?? "nun");
-
-      if (data?.data?.isAdmin == true) {
-        dispatch(CheckIsAdmin(true));
-      } else {
-        dispatch(CheckIsAdmin(false));
-      }
+      localStorage.setItem("user", JSON.stringify(res?.user));      
       router.push("/dashboard");
       setUsername("");
       setPassword("");

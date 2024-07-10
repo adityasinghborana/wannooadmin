@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '@/firebase/config';
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/config";
 import { SignUpVendor, UploadBackgroundImage } from "@/lib/services";
 import ImageUploadModal from "../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
 import { Button } from "@/components/ui/button";
-
+import { useRouter } from "next/navigation";
 const initialFormData = {
   username: "",
   password: "",
@@ -13,7 +13,7 @@ const initialFormData = {
   isVendor: false,
   email: "",
   address: "",
-  age: "",
+  age: 22,
   name: "",
   license_number: "",
   country: "",
@@ -27,9 +27,11 @@ const initialFormData = {
 };
 
 const SignupForm = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
-  const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
   const [isModalOpen, setIsModalOpen] = useState({
     document_tradelicense: false,
     document_other: false,
@@ -43,7 +45,8 @@ const SignupForm = () => {
     const { name, value, type, checked, files } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,
+      [name]:
+        type === "checkbox" ? checked : type === "file" ? files[0] : value,
     }));
   };
 
@@ -51,9 +54,9 @@ const SignupForm = () => {
     e.preventDefault();
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
-      if (key !== 'isAdmin' && key !== 'isVendor') {
+      if (key !== "isAdmin" && key !== "isVendor") {
         if (!formData[key]) {
-          newErrors[key] = `${key.replace('_', ' ')} is required`;
+          newErrors[key] = `${key.replace("_", " ")} is required`;
         }
       }
     });
@@ -63,18 +66,21 @@ const SignupForm = () => {
     } else {
       setErrors({});
       try {
-        await createUserWithEmailAndPassword(formData.email, formData.password).then(async (res) => {
-          console.log(res, "this is resssposne ")
+        await createUserWithEmailAndPassword(
+          formData.email,
+          formData.password
+        ).then(async (res) => {
+          console.log(res, "this is resssposne ");
           if (res.user.accessToken !== null) {
-            console.log("hello this works if ")
+            console.log("hello this works if ");
             const userData = {
-              "uid": res.user.uid,
-              ...formData
+              uid: res.user.uid,
+              ...formData,
             };
             // console.log(userData.uid,"this is uid ");
-            await SignUpVendor(userData);
+            await SignUpVendor(userData).then(() => router.push("/dashboard"));
           } else {
-            console.log(res)
+            console.log(res);
           }
         });
       } catch (error) {
@@ -113,11 +119,12 @@ const SignupForm = () => {
     });
   };
 
-
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-primary p-4">
       <div className="bg-white p-4 shadow-lg w-full max-w-4xl rounded-2xl">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sign Up</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Sign Up
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
@@ -129,7 +136,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+              {errors.name && (
+                <span className="text-red-500 text-sm">{errors.name}</span>
+              )}
             </div>
             <div className="col-span-2 sm:col-span-1">
               <label className="block text-gray-700">Age</label>
@@ -140,7 +149,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
+              {errors.age && (
+                <span className="text-red-500 text-sm">{errors.age}</span>
+              )}
             </div>
           </div>
 
@@ -154,7 +165,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.username && <span className="text-red-500 text-sm">{errors.username}</span>}
+              {errors.username && (
+                <span className="text-red-500 text-sm">{errors.username}</span>
+              )}
             </div>
             <div className="col-span-2 sm:col-span-1">
               <label className="block text-gray-700">Password</label>
@@ -165,7 +178,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
+              {errors.password && (
+                <span className="text-red-500 text-sm">{errors.password}</span>
+              )}
             </div>
           </div>
 
@@ -179,7 +194,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+              {errors.email && (
+                <span className="text-red-500 text-sm">{errors.email}</span>
+              )}
             </div>
             <div className="col-span-2 sm:col-span-1">
               <label className="block text-gray-700">Mobile</label>
@@ -190,7 +207,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.mobile && <span className="text-red-500 text-sm">{errors.mobile}</span>}
+              {errors.mobile && (
+                <span className="text-red-500 text-sm">{errors.mobile}</span>
+              )}
             </div>
           </div>
 
@@ -203,7 +222,9 @@ const SignupForm = () => {
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
             />
-            {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
+            {errors.address && (
+              <span className="text-red-500 text-sm">{errors.address}</span>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-6 mb-4">
@@ -216,7 +237,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+              {errors.city && (
+                <span className="text-red-500 text-sm">{errors.city}</span>
+              )}
             </div>
             <div className="col-span-2 sm:col-span-1">
               <label className="block text-gray-700">Country</label>
@@ -227,7 +250,9 @@ const SignupForm = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
               />
-              {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
+              {errors.country && (
+                <span className="text-red-500 text-sm">{errors.country}</span>
+              )}
             </div>
           </div>
 
@@ -240,7 +265,11 @@ const SignupForm = () => {
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
             />
-            {errors.license_number && <span className="text-red-500 text-sm">{errors.license_number}</span>}
+            {errors.license_number && (
+              <span className="text-red-500 text-sm">
+                {errors.license_number}
+              </span>
+            )}
           </div>
 
           <div className="mb-4">
@@ -251,7 +280,11 @@ const SignupForm = () => {
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded mt-1 focus:outline-none focus:border-blue-500"
             />
-            {errors.services_description && <span className="text-red-500 text-sm">{errors.services_description}</span>}
+            {errors.services_description && (
+              <span className="text-red-500 text-sm">
+                {errors.services_description}
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-2 mb-4">
@@ -259,8 +292,8 @@ const SignupForm = () => {
               <input
                 type="file"
                 id="document_tradelicense"
-                style={{ display: 'none' }}
-                onChange={(e) => handleImageSelect(e, 'document_tradelicense')}
+                style={{ display: "none" }}
+                onChange={(e) => handleImageSelect(e, "document_tradelicense")}
               />
 
               <Button
@@ -268,7 +301,7 @@ const SignupForm = () => {
                 type="button"
                 className="bg-primary text-white py-2 px-4 rounded"
                 onClick={() =>
-                  document.getElementById('document_tradelicense').click()
+                  document.getElementById("document_tradelicense").click()
                 }
               >
                 Upload Trade License Document
@@ -296,15 +329,17 @@ const SignupForm = () => {
               <input
                 type="file"
                 id="document_other"
-                style={{ display: 'none' }}
-                onChange={(e) => handleImageSelect(e, 'document_other')}
+                style={{ display: "none" }}
+                onChange={(e) => handleImageSelect(e, "document_other")}
               />
 
               <Button
                 variant={"outline"}
                 type="button"
                 className="bg-primary text-white py-2 px-4 rounded"
-                onClick={() => document.getElementById('document_other').click()}
+                onClick={() =>
+                  document.getElementById("document_other").click()
+                }
               >
                 Upload Other Supporting Document
               </Button>
@@ -331,15 +366,15 @@ const SignupForm = () => {
               <input
                 type="file"
                 id="document_bank"
-                style={{ display: 'none' }}
-                onChange={(e) => handleImageSelect(e, 'document_bank')}
+                style={{ display: "none" }}
+                onChange={(e) => handleImageSelect(e, "document_bank")}
               />
 
               <Button
                 variant={"outline"}
                 type="button"
                 className="bg-primary text-white py-2 px-4 rounded"
-                onClick={() => document.getElementById('document_bank').click()}
+                onClick={() => document.getElementById("document_bank").click()}
               >
                 Upload Bank Documents
               </Button>
@@ -356,7 +391,9 @@ const SignupForm = () => {
                 name="document_bank"
               />
               {errors.document_bank && (
-                <span className="text-red-500 text-sm">{errors.document_bank}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.document_bank}
+                </span>
               )}
             </div>
 
@@ -364,15 +401,15 @@ const SignupForm = () => {
               <input
                 type="file"
                 id="document_vat"
-                style={{ display: 'none' }}
-                onChange={(e) => handleImageSelect(e, 'document_vat')}
+                style={{ display: "none" }}
+                onChange={(e) => handleImageSelect(e, "document_vat")}
               />
 
               <Button
                 variant={"outline"}
                 type="button"
                 className="bg-primary text-white py-2 px-4 rounded"
-                onClick={() => document.getElementById('document_vat').click()}
+                onClick={() => document.getElementById("document_vat").click()}
               >
                 Upload Bank Documents
               </Button>
@@ -389,11 +426,12 @@ const SignupForm = () => {
                 name="document_vat"
               />
               {errors.document_vat && (
-                <span className="text-red-500 text-sm">{errors.document_vat}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.document_vat}
+                </span>
               )}
             </div>
           </div>
-
 
           <div className="flex justify-center">
             <button
