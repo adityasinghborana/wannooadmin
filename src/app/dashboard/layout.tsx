@@ -4,8 +4,11 @@ import Navbar from "../ui/dashboard/navbar/Navbar";
 import Sidebar from "../ui/dashboard/sidebar/Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { CheckIsAdmin } from "@/lib/store/features/isAdmin/isAdminSlice";
+import { CheckIsVendor } from "@/lib/services";
 
 const DashboardLayout: React.FC<{
   children: React.ReactNode;
@@ -13,6 +16,24 @@ const DashboardLayout: React.FC<{
   const pathName = usePathname();
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
+  const dispatch = useDispatch(); 
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+      let user = JSON.parse(localStorage.getItem("user")!);
+      let data = await CheckIsVendor(user?.uid ?? "nun");
+  
+      if (data?.data?.isAdmin == true) {
+        dispatch(CheckIsAdmin(true));
+      } else {
+        dispatch(CheckIsAdmin(false));
+      } 
+    } catch (error) {
+        console.error(error);
+      }
+    }
+    checkUser();
+  }, []);
 
   if (!user && !loading && !error && !pathName.includes("/signIn")) {
     router.replace("/signIn");

@@ -1,6 +1,6 @@
 "use client";
 // App.tsx
-import { Getevents } from "@/lib/services";
+import { GetEvents } from "@/lib/services";
 import React, { useEffect, useState } from "react";
 import { Event } from "../../../lib/interfaces/eventinterface";
 import { columns } from "./columns";
@@ -14,7 +14,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        Getevents().then((response) => setEvents(response));
+        GetEvents().then((response) => setEvents(response));
       } catch (err) {
         setError("Failed to fetch events.");
       } finally {

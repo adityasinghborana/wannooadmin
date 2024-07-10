@@ -1,6 +1,6 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { GetCoupons } from "@/lib/services";
+import { GetCoupons, GetEvents, getAllTours } from "@/lib/services";
 import { Separator } from "@radix-ui/react-select";
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
@@ -34,6 +34,8 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { MdDelete } from "react-icons/md";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { addUsers } from "@/lib/store/features/user/userSlice";
 interface Coupon {
   id: number;
   name: string;
@@ -61,8 +63,17 @@ const Coupon = () => {
     resolver: yupResolver(couponSchema),
   });
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const Tours = useAppSelector((state) => state.tour.Tours);
+  const [tourData, setTourData] = useState(Tours);
+  const [eventData, setEventData] = useState(Tours);
 
   useEffect(() => {
+    Tours.length === 0 && getAllTours().then((data) => setTourData(data));
+    GetEvents().then((data) => setEventData(data));
+  }, []);
+
+  useEffect(() => {
+    console.log(tourData)
     const fetchCoupons = async () => {
       const data = await GetCoupons();
       console.log;
@@ -174,12 +185,12 @@ const Coupon = () => {
                   <FormField
                     control={form.control}
                     name="tourid"
+                    defaultValue=""
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Tour</FormLabel>
                         <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          onValueChange={(value) => field.onChange(value)}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -187,8 +198,12 @@ const Coupon = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="Flat">Flat</SelectItem>
-                            <SelectItem value="%">Percentage</SelectItem>
+                            {tourData.map((tour) => (
+                                <SelectItem key={tour.id} value={`${tour.tourId}`}>
+                                {tour.tourName}
+                                </SelectItem>
+                              ))
+                            }
                           </SelectContent>
                         </Select>
                       </FormItem>
@@ -197,21 +212,25 @@ const Coupon = () => {
                   <FormField
                     control={form.control}
                     name="eventid"
+                    defaultValue=""
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Event</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select Event" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Flat">Flat</SelectItem>
-                            <SelectItem value="%">Percentage</SelectItem>
+                          <SelectContent>                            
+                            {eventData.length > 0 && eventData.map((event) => (                              
+                              <SelectItem key={event?.eventdetail[0]?.id} value={`${event?.eventdetail[0]?.id}`}>
+                                {event?.eventName}
+                              </SelectItem>
+                            ))
+                            }
                           </SelectContent>
                         </Select>
                       </FormItem>

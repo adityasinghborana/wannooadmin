@@ -294,7 +294,7 @@ export async function GetAllBookings() {
     }
   }
   
-  export async function Getevents() { 
+  export async function GetEvents() { 
     try {
       const response = await axiosInstance.get('/events');
       return response.data;

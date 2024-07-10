@@ -169,7 +169,7 @@ const Sidebar = () => {
           ],
         },
       ]);
-    } else {
+    } else{
       setMenuItems([
         {
           title: "Pages",
@@ -214,7 +214,7 @@ const Sidebar = () => {
         },
       ]);
     }
-  }, []);
+  }, [CheckIsAdmin]);
 
   return (
     <div
