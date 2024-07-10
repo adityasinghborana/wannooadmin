@@ -46,7 +46,7 @@ const Bookings = () => {
       flex: 1,
     },
     {
-      field: "serviceType",
+      field: "servicetype",
       headerName: "Service Type",
       flex: 1,
     },
