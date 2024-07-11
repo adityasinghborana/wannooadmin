@@ -32,7 +32,7 @@ export const columns: ColumnDef<Vendor, any>[] = [
     },
   },
   {
-    accessorKey: "isVendor",
+    accessorKey: "isAdmin",
     cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
     header: ({ column }) => {
       return (
@@ -40,21 +40,21 @@ export const columns: ColumnDef<Vendor, any>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Vendor
+          Admin
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "isAdmin",
-    header: "Admin",
-    cell: ({ row }) => (row.original.isAdmin ? "Yes" : "No"),
+    accessorKey: "isVendor",
+    header: "Vendor",
+    cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
   },
 
   {
     accessorKey: "isApproved",
-    cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
+    cell: ({ row }) => (row.original.isApproved ? "Yes" : "No"),
     header: ({ column }) => {
       return (
         <Button

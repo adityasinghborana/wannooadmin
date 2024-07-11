@@ -3,6 +3,7 @@ export interface Vendor {
   uid: string;
   username: string;
   isAdmin: boolean;
+  isApproved: boolean;
   isVendor: boolean;
   email: string;
   address: string;

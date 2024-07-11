@@ -1,6 +1,6 @@
 "use client";
 // App.tsx
-import { getAllVendors, Getevents } from "@/lib/services";
+import { getAllVendors } from "@/lib/services";
 import React, { useEffect, useState } from "react";
 import { Vendor } from "../../../lib/interfaces/vendorinterface";
 import { columns } from "./columns";
