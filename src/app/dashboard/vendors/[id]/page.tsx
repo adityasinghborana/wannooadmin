@@ -37,6 +37,7 @@ const VendorDetail = () => {
     username: "",
     isAdmin: false,
     isVendor: false,
+    isApproved: false,
     email: "",
     address: "",
     age: 0,
