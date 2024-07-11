@@ -4,6 +4,7 @@ import {
   GetCoupons,
   GetEvents,
   createCoupons,
+  deleteCoupon,
   getAllTours,
 } from "@/lib/services";
 import { Separator } from "@radix-ui/react-select";
@@ -60,13 +61,15 @@ const couponSchema = yup.object().shape({
   tourid: yup.number(),
   eventid: yup.number(),
 });
-const onSubmit = (data: CouponFormData) => {
-  console.log(data);
-  const res = createCoupons(data).then((value) => {
-    console.log(value);
-  });
-};
+
 const Coupon = () => {
+  const onSubmit = (data: CouponFormData) => {
+    console.log(data);
+    const res = createCoupons(data).then((value) => {
+      console.log(value);
+      fetchCoupons();
+    });
+  };
   const form = useForm<CouponFormData>({
     resolver: yupResolver(couponSchema),
   });
@@ -83,13 +86,12 @@ const Coupon = () => {
     GetEvents().then((data) => setEventData(data));
   }, []);
 
+  const fetchCoupons = async () => {
+    const data = await GetCoupons();
+
+    setCoupons(data.result);
+  };
   useEffect(() => {
-    const fetchCoupons = async () => {
-      const data = await GetCoupons();
-
-      setCoupons(data.result);
-    };
-
     fetchCoupons();
   }, []);
 
@@ -98,36 +100,42 @@ const Coupon = () => {
       <ScrollArea className="h-1/2 w-full rounded-2xl border ">
         <div className="p-4">
           <h4 className="mb-4 text-sm font-medium leading-none">Coupons</h4>
-          {coupons.map((coupon) => (
-            <>
-              <div
-                key={coupon.id * Math.random()}
-                className="text-sm grid grid-cols-5 items-center "
-              >
-                <div>{coupon.id}</div>
-                <div>
-                  <strong className="mr-3">Name:</strong>
-                  {coupon.name}
+          {Array.isArray(coupons) && coupons.length > 0 ? (
+            coupons.map((coupon) => (
+              <React.Fragment key={coupon.id}>
+                <div className="text-sm grid grid-cols-5 items-center">
+                  <div>{coupon.id}</div>
+                  <div>
+                    <strong className="mr-3">Name:</strong>
+                    {coupon.name}
+                  </div>
+                  <div>
+                    <strong className="mr-3">Discount:</strong>
+                    {coupon.discount}
+                  </div>
+                  <div>
+                    <strong className="mr-3">Type:</strong>
+                    {coupon.type}
+                  </div>
+                  <div>
+                    <Button
+                      className="bg-red-400 hover:bg-red-600"
+                      onClick={() => {
+                        deleteCoupon(coupon.id).then(() => {
+                          fetchCoupons();
+                        });
+                      }}
+                    >
+                      <MdDelete />
+                    </Button>
+                  </div>
                 </div>
-
-                <div>
-                  <strong className="mr-3">Discount :</strong>
-                  {coupon.discount}
-                </div>
-                <div>
-                  <strong className="mr-3">Type:</strong>
-                  {coupon.type}
-                </div>
-                <div>
-                  <Button className="bg-red-400 hover:bg-red-600">
-                    <MdDelete></MdDelete>
-                  </Button>
-                </div>
-              </div>
-
-              <Separator className="my-2 " />
-            </>
-          ))}
+                <Separator className="my-2" />
+              </React.Fragment>
+            ))
+          ) : (
+            <div>No coupons to display</div>
+          )}
         </div>
       </ScrollArea>
       <div className="my-8">

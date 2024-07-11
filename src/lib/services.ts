@@ -365,3 +365,13 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+  export async function deleteCoupon(data:any) { 
+    try {
+      const response = await axiosInstance.delete('/deletecoupon',{data:
+        {id:data}
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
