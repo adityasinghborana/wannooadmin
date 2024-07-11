@@ -14,7 +14,22 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/lib/interfaces/vendorinterface";
-
+import Vendors from "../page";
+import Link from "next/link";
+const excludedFields = [
+  "id",
+  "vatDocument",
+  "bankDocument",
+  "document_tradelicense",
+  "document_other",
+  "tours",
+];
+const linkFields = [
+  "vatDocument",
+  "bankDocument",
+  "document_tradelicense",
+  "document_other",
+];
 const VendorDetail = () => {
   const [vendordetail, setVendorDetail] = useState<Vendor>({
     id: 0,
@@ -36,13 +51,13 @@ const VendorDetail = () => {
     created_at: "", // Or new Date().toISOString() if you want to initialize it with the current date
   });
   const params = useParams();
-  const uid = Array.isArray(params.bookingId)
-    ? params.bookingId[0]
-    : params.bookingId;
+  const uid = Array.isArray(params.id) ? params.id[0] : params.id;
+  console.log(uid);
   useEffect(() => {
-    const FetchVendorDetails = async (id: string) => {
-      const response = await getVendorDetail(id);
-      setVendorDetail(response);
+    const FetchVendorDetails = async (uid: string) => {
+      const response = await getVendorDetail(uid);
+      console.log(response);
+      setVendorDetail(response.data);
     };
 
     if (uid) {
@@ -50,17 +65,58 @@ const VendorDetail = () => {
     }
   }, [uid]);
   return (
-    <Card>
+    <Card className="shadow-lg mt-8 rounded-xl">
       <CardHeader>
-        <CardTitle>{vendordetail.id}</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle className="mb-8"> Details</CardTitle>
+        <div className="grid grid-cols-3 gap-2  ">
+          {Object.keys(vendordetail)
+            .filter((key) => !excludedFields.includes(key))
+            .map((key) => (
+              <CardContent
+                key={key}
+                className="flex flex-row items-center justify-start"
+              >
+                <div className="text-center flex flex-row ">
+                  <CardTitle className="flex flex-row">
+                    <p className="mx-1">{key.toUpperCase()}:</p>
+                  </CardTitle>
+                  <CardContent>
+                    {String(vendordetail[key as keyof Vendor])}
+                  </CardContent>
+                </div>
+              </CardContent>
+            ))}
+        </div>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
+
+      <CardHeader>
+        <CardTitle className="mb-8"> Documents</CardTitle>
+        <div className="grid grid-cols-2 gap-2  ">
+          {Object.keys(vendordetail)
+            .filter((key) => linkFields.includes(key))
+            .map((key) => (
+              <CardContent
+                key={key}
+                className="flex flex-row items-center justify-start"
+              >
+                <div className="text-center flex flex-row ">
+                  <CardTitle className="flex flex-row">
+                    <p className="mx-2">{key.toUpperCase()}:</p>
+                  </CardTitle>
+                  <a
+                    href={`${process.env.NEXT_PUBLIC_URL}${String(
+                      vendordetail[key as keyof Vendor]
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    click here to see
+                  </a>
+                </div>
+              </CardContent>
+            ))}
+        </div>
+      </CardHeader>
     </Card>
   );
 };
