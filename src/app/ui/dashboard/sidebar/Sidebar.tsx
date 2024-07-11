@@ -75,6 +75,11 @@ const Sidebar = () => {
               path: "/dashboard/tours",
               icon: <MdTour />,
             },
+            {
+              title: "Tours Request",
+              path: "/dashboard/tourrequests",
+              icon: <MdTour />,
+            },
 
             {
               title: "Add Tours",
@@ -85,6 +90,11 @@ const Sidebar = () => {
               title: "Events",
               path: "/dashboard/events",
               icon: <MdFestival />,
+            },
+            {
+              title: "Events Request",
+              path: "/dashboard/eventrequests",
+              icon: <MdTour />,
             },
             {
               title: "Add Event",
@@ -169,7 +179,7 @@ const Sidebar = () => {
           ],
         },
       ]);
-    } else{
+    } else {
       setMenuItems([
         {
           title: "Pages",
