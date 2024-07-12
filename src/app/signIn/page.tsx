@@ -19,7 +19,7 @@ const SignIn = () => {
     try {
       const res = await signInWithEmailAndPassword(username, password);
       localStorage.setItem("user", JSON.stringify(res?.user));
-      router.push("/dashboard");
+      router.push("/admin/dashboard");
       setUsername("");
       setPassword("");
     } catch (error) {

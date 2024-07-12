@@ -32,7 +32,7 @@ const Sidebar = () => {
       list: [
         {
           title: "Dashboard",
-          path: "/dashboard",
+          path: "/admin/dashboard",
           icon: <MdDashboard />,
         },
       ],
@@ -47,22 +47,22 @@ const Sidebar = () => {
           list: [
             {
               title: "Dashboard",
-              path: "/dashboard",
+              path: "/admin/dashboard",
               icon: <MdDashboard />,
             },
             {
               title: "Users",
-              path: "/dashboard/users",
+              path: "/admin/dashboard/users",
               icon: <MdSupervisedUserCircle />,
             },
             {
               title: "Vendors",
-              path: "/dashboard/vendors",
+              path: "/admin/dashboard/vendors",
               icon: <MdVerifiedUser />,
             },
             {
               title: "Pending-Requests",
-              path: "/dashboard/pending-requests",
+              path: "/admin/dashboard/pending-requests",
               icon: <MdPending />,
             },
           ],
@@ -72,33 +72,33 @@ const Sidebar = () => {
           list: [
             {
               title: "Tours",
-              path: "/dashboard/tours",
+              path: "/admin/dashboard/tours",
               icon: <MdTour />,
             },
             {
               title: "Tours Request",
-              path: "/dashboard/tourrequests",
+              path: "/admin/dashboard/tourrequests",
               icon: <MdTour />,
             },
 
             {
               title: "Add Tours",
-              path: "/dashboard/add-tours",
+              path: "/admin/dashboard/add-tours",
               icon: <MdAddCard />,
             },
             {
               title: "Events",
-              path: "/dashboard/events",
+              path: "/admin/dashboard/events",
               icon: <MdFestival />,
             },
             {
               title: "Events Request",
-              path: "/dashboard/eventrequests",
+              path: "/admin/dashboard/eventrequests",
               icon: <MdTour />,
             },
             {
               title: "Add Event",
-              path: "/dashboard/addevents",
+              path: "/admin/dashboard/addevents",
               icon: <MdEvent />,
             },
           ],
@@ -108,7 +108,7 @@ const Sidebar = () => {
           list: [
             {
               title: "Email Templates",
-              path: "/dashboard/email",
+              path: "/admin/dashboard/email",
               icon: <MdEmail />,
             },
           ],
@@ -118,12 +118,12 @@ const Sidebar = () => {
           list: [
             {
               title: "Home Page Data",
-              path: "/dashboard/homepage/home",
+              path: "/admin/dashboard/homepage/home",
               icon: <MdHome />,
             },
             {
               title: "Library",
-              path: "/dashboard/homepage/library",
+              path: "/admin/dashboard/homepage/library",
               icon: <MdImage />,
             },
           ],
@@ -133,22 +133,22 @@ const Sidebar = () => {
           list: [
             {
               title: "About us",
-              path: "/dashboard/about-us",
+              path: "/admin/dashboard/about-us",
               icon: <MdWorkHistory />,
             },
             {
               title: "Contact us",
-              path: "/dashboard/contact-us",
+              path: "/admin/dashboard/contact-us",
               icon: <MdWorkHistory />,
             },
             {
               title: "Forms Submission",
-              path: "/dashboard/forms",
+              path: "/admin/dashboard/forms",
               icon: <MdWorkHistory />,
             },
             {
               title: "Coupons",
-              path: "/dashboard/coupons",
+              path: "/admin/dashboard/coupons",
               icon: <MdDiscount />,
             },
           ],
@@ -158,12 +158,12 @@ const Sidebar = () => {
           list: [
             {
               title: "Bookings",
-              path: "/dashboard/bookings",
+              path: "/admin/dashboard/bookings",
               icon: <MdWorkHistory />,
             },
             // {
             //   title: "Canceled Bookings ",
-            //   path: "/dashboard/tours",
+            //   path: "/admin/dashboard/tours",
             //   icon: <MdWorkHistory />,
             // },
           ],
@@ -173,7 +173,7 @@ const Sidebar = () => {
           list: [
             {
               title: "Api's",
-              path: "/dashboard/api",
+              path: "/admin/dashboard/api",
               icon: <MdApi />,
             },
           ],
@@ -186,7 +186,7 @@ const Sidebar = () => {
           list: [
             {
               title: "Dashboard",
-              path: "/dashboard",
+              path: "/admin/dashboard",
               icon: <MdDashboard />,
             },
           ],
@@ -196,28 +196,28 @@ const Sidebar = () => {
           list: [
             {
               title: "Tours",
-              path: "/dashboard/tours",
+              path: "/admin/dashboard/tours",
               icon: <MdTour />,
             },
 
             {
               title: "Add Tours",
-              path: "/dashboard/add-tours",
+              path: "/admin/dashboard/add-tours",
               icon: <MdAddCard />,
             },
             {
               title: "Events",
-              path: "/dashboard/events",
+              path: "/admin/dashboard/events",
               icon: <MdFestival />,
             },
             {
               title: "Add Event",
-              path: "/dashboard/addevents",
+              path: "/admin/dashboard/addevents",
               icon: <MdEvent />,
             },
             {
               title: "Coupons",
-              path: "/dashboard/coupons",
+              path: "/admin/dashboard/coupons",
               icon: <MdDiscount />,
             },
           ],

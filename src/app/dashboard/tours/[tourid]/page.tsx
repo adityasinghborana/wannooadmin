@@ -28,7 +28,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
       }
       let res = await getTourDetails(params.tourid);
       res && setImages(res.tourImages);
-      res && delete res.tourImages
+      res && delete res.tourImages;
       res && setTourDetails(res);
       // console.log(await getTourDetails(params.tourid))
     };
@@ -79,23 +79,26 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
               <MdArrowBack />
             </Link>
           </div>
-            {images.length > 0 && (
-              <div id={String(currentImageIndex)} className="carousel flex justify-center">
-                <div className="bg-black grid h-64 w-96">
-                  <img
-                    src={images[currentImageIndex].imagePath}
-                    alt={`Image ${currentImageIndex + 1}`}
-                  />
-                  <div className="controls mt-4 flex justify-between">
-                    <button onClick={prevImage}>Previous</button>
-                    <button onClick={deleteImage}>Delete</button>
-                    <button onClick={updateImage}>Update</button>
-                    <button onClick={nextImage}>Next</button>
-                  </div>
+          {images.length > 0 && (
+            <div
+              id={String(currentImageIndex)}
+              className="carousel flex justify-center"
+            >
+              <div className="bg-black grid h-64 w-96">
+                <img
+                  src={images[currentImageIndex].imagePath}
+                  alt={`Image ${currentImageIndex + 1}`}
+                />
+                <div className="controls mt-4 flex justify-between">
+                  <button onClick={prevImage}>Previous</button>
+                  <button onClick={deleteImage}>Delete</button>
+                  <button onClick={updateImage}>Update</button>
+                  <button onClick={nextImage}>Next</button>
                 </div>
-                {images.length === 0 && <p>No images available.</p>}
               </div>
-            )}
+              {images.length === 0 && <p>No images available.</p>}
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-5">
             {Object.keys(tourdetails).map((key) => (
               <div key={key}>

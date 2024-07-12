@@ -78,7 +78,9 @@ const SignupForm = () => {
               ...formData,
             };
             // console.log(userData.uid,"this is uid ");
-            await SignUpVendor(userData).then(() => router.push("/dashboard"));
+            await SignUpVendor(userData).then(() =>
+              router.push("/admin/dashboard")
+            );
           } else {
             console.log(res);
           }

@@ -16,27 +16,27 @@ const DashboardLayout: React.FC<{
   const pathName = usePathname();
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   useEffect(() => {
     const checkUser = async () => {
       try {
-      let user = JSON.parse(localStorage.getItem("user")!);
-      let data = await CheckIsVendor(user?.uid ?? "nun");
-  
-      if (data?.data?.isAdmin == true) {
-        dispatch(CheckIsAdmin(true));
-      } else {
-        dispatch(CheckIsAdmin(false));
-      } 
-    } catch (error) {
+        let user = JSON.parse(localStorage.getItem("user")!);
+        let data = await CheckIsVendor(user?.uid ?? "nun");
+
+        if (data?.data?.isAdmin == true) {
+          dispatch(CheckIsAdmin(true));
+        } else {
+          dispatch(CheckIsAdmin(false));
+        }
+      } catch (error) {
         console.error(error);
       }
-    }
+    };
     checkUser();
   }, []);
 
   if (!user && !loading && !error && !pathName.includes("/signIn")) {
-    router.replace("/signIn");
+    router.replace("/admin/signIn");
     return null; // Render nothing while redirecting
   }
 
