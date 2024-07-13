@@ -375,3 +375,12 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+  
+  export async function deleteTour(id:any) { 
+    try {
+      const response = await axiosInstance.delete(`/deletetour?id=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }

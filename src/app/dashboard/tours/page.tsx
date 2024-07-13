@@ -1,7 +1,7 @@
 "use client";
 import DataGridContainer from "@/app/ui/dashboard/DataGridContainer/DataGridContainer";
 import Container from "@/app/ui/dashboard/container/Container";
-import { getAllTours } from "@/lib/services";
+import { deleteTour, getAllTours } from "@/lib/services";
 import { useAppSelector } from "@/lib/store/hooks";
 import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import Link from "next/link";
@@ -25,6 +25,13 @@ const Tours: FC = () => {
   useEffect(() => {
     Tours.length === 0 && getAllTours().then((data) => setRows(data));
   }, []);
+
+  const handleDelete = async(params:any)=>{
+      let data = await deleteTour(params?.row?.tourId)
+      if(data){
+        setRows(rows.filter((item) => item.id !== params?.row?.id))
+      }
+  }
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -77,7 +84,7 @@ const Tours: FC = () => {
           >
             <MdViewAgenda />
           </Link>
-          <button className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600">
+          <button onClick={() => handleDelete(params)}  className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600">
             <MdDelete />
           </button>
         </div>
