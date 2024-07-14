@@ -11,6 +11,7 @@ const CustomPagination = ({ totalPages, currentPage, onPageChange }) => {
         {totalPages > 1 && (
           <>
             <button
+              type="button"
               onClick={handlePrevPage}
               disabled={currentPage === 0}
               className="mr-2 py-2 px-4 bg-blue-500 text-white rounded-l"
@@ -19,6 +20,7 @@ const CustomPagination = ({ totalPages, currentPage, onPageChange }) => {
             </button>
             {currentPage + 1} / {totalPages}
             <button
+              type="button"
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
               className="ml-2 py-2 px-4 bg-blue-500 text-white rounded-r"

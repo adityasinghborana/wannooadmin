@@ -1,6 +1,8 @@
 "use client";
 import Container from "@/app/ui/dashboard/container/Container";
+import SCustomImageUpload from "@/app/ui/dashboard/SingleImageLibrary/SCustomImageUpload";
 import {
+  GetAllImages,
   UpdateHomePageData,
   getContactUsPageData,
   getHomePageData,
@@ -9,6 +11,14 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const ContactUsPage = () => {
   const [contactpagedata, setContactPageData] = useState({});
+  const [imagepath, setImagePath] = useState('');
+
+  useEffect(() => {
+    setContactPageData((prevData) => ({
+      ...prevData,
+      Imagepath: imagepath,
+    }));
+  }, [imagepath]);
 
   const getData = async () => {
     setContactPageData(await getContactUsPageData());
@@ -39,7 +49,7 @@ const ContactUsPage = () => {
     <Container>
       <div
         className="bg-white p-8 shadow-md w-full rounded-2xl mt-28"
-        style={{ height: "calc(100vh - 30rem)" }}
+        style={{ height: "calc(100vh - 15rem)" }}
       >
         <h2 className="text-2xl text-black font-bold mb-6 text-center">
           Contact page data
@@ -52,6 +62,7 @@ const ContactUsPage = () => {
             {/* Other form fields */}
             {Object.keys(contactpagedata).map((key) => {
               if (key === "id") return null;
+              if (key === "Imagepath") return <SCustomImageUpload onImageSelect={setImagePath} Images={GetAllImages}/>;
               return (
                 <div className="mb-4 " key={key}>
                   <label className="block text-gray-500 capitalize">
