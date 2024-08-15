@@ -16,6 +16,7 @@ import {
 import CustomImageUpload from "../../ui/dashboard/ImageModal/ImageUpload";
 import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
 
 // Define the schema for validation
 const tourSchema = yup.object().shape({
@@ -252,7 +253,8 @@ const TourForm = () => {
       countryid: 13063,
       citytourtypeid: cityToureTypeId,
     };
-    await AddTour(datatopost);
+    let res = await AddTour(datatopost);
+    res?.result?.status === 200 && toast.success("Tour added successfully");
     // Send data to the API
   };
 
