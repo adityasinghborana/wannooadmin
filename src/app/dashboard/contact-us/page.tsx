@@ -48,8 +48,8 @@ const ContactUsPage = () => {
   return (
     <Container>
       <div
-        className="bg-white p-8 shadow-md w-full rounded-2xl mt-28"
-        style={{ height: "calc(100vh - 15rem)" }}
+        className="bg-white p-8 shadow-md w-full rounded-2xl mt-2"
+        // style={{ height: "calc(100vh - 15rem)" }}
       >
         <h2 className="text-2xl text-black font-bold mb-6 text-center">
           Contact page data

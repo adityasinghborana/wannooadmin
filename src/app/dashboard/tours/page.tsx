@@ -67,6 +67,11 @@ const Tours: FC = () => {
       flex: 1,
     },
     {
+      field: "cityName",
+      headerName: "City",
+      flex: 1,
+    },
+    {
       field: "actions",
       headerName: "Actions",
       flex: 1,

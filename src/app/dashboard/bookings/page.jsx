@@ -51,6 +51,16 @@ const Bookings = () => {
       flex: 1,
     },
     {
+      field: "tourDate",
+      headerName: "Tour Date",
+      flex: 1,
+    },
+    {
+      field: "startTime",
+      headerName: "Setoutart Time",
+      flex: 1,
+    },
+    {
       field: "bookingResultId",
       headerName: "Booking_Result_Id",
       flex: 1,

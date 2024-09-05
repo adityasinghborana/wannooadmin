@@ -3,6 +3,7 @@ import { auth } from "@/firebase/config";
 import { CheckIsVendor } from "@/lib/services";
 import { CheckIsAdmin } from "@/lib/store/features/isAdmin/isAdminSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
@@ -28,8 +29,15 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-primary-foreground w-full">
-      <div className="bg-primary p-8 rounded-2xl shadow-md w-96 text-white">
+    <div className="flex justify-center items-center h-screen bg-white w-full">
+      <div className="bg-black p-8 rounded-2xl shadow-md w-96 text-white">
+        <Image
+          src={`/admin/logo/Group.png`}
+          alt="Logo"
+          width={200}
+          height={200}
+          className="mb-4"
+        />
         <h1 className="text-3xl font-bold text-center mb-8">Sign-In</h1>
         {/* <form onSubmit={handleLogin}> */}
         {error && <div className="text-red-500 mb-4">{error}</div>}

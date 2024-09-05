@@ -157,9 +157,8 @@ const Coupon = () => {
                       <FormItem>
                         <FormLabel>Coupon Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="shadcn" {...field} />
+                          <Input placeholder="Coupon Name" {...field} />
                         </FormControl>
-
                         <FormMessage />
                       </FormItem>
                     )}
@@ -171,9 +170,8 @@ const Coupon = () => {
                       <FormItem>
                         <FormLabel>Discount Value</FormLabel>
                         <FormControl>
-                          <Input placeholder="20" {...field} />
+                          <Input placeholder="Discount Value" {...field} />
                         </FormControl>
-
                         <FormMessage />
                       </FormItem>
                     )}
@@ -186,14 +184,14 @@ const Coupon = () => {
                         <FormLabel>Discount Type</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          // defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select Type" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent className="bg-white">
                             <SelectItem value="Flat">Flat</SelectItem>
                             <SelectItem value="%">Percentage</SelectItem>
                           </SelectContent>

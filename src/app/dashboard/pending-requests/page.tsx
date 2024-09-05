@@ -15,10 +15,10 @@ const PendingVendors: React.FC = () => {
     const fetchVendors = async () => {
       try {
         getAllVendors().then((response) => {
-          const approvedVendors = response.filter(
+          const unapprovedVendors = response.filter(
             (vendor: Vendor) => vendor.isApproved == false
           );
-          setVendors(approvedVendors);
+          setVendors(unapprovedVendors);
         });
       } catch (err) {
         setError("Failed to fetch events.");

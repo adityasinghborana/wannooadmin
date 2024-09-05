@@ -31,48 +31,54 @@ export const columns: ColumnDef<Vendor, any>[] = [
       );
     },
   },
-  {
-    accessorKey: "isAdmin",
-    cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Admin
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "isAdmin",
+  //   cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Admin
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "isVendor",
     header: "Vendor",
     cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
   },
 
-  {
-    accessorKey: "isApproved",
-    cell: ({ row }) => (row.original.isApproved ? "Yes" : "No"),
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Approved
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "isApproved",
+  //   cell: ({ row }) => (row.original.isApproved ? "Yes" : "No"),
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Approved
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "Actions",
     cell: (row: any) => {
       return (
         <div className="flex max-w-full gap-2 h-full items-center justify-center">
           <Link href={`/dashboard/vendors/${row.row.original.uid}`}>
+            <button className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600">
+              <MdViewAgenda />
+            </button>
+          </Link>
+
+          <Link href={`/dashboard/vendors/view${row.row.original.uid}`}>
             <button className="flex items-center justify-center px-2 py-1 rounded bg-yellow-400 text-white hover:bg-blue-600 focus:outline-none focus:bg-red-600">
               <MdVisibility />
             </button>

@@ -78,7 +78,7 @@ const Home: React.FC = () => {
           className="overflow-y-auto "
           style={{ maxHeight: "90%", scrollbarWidth: "none" }}
         >
-          <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
             {/* Render form inputs based on homepagedata */}
             {Object.keys(homepagedata).map((key) => {
               if (key === "id") return null; // Skip rendering 'id'
@@ -104,10 +104,10 @@ const Home: React.FC = () => {
                 </div>
               );
             })}
-            <div className="flex justify-center col-span-3">
+            <div className="flex justify-center">
               <button
                 type="submit"
-                className="bg-primary text-white py-2 px-4 rounded-full hover:bg-purple-400 w-96"
+                className="bg-primary text-white py-2 px-4 rounded-full hover:bg-purple-400"
               >
                 Submit
               </button>

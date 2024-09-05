@@ -68,7 +68,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
   };
 
   return (
-    <div className=" w-full flex justify-center px-20">
+    <div className="w-full flex justify-center px-20">
       <div className="w-full justify-self-center">
         <form
           onSubmit={handleSubmit}
@@ -99,7 +99,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
               {images.length === 0 && <p>No images available.</p>}
             </div>
           )}
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-5">
             {Object.keys(tourdetails).map((key) => (
               <div key={key}>
                 <div key={currentImageIndex} className="mb-4">
@@ -109,14 +109,13 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
                   >
                     {key}
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     id={key}
                     name={key}
                     disabled={!isedit}
                     value={tourdetails[key] || ""}
                     onChange={handleInputChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
+                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full text-black"
                   />
                 </div>
               </div>

@@ -43,12 +43,10 @@ const Dashboard = () => {
   return (
     <Container>
       <div className="">
-        <div className="hidden md:grid grid-cols-3 gap-5 mb-4">
+        <div className="flex gap-2 mb-4">
           <Card title="Total Users" value={users} desc="......" />
           <Card title="Total Vendors" value={vendors} desc="......"/>
           <Card title="Total Tours" value={tours} desc="......"/>
-        </div>
-        <div className="hidden md:grid grid-cols-3 gap-5 mb-4">
           <Card title="Total Payout" value={users} desc="......" />
           <Card title="Total Bookings" value={vendors} desc="......"/>
           <Card title="Total Sales" value={tours} desc="......"/>
