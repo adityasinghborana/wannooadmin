@@ -1,5 +1,13 @@
 "use client";
 
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { getTourDetails } from "@/lib/services";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -69,7 +77,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
 
   return (
     <div className="w-full flex justify-center px-20">
-      <div className="w-full justify-self-center">
+      <div className="w-full max-w-6xl">
         <form
           onSubmit={handleSubmit}
           className="px-4 py-4 border rounded-xl bg-white"
@@ -80,24 +88,50 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
             </Link>
           </div>
           {images.length > 0 && (
-            <div
+            // <div
+            //   id={String(currentImageIndex)}
+            //   className="carousel"
+            // >
+            //   <div className="bg-black grid h-64 w-96">
+            //     <img
+            //       src={images[currentImageIndex].imagePath}
+            //       alt={`Image ${currentImageIndex + 1}`}
+            //     />
+            //     <div className="controls mt-4 flex justify-between">
+            //       <button onClick={prevImage}>Previous</button>
+            //       <button onClick={deleteImage}>Delete</button>
+            //       <button onClick={updateImage}>Update</button>
+            //       <button onClick={nextImage}>Next</button>
+            //     </div>
+            //   </div>
+            //   {images.length === 0 && <p>No images available.</p>}
+            // </div>
+            <Carousel
               id={String(currentImageIndex)}
-              className="carousel flex justify-center"
+              opts={{
+                align: "start",
+              }}
+              className="w-full"
             >
-              <div className="bg-black grid h-64 w-96">
-                <img
-                  src={images[currentImageIndex].imagePath}
-                  alt={`Image ${currentImageIndex + 1}`}
-                />
-                <div className="controls mt-4 flex justify-between">
-                  <button onClick={prevImage}>Previous</button>
-                  <button onClick={deleteImage}>Delete</button>
-                  <button onClick={updateImage}>Update</button>
-                  <button onClick={nextImage}>Next</button>
-                </div>
-              </div>
-              {images.length === 0 && <p>No images available.</p>}
-            </div>
+              <CarouselContent>
+                {images.map((image, index) => (
+                  <CarouselItem  className='md:basis-1/2 lg:basis-1/3' key={index}>
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center p-6">
+                          <img
+                            src={image.imagePath}
+                            alt={`Image ${currentImageIndex + 1}`}
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           )}
           <div className="grid grid-cols-1 gap-5">
             {Object.keys(tourdetails).map((key) => (

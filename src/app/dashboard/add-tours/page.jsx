@@ -17,6 +17,7 @@ import CustomImageUpload from "../../ui/dashboard/ImageModal/ImageUpload";
 import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import Cookie from 'js-cookie';
 
 // Define the schema for validation
 const tourSchema = yup.object().shape({
@@ -245,7 +246,7 @@ const TourForm = () => {
   };
   const excludedFields = ["bookingResult", "adultRate", "childRate"];
   const onSubmit = async (data) => {
-    let user = JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(Cookie.get('user'));
     let datatopost = {
       ...data,
       vendoruid: user?.uid,

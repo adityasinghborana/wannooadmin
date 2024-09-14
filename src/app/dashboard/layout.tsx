@@ -1,14 +1,14 @@
 "use client";
+import { auth } from "@/firebase/config";
+import { CheckIsVendor } from "@/lib/services";
+import { CheckIsAdmin } from "@/lib/store/features/isAdmin/isAdminSlice";
+import Cookie from 'js-cookie';
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDispatch } from "react-redux";
 import Navbar from "../ui/dashboard/navbar/Navbar";
 import Sidebar from "../ui/dashboard/sidebar/Sidebar";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/config";
-import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { CheckIsAdmin } from "@/lib/store/features/isAdmin/isAdminSlice";
-import { CheckIsVendor } from "@/lib/services";
 
 const DashboardLayout: React.FC<{
   children: React.ReactNode;
@@ -20,9 +20,11 @@ const DashboardLayout: React.FC<{
   useEffect(() => {
     const checkUser = async () => {
       try {
-        let user = JSON.parse(localStorage.getItem("user")!);
+        let user = JSON.parse(Cookie.get('user')!);
         let data = await CheckIsVendor(user?.uid ?? "nun");
-
+        if(data?.data?.isApproved == false){
+          router.replace("/admin");
+        }
         if (data?.data?.isAdmin == true) {
           dispatch(CheckIsAdmin(true));
         } else {
@@ -36,7 +38,7 @@ const DashboardLayout: React.FC<{
   }, []);
 
   if (!user && !loading && !error && !pathName.includes("/signIn")) {
-    router.replace("/admin/signIn");
+    router.replace("/signIn");
     return null; // Render nothing while redirecting
   }
 

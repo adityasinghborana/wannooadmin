@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import CustomImageUpload from "../../ui/dashboard/ImageModal/ImageUpload";
 import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
+import Cookie from 'js-cookie';
 
 // Define the schema for validation
 const eventSchema = yup.object().shape({
@@ -243,7 +244,7 @@ const EventForm = () => {
   };
 
   const onSubmit = async (data) => {
-    let user = JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(Cookie.get('user'));
     const formattedData = {
       vendoruid: user?.uid,
       isVisible: data?.isVisible === "true" ? true : false,

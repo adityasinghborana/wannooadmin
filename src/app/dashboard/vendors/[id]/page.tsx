@@ -1,116 +1,130 @@
 "use client";
 
-import { getTourDetails, getVendorDetail } from "@/lib/services";
-import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Vendor } from "@/lib/interfaces/vendorinterface";
+import { getVendorDetail } from "@/lib/services";
 import { useEffect, useState } from "react";
-import { MdArrowBack, MdArrowLeft } from "react-icons/md";
+const excludedFields = [
+  "id",
+  "vatDocument",
+  "bankDocument",
+  "document_tradelicense",
+  "document_other",
+  "tours",
+];
+const linkFields = [
+  "vatDocument",
+  "bankDocument",
+  "document_tradelicense",
+  "document_other",
+];
+export default function VendorDetail({ params }: { params: { id: String } }) {
+  const [vendordetail, setVendorDetail] = useState<Vendor>({
+    id: 0,
+    uid: "",
+    username: "",
+    isAdmin: false,
+    isVendor: false,
+    isApproved: false,
+    email: "",
+    address: "",
+    age: 0,
+    name: "",
+    license_number: "",
+    country: "",
+    city: "",
+    services_description: "",
+    mobile: "",
+    document_tradelicense: "",
+    document_other: "",
+    created_at: "", // Or new Date().toISOString() if you want to initialize it with the current date
+  });
 
-interface TourData {
-  [key: string]: string[];
-}
+  if (params.id.includes("view")) {
+    params.id = params.id.replace("view", "");
+  }
 
-interface Image {
-  id: number;
-  imagePath: string;
-}
+  const formatDate = (dateString: any) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
-export default function EditVendor({ params }: { params: { id: String } }) {
-  const [tourdetails, setTourDetails] = useState<any>({});
-  const [isedit, SetIsEdit] = useState<boolean>(true);
-  const [images, setImages] = useState<Image[]>([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  const uid = params.id;
   useEffect(() => {
-    const Tourdetails = async () => {
-      console.log(params.id)
-      if (params.id.includes("view")) {
-        SetIsEdit(false);
-        params.id = params.id.replace("view", "");
-      }
-      let res = await getVendorDetail(params.id);      
-      console.log(res.data)
-      res && setTourDetails(res.data);
-      // console.log(await getTourDetails(params.tourid))
+    const FetchVendorDetails = async (uid: String) => {
+      const response = await getVendorDetail(uid);
+      setVendorDetail({...response.data});
     };
-    Tourdetails();
-  }, []);
 
-  const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
-    setTourDetails({ ...tourdetails, [name]: value });
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    // Handle form submission with formData
-    console.log("Form submitted with data:", tourdetails);
-  };
-
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-
-  const deleteImage = () => {
-    if (window.confirm("Are you sure you want to delete this image?")) {
-      // Make an API request to delete the current image
-      // After deletion, you may want to fetch the updated list of images
+    if (uid) {
+      FetchVendorDetails(uid);
     }
-  };
-
-  const updateImage = () => {
-    // Add logic to allow users to update the current image
-  };
-
+  }, [uid]);
   return (
-    <div className="w-full flex justify-center overflow-y-scroll px-20">
-      <div className="w-full justify-self-center">
-        <form
-          onSubmit={handleSubmit}
-          className="px-4 py-4 border rounded-xl bg-white"
-        >
-          <div className="mb-5">
-            <Link href={"/dashboard/vendors"} className="text-black text-3xl">
-              <MdArrowBack />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 gap-5">
-            {Object.keys(tourdetails).map((key) => (
-              <div key={key}>
-                <div key={currentImageIndex} className="mb-4">
-                  <label
-                    htmlFor={key}
-                    className="block text-sm font-medium text-gray-700 uppercase"
-                  >
-                    {key}
-                  </label>
-                  <textarea
-                    id={key}
-                    name={key}
-                    disabled={!isedit}
-                    value={tourdetails[key] || ""}
-                    onChange={handleInputChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full text-black"
-                  />
+    <Card className="shadow-lg mt-8 rounded-xl" style={{ height: 'calc(100vh - 5rem)', overflowY: 'scroll' }}>
+      <CardHeader>
+        <CardTitle className="mb-8">Details</CardTitle>
+        <div className="grid grid-cols-1 gap-2 h-[400px] overflow-y-scroll">
+          {Object.keys(vendordetail)
+            .filter((key) => !excludedFields.includes(key))
+            .map((key) => (
+              <CardContent
+                key={key}
+                className="flex flex-row items-center justify-start"
+              >
+                <div className="text-center flex flex-row">
+                  <CardTitle className="flex flex-row">
+                    <p className="mx-1">{key.toUpperCase()}:</p>
+                  </CardTitle>
+                  <CardContent>
+                    {key === 'created_at'
+                      ? formatDate(vendordetail[key])
+                      : String(vendordetail[key as keyof Vendor])}
+                  </CardContent>
                 </div>
-              </div>
+              </CardContent>
             ))}
-          </div>
-          {isedit && (
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Submit
-            </button>
-          )}
-        </form>
-      </div>
-    </div>
+        </div>
+      </CardHeader>
+  
+      <CardHeader>
+        <CardTitle className="mb-8">Documents</CardTitle>
+        <div className="grid grid-cols-2 gap-2 h-[400px] overflow-y-scroll">
+          {Object.keys(vendordetail)
+            .filter((key) => linkFields.includes(key))
+            .map((key) => (
+              <CardContent
+                key={key}
+                className="flex flex-row items-center justify-start"
+              >
+                <div className="text-center flex flex-row">
+                  <CardTitle className="flex flex-row">
+                    <p className="mx-2">{key.toUpperCase()}:</p>
+                  </CardTitle>
+                  <a
+                    href={`${process.env.NEXT_PUBLIC_URL}${String(
+                      vendordetail[key as keyof Vendor]
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    click here to see
+                  </a>
+                </div>
+              </CardContent>
+            ))}
+        </div>
+      </CardHeader>
+    </Card>
   );
-}
+  
+};

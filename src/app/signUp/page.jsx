@@ -6,6 +6,7 @@ import { SignUpVendor, UploadBackgroundImage } from "@/lib/services";
 import ImageUploadModal from "../ui/dashboard/SingleImageModal/CustomSingleImageUpload";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 const initialFormData = {
   username: "",
   password: "",
@@ -13,7 +14,7 @@ const initialFormData = {
   isVendor: false,
   email: "",
   address: "",
-  age: 22,
+  age: 0,
   name: "",
   license_number: "",
   country: "",
@@ -79,7 +80,7 @@ const SignupForm = () => {
             };
             // console.log(userData.uid,"this is uid ");
             await SignUpVendor(userData).then(() =>
-              router.push("/admin/dashboard")
+              router.push("/dashboard")
             );
           } else {
             console.log(res);
@@ -122,15 +123,24 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-primary-foreground p-4">
-      <div className="bg-white  w-1/2 px-8 shadow-lg  max-w-4xl rounded-2xl py-8">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+    <div className="min-h-screen w-full flex items-center justify-center bg-white p-4">
+      <div className="bg-black text-white  w-1/2 px-8 shadow-lg  max-w-4xl rounded-2xl py-8">
+        <div className="flex flex-col justify-center items-center">
+        <Image
+            src={`/admin/logo/Group.png`}
+            alt="Logo"
+            width={300}
+            height={200}
+            className="mb-4"
+          />
+        <h2 className="text-3xl font-bold mb-6">          
           Sign Up
         </h2>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Name</label>
+              <label className="block text-white">Name</label>
               <input
                 type="text"
                 name="name"
@@ -143,7 +153,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Age</label>
+              <label className="block text-white">Age</label>
               <input
                 type="number"
                 name="age"
@@ -159,7 +169,7 @@ const SignupForm = () => {
 
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Username</label>
+              <label className="block text-white">Username</label>
               <input
                 type="text"
                 name="username"
@@ -172,7 +182,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Password</label>
+              <label className="block text-white">Password</label>
               <input
                 type="password"
                 name="password"
@@ -188,7 +198,7 @@ const SignupForm = () => {
 
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Email</label>
+              <label className="block text-white">Email</label>
               <input
                 type="email"
                 name="email"
@@ -201,7 +211,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Mobile</label>
+              <label className="block text-white">Mobile</label>
               <input
                 type="text"
                 name="mobile"
@@ -216,7 +226,7 @@ const SignupForm = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Address</label>
+            <label className="block text-white">Address</label>
             <input
               type="text"
               name="address"
@@ -231,7 +241,7 @@ const SignupForm = () => {
 
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">City</label>
+              <label className="block text-white">City</label>
               <input
                 type="text"
                 name="city"
@@ -244,7 +254,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-gray-700">Country</label>
+              <label className="block text-white">Country</label>
               <input
                 type="text"
                 name="country"
@@ -259,7 +269,7 @@ const SignupForm = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">License Number</label>
+            <label className="block text-white">License Number</label>
             <input
               type="text"
               name="license_number"
@@ -275,7 +285,7 @@ const SignupForm = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Services Description</label>
+            <label className="block text-white">Services Description</label>
             <textarea
               name="services_description"
               value={formData.services_description}

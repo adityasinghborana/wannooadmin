@@ -57,7 +57,7 @@ const Bookings = () => {
     },
     {
       field: "startTime",
-      headerName: "Setoutart Time",
+      headerName: "Tour Start Time",
       flex: 1,
     },
     {

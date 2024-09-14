@@ -1,12 +1,9 @@
 'use client'
 import DataGridContainer from "@/app/ui/dashboard/DataGridContainer/DataGridContainer";
 import Container from "@/app/ui/dashboard/container/Container";
-import { GetAllBookings, GetVendorBookings } from "@/lib/services";
-import { Button } from "@mui/material";
+import { GetVendorBookings } from "@/lib/services";
+import Cookie from 'js-cookie';
 import { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
-
-
 const Bookings = () => {
   // const users = useAppSelector((state) => state.user.Users);
   const [rows, setRows] = useState([]);
@@ -14,7 +11,7 @@ const Bookings = () => {
 
   useEffect(() => {
     const getBookings = async()=>{
-       let vendorId = JSON.parse(localStorage.getItem('user')).uid
+       let vendorId = JSON.parse(Cookie.get('user')).uid
        let data = await GetVendorBookings(vendorId)
        console.log(data.bookingDetails)
        setRows(data[1].bookingDetails)

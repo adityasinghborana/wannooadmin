@@ -16,7 +16,7 @@ export const columns: ColumnDef<Event, any>[] = [
     header: "Image", // Adjust this accessor to match your Event interface
     cell: (row: any) => (
       <img
-        src={row.value}
+        src={row.row.original.imagePath}
         alt="Event Image"
         style={{ width: "100px", height: "auto" }}
       />

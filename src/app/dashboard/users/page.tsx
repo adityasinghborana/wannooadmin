@@ -10,8 +10,9 @@ import {
   GridColDef,
   GridRowId
 } from "@mui/x-data-grid";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdVisibility } from "react-icons/md";
 
 interface Row {
   id: GridRowId;
@@ -61,6 +62,11 @@ const User = () => {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 h-full items-center justify-center">
+            <Link href={`/dashboard/users/view${params.row.id}`}>
+            <button className="flex items-center justify-center px-2 py-1 rounded bg-yellow-400 text-white hover:bg-blue-600 focus:outline-none focus:bg-red-600">
+              <MdVisibility />
+            </button>
+          </Link>
             <button
             onClick={() => handleOpenDialog(params.row)}
             className="flex items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
