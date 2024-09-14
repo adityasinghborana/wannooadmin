@@ -21,14 +21,9 @@ const DashboardLayout: React.FC<{
     const checkUser = async () => {
       try {
         let user = JSON.parse(Cookie.get('user')!);
-        let data = await CheckIsVendor(user?.uid ?? "nun");
-        if(data?.data?.isApproved == false){
-          router.replace("/admin");
-        }
+        let data = await CheckIsVendor(user?.uid ?? "nun");        
         if (data?.data?.isAdmin == true) {
           dispatch(CheckIsAdmin(true));
-        } else {
-          dispatch(CheckIsAdmin(false));
         }
       } catch (error) {
         console.error(error);
@@ -36,11 +31,6 @@ const DashboardLayout: React.FC<{
     };
     checkUser();
   }, []);
-
-  if (!user && !loading && !error && !pathName.includes("/signIn")) {
-    router.replace("/signIn");
-    return null; // Render nothing while redirecting
-  }
 
   if (user) {
     return (

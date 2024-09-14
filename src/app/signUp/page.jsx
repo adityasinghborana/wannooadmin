@@ -71,12 +71,13 @@ const SignupForm = () => {
           formData.email,
           formData.password
         ).then(async (res) => {
-          console.log(res, "this is resssposne ");
+          // console.log(res, "this is resssposne ");
           if (res.user.accessToken !== null) {
-            console.log("hello this works if ");
+            // console.log("hello this works if ");
             const userData = {
               uid: res.user.uid,
               ...formData,
+              age: Number(formData.age),              
             };
             // console.log(userData.uid,"this is uid ");
             await SignUpVendor(userData).then(() =>

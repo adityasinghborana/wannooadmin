@@ -18,7 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/admin/favicon.ico" />
+      </head>
       <ToastContainer />
       <StoreProvider>
         <body className={inter.className} id="__next">

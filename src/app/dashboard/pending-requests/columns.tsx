@@ -2,10 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/lib/interfaces/vendorinterface";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, CheckCheck } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { MdDelete, MdEdit, MdViewAgenda, MdVisibility } from "react-icons/md";
+import { MdDelete, MdVisibility } from "react-icons/md";
 
 export const columns: ColumnDef<Vendor, any>[] = [
   {
@@ -72,20 +71,20 @@ export const columns: ColumnDef<Vendor, any>[] = [
     cell: (row: any) => {
       return (
         <div className="flex max-w-full gap-2 h-full items-center justify-center">
-          <Link href={`/dashboard/vendors/${row.row.original.uid}`}>
+          <Button variant="ghost">
             <button className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600">
-              <MdViewAgenda />
+              <CheckCheck size={15} />
             </button>
-          </Link>
+          </Button>
 
           <Link href={`/dashboard/vendors/view${row.row.original.uid}`}>
             <button className="flex items-center justify-center px-2 py-1 rounded bg-yellow-400 text-white hover:bg-blue-600 focus:outline-none focus:bg-red-600">
-              <MdVisibility />
+              <MdVisibility size={15} />
             </button>
           </Link>
 
           <button className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600">
-            <MdDelete />
+            <MdDelete size={15} />
           </button>
         </div>
       );

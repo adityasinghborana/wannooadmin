@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import Cookie from 'js-cookie';
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const SignIn = () => {
       if (res?.user) {
         // Save user data in a cookie
         Cookie.set("user", JSON.stringify(res.user), { expires: 1 }); // Expires in 1 day
+        toast.success("Logged in successfully");
         router.push("/dashboard");
       }
     } catch (error) {
