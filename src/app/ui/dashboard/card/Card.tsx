@@ -5,11 +5,12 @@ interface Props{
     title: string,
     value:number,
     desc: string
+    onClick?: () => void;
 }
 
 const Card: FC <Props> = (props) => {
   return (
-        <div className="bg-primary p-1 md:p-5 rounded-xl cursor-pointer flex w-full hover:bg-primary">
+        <div onClick={props.onClick} className="bg-primary p-1 md:p-5 rounded-xl cursor-pointer flex w-full hover:bg-primary">
             <MdSupervisedUserCircle size={24}/>
             <div className="flex flex-col gap-5">
                 <span className="">{props.title}</span>

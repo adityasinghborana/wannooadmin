@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { MdArrowBack } from "react-icons/md";
 const BookingDetail = () => {
   const params = useParams();
   const BookingId = params.bookingId;
@@ -44,7 +46,12 @@ const BookingDetail = () => {
   }
 
   return (
-    <div>
+    <div className="" style={{ height: 'calc(100vh - 5rem)', overflowY: 'scroll' }}>
+      <div className="mb-5">
+            <Link href={"/dashboard/bookings"} className="text-black text-3xl">
+              <MdArrowBack />
+            </Link>
+          </div>
       <Card className="my-10 rounded-2xl shadow-2xl py-4">
         <CardHeader>
           <div className="grid grid-cols-3 gap-7">
@@ -89,12 +96,12 @@ const BookingDetail = () => {
             {booking.bookingResult.user.email ?? "email not present"}
           </div>
         </CardContent>
-      </Card>
-      <div>
+        {/* <div>
         <Button className="text-white rounded-xl">
           Send Confirmation Mail
         </Button>
-      </div>
+      </div> */}
+      </Card>      
     </div>
   );
 };

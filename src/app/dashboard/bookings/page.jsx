@@ -89,16 +89,16 @@ const Bookings = () => {
       headerName: "Actions",
       flex: 1,
       renderCell: (params) => (
-        <div>
+        <div className="flex h-full items-center justify-center">
           <Button
             onClick={() => handleOpenDialog(params.row)}
-            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+            className="flex mt-3 items-center justify-center py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
           >
             <MdDelete />
           </Button>
           <Button
             onClick={() => handleOpenView(params.row.bookingId)}
-            className="flex mt-3 items-center justify-center px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+            className="flex mt-3 items-center justify-center py-1 rounded text-white focus:outline-none"
           >
             {/* <Link href={`/dashboard/bookings/${params.row.bookingId}`}>
           

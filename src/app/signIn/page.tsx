@@ -24,8 +24,8 @@ const SignIn = () => {
       if (res?.user) {
         // Save user data in a cookie
         Cookie.set("user", JSON.stringify(res.user), { expires: 1 }); // Expires in 1 day
-        toast.success("Logged in successfully");
         router.push("/dashboard");
+        toast.success("Logged in successfully");        
       }
     } catch (error) {
       console.error(error);

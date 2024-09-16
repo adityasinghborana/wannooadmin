@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/lib/interfaces/vendorinterface";
+import axiosInstance from "@/lib/loader.interceptor";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, CheckCheck } from "lucide-react";
 import Link from "next/link";
@@ -45,11 +46,11 @@ export const columns: ColumnDef<Vendor, any>[] = [
   //     );
   //   },
   // },
-  {
-    accessorKey: "isVendor",
-    header: "Vendor",
-    cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
-  },
+  // {
+  //   accessorKey: "isApproved",
+  //   header: "Vendor",
+  //   cell: ({ row }) => (row.original.isVendor ? "Yes" : "No"),
+  // },
 
   // {
   //   accessorKey: "isApproved",
@@ -72,7 +73,7 @@ export const columns: ColumnDef<Vendor, any>[] = [
       return (
         <div className="flex max-w-full gap-2 h-full items-center justify-center">
           <Button variant="ghost">
-            <button className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600">
+            <button onClick={() => axiosInstance.patch(`/updatevendor`, { uid: row.row.original.uid, "status":true})} className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600">
               <CheckCheck size={15} />
             </button>
           </Button>
@@ -83,7 +84,7 @@ export const columns: ColumnDef<Vendor, any>[] = [
             </button>
           </Link>
 
-          <button className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600">
+          <button onClick={() => axiosInstance.patch(`/updatevendor`, { uid: row.row.original.uid, "status":false})} className="flex items-center justify-center px-2 py-1 rounded bg-red-300 text-white hover:bg-red-600 focus:outline-none focus:bg-red-600">
             <MdDelete size={15} />
           </button>
         </div>

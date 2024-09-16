@@ -18,6 +18,7 @@ import ImageUploadModal from "../../ui/dashboard/SingleImageModal/CustomSingleIm
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Cookie from 'js-cookie';
+import axiosInstance from "@/lib/loader.interceptor";
 
 // Define the schema for validation
 const tourSchema = yup.object().shape({
@@ -27,10 +28,10 @@ const tourSchema = yup.object().shape({
   duration: yup.string().required(),
   imagepath: yup.string().required(),
   citytourtype: yup.string().required(),
-  // contractid: yup.number().required(),
-  // isrecommended: yup.boolean().required(),
-  // isprivate: yup.boolean().required(),
-  // isslot: yup.boolean().required(),
+  contractid: yup.number().required(),
+  isrecommended: yup.boolean().required(),
+  isprivate: yup.boolean().required(),
+  isslot: yup.boolean().required(),
   tourdescription: yup.string().required(),
   tourinclusion: yup.string().required(),
   shortdescription: yup.string().required(),
@@ -39,7 +40,7 @@ const tourSchema = yup.object().shape({
   usefulinformation: yup.string().required(),
   childage: yup.string().required(),
   infantage: yup.string().required(),
-  // infantcount: yup.number().required(),
+  infantcount: yup.number().required(),
   isonlychild: yup.boolean().required(),
   starttime: yup.string().required(),
   meal: yup.string(),
@@ -88,9 +89,9 @@ const TourForm = () => {
     duration: "",
     imagepath: "",
     citytourtype: "",
-    // contractid: 0,
-    // isrecommended: false,
-    // isprivate: false,
+    contractid: 0,
+    isrecommended: false,
+    isprivate: false,
     isslot: false,
     tourdescription: "",
     tourinclusion: "",
@@ -100,7 +101,7 @@ const TourForm = () => {
     usefulinformation: "",
     childage: "",
     infantage: "",
-    // infantcount: 0,
+    infantcount: 0,
     isonlychild: false,
     starttime: "",
     meal: "",
@@ -116,7 +117,7 @@ const TourForm = () => {
         optionname: "",
         childage: "",
         infantage: "",
-        // minpax: 0,
+        minpax: 1,
         maxpax: 0,
         duration: "",
         optiondescription: "",
@@ -182,6 +183,8 @@ const TourForm = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [option, setOption] = useState([]);
+  const [customValue, setCustomValue] = useState({});
+  const [isCustom, setIsCustom] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -202,8 +205,8 @@ const TourForm = () => {
       optionname: "",
       childage: "",
       infantage: "",
-      // minpax: "",
-      maxpax: "",
+      minpax: "",
+      maxpax: 1,
       duration: "",
       optiondescription: "",
       operationDays: {
@@ -247,12 +250,47 @@ const TourForm = () => {
   const excludedFields = ["bookingResult", "adultRate", "childRate"];
   const onSubmit = async (data) => {
     let user = JSON.parse(Cookie.get('user'));
+    let newCityId, newTourTypeId;
+
+    if (customValue['cityname']) {
+      try {
+        const cityResponse = await axiosInstance.post('/addcity', { name: customValue['cityname'] });
+        if (cityResponse.status === 200) {
+          newCityId = cityResponse.data.id; // Adjust according to your API response
+        } else {
+          throw new Error(`Failed to add city: ${cityResponse.statusText}`);
+        }
+      } catch (error) {
+        console.error("Error adding custom city:", error);
+        toast.error("Failed to add custom city");
+        return; // Optionally stop further processing if critical
+      }
+    }
+
+    // Handle custom tour type
+    if (customValue['citytourtype']) {
+      try {
+        const tourTypeResponse = await axiosInstance.post('/addtourtypes', { name: customValue['citytourtype'] });
+        if (tourTypeResponse.status === 200) {
+          newTourTypeId = tourTypeResponse.data.id; // Adjust according to your API response
+        } else {
+          throw new Error(`Failed to add tour type: ${tourTypeResponse.statusText}`);
+        }
+      } catch (error) {
+        console.error("Error adding custom tour type:", error);
+        toast.error("Failed to add custom tour type");
+        return; // Optionally stop further processing if critical
+      }
+    }
+
     let datatopost = {
       ...data,
       vendoruid: user?.uid,
-      cityid: parseInt(cityId),
+      cityid: newCityId || parseInt(cityId),
       countryid: 13063,
-      citytourtypeid: cityToureTypeId,
+      citytourtypeid: newTourTypeId || cityToureTypeId,
+      cityname: customValue['cityname'] || data.cityname ,
+      citytourtype: customValue['citytourtype'] || data.citytourtype,
       minpax: 1,
       contractid: 0,
       isrecommended: false,
@@ -261,7 +299,7 @@ const TourForm = () => {
     };
     let res = await AddTour(datatopost);
     res?.result?.status === 200 && toast.success("Tour added successfully");
-    // Send data to the API
+    // // Send data to the API
   };
 
   const handleImageSelect = (e) => {
@@ -290,6 +328,32 @@ const TourForm = () => {
     setValue("imagepaths", [...imagepaths]);
   }, [imagepaths]);
 
+
+
+  const handleSelectChange = (e) => {
+    const { value } = e.target;
+    const fieldKey = e.target.id;
+
+    if (value === 'custom') {
+      setIsCustom(prev => ({ ...prev, [fieldKey]: true }));
+    } else {
+      setIsCustom(prev => ({ ...prev, [fieldKey]: false }));
+      setCustomValue(prev => ({ ...prev, [fieldKey]: null }))
+      if (fieldKey === 'cityname') {
+        setCityId(e.target.selectedOptions[0]?.id);
+      } else if (fieldKey === 'countryname') {
+        setCountryId(value);
+      } else if (fieldKey === 'citytourtype') {
+        setCityTourTypeId(value);
+      }
+    }
+  };
+
+  const handleCustomValueChange = (e) => {
+    const { id, value } = e.target;
+    setCustomValue(prev => ({ ...prev, [id]: value }));
+  };
+
   return (
     <Container>
       <div className="p-8 bg-white rounded-2xl mt-8">
@@ -309,6 +373,10 @@ const TourForm = () => {
                       "countryid",
                       "cityid",
                       "citytourtypeid",
+                      "contractid",
+                      "isrecommended",
+                      "isprivate",
+                      "infantcount",
                     ].includes(key)
                 )
                 .map((key, index) => {
@@ -355,33 +423,30 @@ const TourForm = () => {
                     ["countryname", "cityname", "citytourtype"].includes(key)
                   ) {
                     return (
-                      <div key={index} className="mb-4 rounded ">
-                        <label
-                          htmlFor={key}
-                          className="block text-gray-700 text-sm font-bold mb-2"
-                        >
-                          {key.charAt(0).toUpperCase() + key.slice(1)}
-                        </label>
-                        <Controller
-                          name={key}
-                          control={control}
-                          render={({ field }) => (
+                      <div key={index} className="mb-4 rounded">
+                      <label
+                        htmlFor={key}
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                      >
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </label>
+                      <Controller
+                        name={key}
+                        control={control}
+                        render={({ field }) => (
+                          <>
                             <select
-                              onClick={(e) => {
-                                if (key === "cityname") {
-                                  setCityId(e?.target?.selectedOptions[0]?.id);
-                                } else if (key === "countryname") {
-                                  setCountryId(e.target.value);
-                                } else if (key === "citytourtype") {
-                                  setCityTourTypeId(e.target.value);
-                                }
-                              }}
                               id={key}
-                              className=" text-fieldutilities "
+                              className="text-fieldutilities"
                               {...field}
+                              onChange={(e) => {
+                                handleSelectChange(e);
+                                field.onChange(e);
+                              }}
+                              value={isCustom[key] ? 'custom' : field.value}
                             >
-                              <option>Select</option>
-                              {key === "cityname" &&
+                              <option value="">Select</option>
+                              {key === 'cityname' &&
                                 cities?.map((city) => (
                                   <option
                                     key={city.CityId}
@@ -391,8 +456,8 @@ const TourForm = () => {
                                     {city.CityName}
                                   </option>
                                 ))}
-                              {key === "countryname" && <option>Dubai</option>}
-                              {key === "citytourtype" &&
+                              {key === 'countryname' && <option value="Dubai">Dubai</option>}
+                              {key === 'citytourtype' &&
                                 tourType?.map((tour) => (
                                   <option
                                     key={tour.cityTourType}
@@ -401,15 +466,27 @@ const TourForm = () => {
                                     {tour.cityTourType}
                                   </option>
                                 ))}
+                              { key !== 'countryname' && <option value="custom">Custom</option>}
                             </select>
-                          )}
-                        />
-                        {errors[key]?.message && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors[key].message}
-                          </p>
+                            {isCustom[key] && (
+                              <input
+                                type="text"
+                                id={key}
+                                placeholder="Enter custom value"
+                                className="mt-2 p-2 border border-gray-300 rounded"
+                                value={customValue[key] || ''}
+                                onChange={handleCustomValueChange}
+                              />
+                            )}
+                          </>
                         )}
-                      </div>
+                      />
+                      {errors[key]?.message && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors[key].message}
+                        </p>
+                      )}
+                    </div>
                     );
                   } else if (["imagepaths", "imagepath"].includes(key)) {
                     if (key === "imagepaths") {
@@ -576,6 +653,7 @@ const TourForm = () => {
                         {Object.keys(option).map((optionKey, optionIndex) => {
                           if (optionKey === "timeSlots") return null; // Skip rendering timeSlots here
                           if (optionKey === "id") return null; // Skip rendering timeSlots here
+                          if (optionKey === "minpax") return null; // Skip rendering timeSlots here
                           if (optionKey === "operationDays") {
                             return (
                               <div
