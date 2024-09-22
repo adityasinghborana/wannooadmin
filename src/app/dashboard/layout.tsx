@@ -17,45 +17,61 @@ const DashboardLayout: React.FC<{
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const checkUser = async () => {
+      if (!user) return; // Exit if user is not available
+
       try {
-        let user = JSON.parse(Cookie.get('user')!);
-        let data = await CheckIsVendor(user?.uid ?? "nun");        
-        if (data?.data?.isAdmin == true) {
-          dispatch(CheckIsAdmin(true));
+        const userCookie = Cookie.get('user');
+        if (userCookie) {
+          const parsedUser = JSON.parse(userCookie);
+          const data = await CheckIsVendor(parsedUser?.uid ?? "none");
+          
+          if (data?.data?.isAdmin) {
+            dispatch(CheckIsAdmin(true));
+          }
         }
       } catch (error) {
-        console.error(error);
+        console.error('Error checking user status:', error);
       }
     };
-    checkUser();
-  }, []);
 
-  if (user) {
-    return (
-      <div className="flex md:flex-row md:gap-5 min-w-full overflow-hidden">
-        {pathName.includes("tours/") ? (
-          <div className="flex flex-col w-full h-full">{children}</div>
-        ) : (
-          <div
-            className="flex flex-row w-full"
-            style={{ maxHeight: "calc(100vh)" }}
-          >
-            <div className="shadow-2xl w-full pr-2 md:w-1/6 bg-primary-foreground hidden md:block rounded-r-3xl">
-              <Sidebar />
-            </div>
-            <div className="flex flex-col flex-grow w-full h-full">
-              <div className="mx-8 my-2">
-                <Navbar />
-                {children}
-              </div>
+    checkUser();
+  }, [user, dispatch]); // Add user and dispatch as dependencies
+
+  // Redirect if loading or error
+  if (loading) return <div>Loading...</div>;
+  if (error) {
+    console.error('Authentication error:', error);
+    router.push('/admin/signIn'); // Redirect to sign-in on error
+    return null; // Render nothing while redirecting
+  }
+
+  if (!user) {
+    router.push('/admin/signIn'); // Redirect to sign-in if not logged in
+    return null; // Render nothing while redirecting
+  }
+
+  return (
+    <div className="flex md:flex-row md:gap-5 min-w-full overflow-hidden">
+      {pathName.includes("tours/") ? (
+        <div className="flex flex-col w-full h-full">{children}</div>
+      ) : (
+        <div className="flex flex-row w-full" style={{ maxHeight: "calc(100vh)" }}>
+          <div className="shadow-2xl w-full pr-2 md:w-1/6 bg-primary-foreground hidden md:block rounded-r-3xl">
+            <Sidebar />
+          </div>
+          <div className="flex flex-col flex-grow w-full h-full">
+            <div className="mx-8 my-2">
+              <Navbar />
+              {children}
             </div>
           </div>
-        )}
-      </div>
-    );
-  }
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default DashboardLayout;

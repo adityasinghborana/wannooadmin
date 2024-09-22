@@ -3,6 +3,16 @@ import { NextResponse, NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   // Get the 'user' cookie
   const userCookie = request.cookies.get('user');
+  const isLoggedIn = !!userCookie;
+
+    // Define public routes where logged-in users should not be able to access
+    const publicRoutes = ['/admin/signIn', '/admin/register'];
+
+    // If the user is logged in and tries to access a public route, redirect them
+    if (isLoggedIn && publicRoutes.includes(request.nextUrl.pathname)) {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+    }
+  
   
   // If the cookie does not exist, redirect to sign-in page
   if (!userCookie) {

@@ -1,5 +1,6 @@
 "use client";
 
+import CustomImageUpload from "@/app/ui/dashboard/ImageModal/ImageUpload";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -8,13 +9,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { getTourDetails } from "@/lib/services";
+import { GetAllImages, getTourDetails, updateAvailability } from "@/lib/services";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MdArrowBack, MdArrowLeft } from "react-icons/md";
+import { MdArrowBack } from "react-icons/md";
 
 interface TourData {
-  [key: string]: string[];
+  [key: string]: string | string[] | number;
 }
 
 interface Image {
@@ -24,23 +25,27 @@ interface Image {
 
 export default function EditTour({ params }: { params: { tourid: String } }) {
   const [tourdetails, setTourDetails] = useState<TourData>({});
-  const [isedit, SetIsEdit] = useState<boolean>(true);
+  const [isedit, setIsEdit] = useState<boolean>(true);
   const [images, setImages] = useState<Image[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [availability, setAvailability] = useState<number | string>("");
+  const [selectedImages, setSelectedImages] = useState<string[]>([]); // Manage selected images
 
   useEffect(() => {
-    const Tourdetails = async () => {
+    const fetchTourDetails = async () => {
       if (params.tourid.includes("view")) {
-        SetIsEdit(false);
+        setIsEdit(false);
         params.tourid = params.tourid.replace("view", "");
       }
       let res = await getTourDetails(params.tourid);
-      res && setImages(res.tourImages);
-      res && delete res.tourImages;
-      res && setTourDetails(res);
-      // console.log(await getTourDetails(params.tourid))
+      if (res) {
+        setImages(res.tourImages);
+        delete res.tourImages;
+        setTourDetails(res);
+        setAvailability(res.availability || "");
+      }
     };
-    Tourdetails();
+    fetchTourDetails();
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -48,10 +53,19 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
     setTourDetails({ ...tourdetails, [name]: value });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleAvailabilityChange = (e: any) => {
+    const value = e.target.value;
+    setAvailability(value === "" ? "" : Number(value));
+  };
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // Handle form submission with formData
-    console.log("Form submitted with data:", tourdetails);
+    const updatedTourData = { ...tourdetails, images: selectedImages }; // Include selected images
+    console.log("Form submitted with data:", updatedTourData);
+    
+    // Call the API to update tour details
+    // await updateTourDetails(updatedTourData);
+    await updateAvailability({id: tourdetails.id, available:availability})
   };
 
   const nextImage = () => {
@@ -66,13 +80,12 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
 
   const deleteImage = () => {
     if (window.confirm("Are you sure you want to delete this image?")) {
-      // Make an API request to delete the current image
-      // After deletion, you may want to fetch the updated list of images
+      // Implement image deletion logic
     }
   };
 
   const updateImage = () => {
-    // Add logic to allow users to update the current image
+    // Implement image upload logic
   };
 
   return (
@@ -88,24 +101,6 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
             </Link>
           </div>
           {images.length > 0 && (
-            // <div
-            //   id={String(currentImageIndex)}
-            //   className="carousel"
-            // >
-            //   <div className="bg-black grid h-64 w-96">
-            //     <img
-            //       src={images[currentImageIndex].imagePath}
-            //       alt={`Image ${currentImageIndex + 1}`}
-            //     />
-            //     <div className="controls mt-4 flex justify-between">
-            //       <button onClick={prevImage}>Previous</button>
-            //       <button onClick={deleteImage}>Delete</button>
-            //       <button onClick={updateImage}>Update</button>
-            //       <button onClick={nextImage}>Next</button>
-            //     </div>
-            //   </div>
-            //   {images.length === 0 && <p>No images available.</p>}
-            // </div>
             <Carousel
               id={String(currentImageIndex)}
               opts={{
@@ -115,13 +110,13 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
             >
               <CarouselContent>
                 {images.map((image, index) => (
-                  <CarouselItem  className='md:basis-1/2 lg:basis-1/3' key={index}>
+                  <CarouselItem className='md:basis-1/2 lg:basis-1/3' key={index}>
                     <div className="p-1">
                       <Card>
                         <CardContent className="flex aspect-square items-center justify-center p-6">
                           <img
                             src={image.imagePath}
-                            alt={`Image ${currentImageIndex + 1}`}
+                            alt={`Image ${index + 1}`}
                           />
                         </CardContent>
                       </Card>
@@ -133,10 +128,14 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
               <CarouselNext />
             </Carousel>
           )}
+          {isedit && <CustomImageUpload
+            onImageSelect={setSelectedImages} // Set selected images here
+            Images={GetAllImages} // Pass existing images
+          />}
           <div className="grid grid-cols-1 gap-5">
             {Object.keys(tourdetails).map((key) => (
               <div key={key}>
-                <div key={currentImageIndex} className="mb-4">
+                <div className="mb-4">
                   <label
                     htmlFor={key}
                     className="block text-sm font-medium text-gray-700 uppercase"
@@ -154,6 +153,23 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
                 </div>
               </div>
             ))}
+            <div className="mb-4">
+              <label
+                htmlFor="availability"
+                className="block text-sm font-medium text-gray-700 uppercase"
+              >
+                Availability
+              </label>
+              <input
+                type="number"
+                id="availability"
+                value={availability}
+                onChange={handleAvailabilityChange}
+                disabled={!isedit}
+                className="mt-1 p-2 border border-gray-300 rounded-lg w-full text-black"
+                placeholder="Enter availability number"
+              />
+            </div>
           </div>
           {isedit && (
             <button

@@ -383,3 +383,39 @@ export async function GetAllBookings() {
       throw error;
     }
   }
+
+  export async function getUserDetails(id:any) { 
+    try {
+      const response = await axiosInstance.get(`/checkuser?uid=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  export async function updateUserDetails(data:any) { 
+    try {
+      const response = await axiosInstance.put(`/updateuser`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  export async function updateVendorDetails(data:any) { 
+    try {
+      const response = await axiosInstance.put(`/updatevendor`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  export async function updateAvailability(data:any) { 
+    try {
+      const response = await axiosInstance.patch(`/updateavailability`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }

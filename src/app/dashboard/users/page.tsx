@@ -12,12 +12,13 @@ import {
 } from "@mui/x-data-grid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MdDelete, MdVisibility } from "react-icons/md";
+import { MdDelete, MdEdit, MdViewAgenda, MdVisibility } from "react-icons/md";
 
 interface Row {
   id: GridRowId;
   email: string;
   firstName: string;
+  uid: string;
 }
 
 const User = () => {
@@ -42,8 +43,8 @@ const User = () => {
       editable: true,
     },
     {
-      field: "age",
-      headerName: "Age",
+      field: "mobileNo",
+      headerName: "Phone number",
       type: "number",
       flex: 1,
       editable: true,
@@ -62,10 +63,17 @@ const User = () => {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 h-full items-center justify-center">
-            <Link href={`/dashboard/users/view${params.row.id}`}>
-            <button className="flex items-center justify-center px-2 py-1 rounded bg-yellow-400 text-white hover:bg-blue-600 focus:outline-none focus:bg-red-600">
-              <MdVisibility />
-            </button>
+           <Link
+            href={`/dashboard/users/${params.row.uid}`}
+            className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
+          >
+            <MdEdit />
+          </Link>
+          <Link
+            href={`/dashboard/users/view${params.row.uid}`}
+            className="flex items-center justify-center px-2 py-1 rounded bg-yellow-300 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
+          >
+            <MdViewAgenda />
           </Link>
             <button
             onClick={() => handleOpenDialog(params.row)}
