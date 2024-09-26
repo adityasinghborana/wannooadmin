@@ -140,7 +140,7 @@ const ImageManagement: React.FC = () => {
             />
             <label
               htmlFor="upload-input"
-              className="cursor-pointer bg-primary text-white px-4 py-2 rounded hover:bg-black flex items-center rounded-xl"
+              className="cursor-pointer bg-primary text-white px-4 py-2 hover:bg-black flex items-center rounded-xl"
             >
               <FiUpload className="mr-2" /> Upload
             </label>
@@ -158,7 +158,7 @@ const ImageManagement: React.FC = () => {
                   className="relative group bg-gray-100 rounded-2xl shadow-lg overflow-hidden"
                 >
                   <img
-                    src={Constants.localBaseUrl + image.url}
+                    src={process.env.NEXT_PUBLIC_URL + image.url}
                     alt={image.filename}
                     className={`w-full h-48 transition-transform duration-200 ease-in-out transform group-hover:scale-105 object-cover ${
                       selectedImages.includes(image.url)
@@ -182,7 +182,7 @@ const ImageManagement: React.FC = () => {
             <div className="flex justify-center items-center mt-10 text-white ">
               <button
                 onClick={handlePrevPage}
-                className="py-2 px-4 rounded-2xl rounded-full text-lg bg-primary hover:bg-gray-400 mr-2"
+                className="py-2 px-4 rounded-2xl text-lg bg-primary hover:bg-gray-400 mr-2"
               >
                 &lt;
               </button>

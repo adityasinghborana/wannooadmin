@@ -132,7 +132,7 @@ const TourForm = () => {
         },
         timeSlots: [
           {
-            timeSlot: "",
+            timeSlot: "0",
             available: 0,
             adultPrice: 0,
             childPrice: 0,
@@ -147,11 +147,12 @@ const TourForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm({
     resolver: yupResolver(tourSchema),
     defaultValues,
   });
-
+  const isslotValue = watch('isslot');
   const {
     fields: optionFields,
     append,
@@ -395,7 +396,7 @@ const TourForm = () => {
                           htmlFor={key}
                           className="block text-gray-700 text-sm font-bold mb-2"
                         >
-                          {key.charAt(0).toUpperCase() + key.slice(1)}
+                          {key === "isslot" ? "Does tour have time slot?" : key === "isonlychild" ? "Is it for only children?" : key.charAt(0).toUpperCase() + key.slice(1) }
                         </label>
                         <Controller
                           name={key}
@@ -407,8 +408,8 @@ const TourForm = () => {
                               {...field}
                             >
                               <option>Select</option>
-                              <option value="true">True</option>
-                              <option value="false">False</option>
+                              <option value="true">Yes</option>
+                              <option value="false">No</option>
                             </select>
                           )}
                         />
@@ -739,7 +740,7 @@ const TourForm = () => {
                         })}
                       </div>
 
-                      <div className="grid gap-2 border px-2 py-2 mt-2">
+                      { isslotValue === 'true' && <div className="grid gap-2 border px-2 py-2 mt-2">
                         <h4 className="text-base font-medium mb-2">
                           Time Slots
                         </h4>
@@ -805,7 +806,7 @@ const TourForm = () => {
                             </div>
                           ))}
                         </div>
-                      </div>
+                      </div>}
                     </div>
                   )}
                 </div>
@@ -813,6 +814,7 @@ const TourForm = () => {
               <Button
                 variant="secondary"
                 className="bg-primary"
+                type="button"
                 onClick={() => handleAddOption()}
               >
                 Add Option
