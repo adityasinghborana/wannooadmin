@@ -22,59 +22,59 @@ import axiosInstance from "@/lib/loader.interceptor";
 
 // Define the schema for validation
 const tourSchema = yup.object().shape({
-  countryname: yup.string().required(),
-  cityname: yup.string().required(),
-  tourname: yup.string().required(),
-  duration: yup.string().required(),
-  imagepath: yup.string().required(),
-  citytourtype: yup.string().required(),
-  contractid: yup.number().required(),
-  isrecommended: yup.boolean().required(),
-  isprivate: yup.boolean().required(),
-  isslot: yup.boolean().required(),
-  tourdescription: yup.string().required(),
-  tourinclusion: yup.string().required(),
-  shortdescription: yup.string().required(),
-  importantinformation: yup.string().required(),
-  itenararydescription: yup.string().required(),
-  usefulinformation: yup.string().required(),
-  childage: yup.string().required(),
-  infantage: yup.string().required(),
-  infantcount: yup.number().required(),
-  isonlychild: yup.boolean().required(),
-  starttime: yup.string().required(),
+  countryname: yup.string(),
+  cityname: yup.string(),
+  tourname: yup.string(),
+  duration: yup.string(),
+  imagepath: yup.string(),
+  citytourtype: yup.string(),
+  contractid: yup.number(),
+  isrecommended: yup.boolean(),
+  isprivate: yup.boolean(),
+  isslot: yup.boolean(),
+  tourdescription: yup.string(),
+  tourinclusion: yup.string(),
+  shortdescription: yup.string(),
+  importantinformation: yup.string(),
+  itenararydescription: yup.string(),
+  usefulinformation: yup.string(),
+  childage: yup.string(),
+  infantage: yup.string(),
+  infantcount: yup.number(),
+  isonlychild: yup.boolean(),
+  starttime: yup.string(),
   meal: yup.string(),
   googlemapurl: yup.string().url(),
   tourexclusion: yup.string(),
-  adultprice: yup.number().required(),
-  childprice: yup.number().required(),
-  infantprice: yup.number().required(),
-  amount: yup.number().required(),
-  imagepaths: yup.array().of(yup.string()).required(),
+  adultprice: yup.number(),
+  childprice: yup.number(),
+  infantprice: yup.number(),
+  amount: yup.number(),
+  imagepaths: yup.array().of(yup.string()),
   optionlist: yup.array().of(
     yup.object().shape({
-      optionname: yup.string().required(),
-      childage: yup.string().required(),
-      infantage: yup.string().required(),
-      minpax: yup.number().required(),
-      maxpax: yup.number().required(),
-      duration: yup.string().required(),
-      optiondescription: yup.string().required(),
+      optionname: yup.string(),
+      childage: yup.string(),
+      infantage: yup.string(),
+      minpax: yup.number(),
+      maxpax: yup.number(),
+      duration: yup.string(),
+      optiondescription: yup.string(),
       operationDays: yup.object().shape({
-        monday: yup.number().required(),
-        tuesday: yup.number().required(),
-        wednesday: yup.number().required(),
-        thursday: yup.number().required(),
-        friday: yup.number().required(),
-        saturday: yup.number().required(),
-        sunday: yup.number().required(),
+        monday: yup.number(),
+        tuesday: yup.number(),
+        wednesday: yup.number(),
+        thursday: yup.number(),
+        friday: yup.number(),
+        saturday: yup.number(),
+        sunday: yup.number(),
       }),
       timeSlots: yup.array().of(
         yup.object().shape({
-          timeSlot: yup.string().required(),
-          available: yup.number().required(),
-          adultPrice: yup.number().required(),
-          childPrice: yup.number().required(),
+          timeSlot: yup.string(),
+          available: yup.number(),
+          adultPrice: yup.number(),
+          childPrice: yup.number(),
         })
       ),
     })
@@ -522,19 +522,19 @@ const TourForm = () => {
                       return (
                         <div key={index}>
                           <label
-                            htmlFor="image-upload"
+                            htmlFor="imagepath"
                             className="block text-gray-700 text-sm font-bold mb-2"
                           >
                             Upload Image
                           </label>
                           <Controller
-                            name="image-upload"
+                            name="imagepath"
                             control={control}
                             render={({ field }) => (
                               <div>
                                 <input
                                   type="file"
-                                  id="image-upload"
+                                  id="imagepath"
                                   value={""}
                                   style={{ display: "none" }}
                                   onChange={(e) => {
@@ -549,7 +549,7 @@ const TourForm = () => {
                                   className="bg-primary text-white py-2 px-4 rounded"
                                   onClick={() =>
                                     document
-                                      .getElementById("image-upload")
+                                      .getElementById("imagepath")
                                       .click()
                                   }
                                 >
@@ -565,9 +565,9 @@ const TourForm = () => {
                               </div>
                             )}
                           />
-                          {errors["image-upload"] && (
+                          {errors["imagepath"] && (
                             <p className="text-red-500 text-xs mt-1">
-                              {errors["image-upload"].message}
+                              {errors["imagepath"].message}
                             </p>
                           )}
                         </div>
