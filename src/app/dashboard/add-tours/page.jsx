@@ -48,6 +48,7 @@ const tourSchema = yup.object().shape({
   tourexclusion: yup.string(),
   adultprice: yup.number(),
   childprice: yup.number(),
+  isvendortour: yup.boolean(),
   infantprice: yup.number(),
   amount: yup.number(),
   imagepaths: yup.array().of(yup.string()),
@@ -206,12 +207,12 @@ const TourForm = () => {
       optionname: "",
       childage: "",
       infantage: "",
-      minpax: "",
-      maxpax: 1,
+      minpax: 1,
+      maxpax: 0,
       duration: "",
       optiondescription: "",
       operationDays: {
-        monday: 0,
+        monday: 1,
         tuesday: 0,
         wednesday: 0,
         thursday: 0,
@@ -221,7 +222,7 @@ const TourForm = () => {
       },
       timeSlots: [
         {
-          timeSlot: "",
+          timeSlot: "0",
           available: 0,
           adultPrice: 0,
           childPrice: 0,
