@@ -1,3 +1,4 @@
+import axios from "axios"
 import axiosInstance from "./loader.interceptor"
 
 export async function getAllUsers(){
@@ -7,6 +8,24 @@ export async function getAllUsers(){
     } catch (error) {
         throw error
     }
+}
+
+export async function GetAllCardDetails(){
+  try {
+      let res = await axios.get('https://znjdppgl-3000.inc1.devtunnels.ms/dashboarddata')
+      return res?.data
+  } catch (error) {
+      throw error
+  }
+}
+
+export async function GetChartData(date:any){
+  try {
+      let res = await axios.post('https://znjdppgl-3000.inc1.devtunnels.ms/dashboardchartbooking', date)
+      return res?.data
+  } catch (error) {
+      throw error
+  }
 }
 
 export async function deleteUser(id:number) {

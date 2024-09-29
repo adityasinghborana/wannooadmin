@@ -24,7 +24,7 @@ export default function RootLayout({
       </head>
       <ToastContainer />
       <StoreProvider>
-        <body className={inter.className} id="__next">
+        <body className={`${inter.className} overflow-hidden`} id="__next">
           {children}
         </body>
       </StoreProvider>
