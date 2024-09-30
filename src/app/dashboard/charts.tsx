@@ -1,21 +1,6 @@
-"use client";
-
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
@@ -23,58 +8,66 @@ import { Calendar } from "@/components/ui/calendar";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { GetChartData } from "@/lib/services";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export const description = "View your dashboard data";
 
-
-
 const chartConfig = {
-  views: {
-    label: "Page Views",
-  },
-  user: {
+  Users: {
     label: "Users",
-    color: "hsl(var(--chart-1))",
+    color: "#2196F3",
   },
-  vendor: {
+  Vendors: {
     label: "Vendors",
-    color: "hsl(var(--chart-2))",
+    color: "#FF9800",
   },
-  booking: {
+  Bookings: {
     label: "Bookings",
-    color: "hsl(var(--chart-2))",
+    color: "#4CAF50",
   },
 } satisfies ChartConfig;
 
 export function DashboardChart() {
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("user");
-    const [date, setDate] = React.useState<DateRange | undefined>({
-        from: addDays(new Date(), -30),
-        to: new Date(),
-      })
-    const [chartData, setrChartData] =  React.useState<any>([])
-  
-  const getChartData = async () => {  
-  const res = await GetChartData({startDate:date?.from, endDate:date?.to});
-  console.log(res[0]?.date)
-  setrChartData([{date:res[0]?.date, user:res[0]?.users || 0, vendor:res[0]?.vendors || 0, bookings:res[0]?.bookings || 0}])  
-  };
+    React.useState<keyof typeof chartConfig>("Users");
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: addDays(new Date(), -30),
+    to: new Date(),
+  });
+  const [chartData, setChartData] = React.useState<any>({});
 
-  const total = React.useMemo(
-    () => ({
-      user: chartData?.reduce((acc:any, curr:any) => acc + curr.user, 0),
-      vendor: chartData?.reduce((acc:any, curr:any) => acc + curr.vendor, 0),
-      booking: chartData?.reduce((acc:any, curr:any) => acc + curr.bookings, 0),
-    }),
-    []
-  );
+  const getChartData = async () => {
+    // Fetching chart data for bookings, users, and vendors
+    const res = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'bookings');
+    const res1 = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'users');
+    const res2 = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'vendors');
+  
+    // Setting chart data
+    setChartData({
+      bookings: res?.map((data: any) => ({ date: data.date, bookings: data.bookings })),
+      users: res1?.map((data: any) => ({ date: data.date, users: data.Users })),
+      vendors: res2?.map((data: any) => ({ date: data.date, vendors: data.Vendors })),
+    });
+    // setChartData({
+    //   bookings: [{ date: "january", bookings: 500 }, { date: "feb", bookings: 500 },{ date:  "march", bookings: 500 }],
+    //   users: res1?.map((data: any) => ({ date: data.date, users: data.Users })),
+    //   vendors: res2?.map((data: any) => ({ date: data.date, vendors: data.Vendors })),
+    // });
+  };
+  
+  const total = React.useMemo(() => ({
+    Users: chartData?.users?.reduce((acc: any, curr: any) => acc + (curr.users), 0),
+    Vendors: chartData?.vendors?.reduce((acc: any, curr: any) => acc + (curr.vendors), 0),
+    Bookings: chartData?.bookings?.reduce((acc: any, curr: any) => acc + (curr.bookings), 0),
+  }), [chartData]);
 
   React.useEffect(() => {
     getChartData();
   }, [date]);
 
- if(!chartData) return <>No data</>
+  if (!chartData.users) return <>No data</>;
 
   return (
     <Card>
@@ -82,11 +75,22 @@ export function DashboardChart() {
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Charts</CardTitle>
           <CardDescription>
-            Showing total visitors from {date?.from?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - {date?.to?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            Showing total visitors from{" "}
+            {date?.from?.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}{" "}
+            -{" "}
+            {date?.to?.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
           </CardDescription>
         </div>
         <div className="flex">
-          {["user", "vendor", "booking"].map((key) => {
+          {["Users", "Vendors", "Bookings"].map((key) => {
             const chart = key as keyof typeof chartConfig;
             return (
               <button
@@ -107,54 +111,53 @@ export function DashboardChart() {
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
-      <div className="mb-4">
-      <div className={"grid gap-2"}>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            id="date"
-            variant={"outline"}
-            className={cn(
-              "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
-
+        <div className="mb-4">
+          <div className={"grid gap-2"}>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="date"
+                  variant={"outline"}
+                  className={cn(
+                    "w-[300px] justify-start text-left font-normal",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "LLL dd, y")} -{" "}
+                        {format(date.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(date.from, "LLL dd, y")
+                    )
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 bg-white" align="start">
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={date?.from}
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto h-[250px] w-full bg-white hover:bg-white"
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={chartData[activeChart.toLowerCase()]} // Dynamically setting the chart data based on activeChart
             margin={{
               left: 12,
               right: 12,
@@ -162,7 +165,7 @@ export function DashboardChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="date" // Assuming the 'date' field is used as the X-axis
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -178,8 +181,9 @@ export function DashboardChart() {
             <ChartTooltip
               content={
                 <ChartTooltipContent
+                  // dataKey={activeChart}
                   className="w-[150px]"
-                  nameKey="views"
+                  nameKey={activeChart}
                   labelFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "short",
@@ -190,7 +194,10 @@ export function DashboardChart() {
                 />
               }
             />
-            <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+            <Bar
+              dataKey={activeChart.toLowerCase()} // Assuming 'value' is the field for the chart's Y-axis data
+              fill={chartConfig[activeChart].color}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>

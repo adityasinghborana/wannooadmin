@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { GetAllImages, getTourDetails, updateAvailability } from "@/lib/services";
+import { editTour, GetAllImages, getTourDetails, updateAvailability } from "@/lib/services";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
@@ -60,8 +60,8 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const updatedTourData = { ...tourdetails, images: selectedImages }; // Include selected images
-    console.log("Form submitted with data:", updatedTourData);
+    const updatedTourData = { ...tourdetails, images: selectedImages, tourId: tourdetails.TourId }; // Include selected images
+    await editTour(updatedTourData)
     
     // Call the API to update tour details
     // await updateTourDetails(updatedTourData);
@@ -90,7 +90,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
 
   return (
     <div className="w-full flex justify-center px-20">
-      <div className="w-full max-w-6xl">
+      <div className="w-full max-w-6xl" style={{ maxHeight: "90vh", overflow: "auto" }}>
         <form
           onSubmit={handleSubmit}
           className="px-4 py-4 border rounded-xl bg-white"

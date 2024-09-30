@@ -19,9 +19,9 @@ export async function GetAllCardDetails(){
   }
 }
 
-export async function GetChartData(date:any){
+export async function GetChartData(date:any, type:any) {
   try {
-      let res = await axios.post('https://znjdppgl-3000.inc1.devtunnels.ms/dashboardchartbooking', date)
+    let res = await axios.post(`https://znjdppgl-3000.inc1.devtunnels.ms/${type === 'bookings' ? 'dashboardchartbooking': type === 'users' ? 'dashboardchartusers' : 'dashboardchartvendors' }`, date)
       return res?.data
   } catch (error) {
       throw error
@@ -433,6 +433,15 @@ export async function GetAllBookings() {
   export async function updateAvailability(data:any) { 
     try {
       const response = await axiosInstance.patch(`/updateavailability`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+ 
+  export async function editTour(data:any) { 
+    try {
+      const response = await axios.put(`https://znjdppgl-3000.inc1.devtunnels.ms/edittour`, data);
       return response.data;
     } catch (error) {
       throw error;
