@@ -60,12 +60,14 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const updatedTourData = { ...tourdetails, images: selectedImages, tourId: tourdetails.TourId }; // Include selected images
+    const { TourId, ...rest } = tourdetails; // Destructure to remove TourId
+    const updatedTourData = { ...rest, images: selectedImages, tourId: TourId }; // Spread the rest and add images
+
+    await updateAvailability({id: tourdetails.id, available:availability})
     await editTour(updatedTourData)
     
     // Call the API to update tour details
     // await updateTourDetails(updatedTourData);
-    await updateAvailability({id: tourdetails.id, available:availability})
   };
 
   const nextImage = () => {
