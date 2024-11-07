@@ -8,6 +8,11 @@ import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import Select from "react-select";
 import {
   AddTour,
+  createCity,
+  createCountry,
+  fetchCities,
+  fetchContinent,
+  fetchCountries,
   GetAllCities,
   GetAllImages,
   GetAllTourTypes,
@@ -19,11 +24,15 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Cookie from 'js-cookie';
 import axiosInstance from "@/lib/loader.interceptor";
+import { set } from "date-fns";
 
 // Define the schema for validation
 const tourSchema = yup.object().shape({
+  continentname: yup.string().required(),
   countryname: yup.string().required(),
+  countryid: yup.string().required(),
   cityname: yup.string().required(),
+  cityid: yup.string().required(),
   tourname: yup.string().required(),
   duration: yup.string().required(),
   imagepath: yup.string().required(),
@@ -84,6 +93,7 @@ const tourSchema = yup.object().shape({
 
 const TourForm = () => {
   const defaultValues = {
+    continentname: "",
     countryname: "",
     cityname: "",
     tourname: "",
@@ -176,32 +186,52 @@ const TourForm = () => {
   ];
 
   const [openIndex, setOpenIndex] = useState(null);
+  
   const [cities, setCities] = useState([]);
-  const [tourType, setTourType] = useState([]);
   const [cityId, setCityId] = useState();
-  const [countryId, setCountryId] = useState();
+
+  const [countries, setCountries] = useState();
+  const [selectedCountry, setSelectedCountry] = useState();
+  
+  const [continents, setContinents] = useState();
+  const [selectedContinent, setSelectedContinent] = useState();
+  
+  const [tourType, setTourType] = useState([]);
   const [cityToureTypeId, setCityTourTypeId] = useState();
+
+  
   const [imagepaths, setImagePaths] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-  const [option, setOption] = useState([]);
   const [customValue, setCustomValue] = useState({});
   const [isCustom, setIsCustom] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      const citiesPromise = GetAllCities();
+      const continentPromise = fetchContinent();
       const tourTypesPromise = GetAllTourTypes();
-      const [cities, tourTypes] = await Promise.all([
-        citiesPromise,
+      const [tourTypes, continent] = await Promise.all([
         tourTypesPromise,
+        continentPromise
       ]);
-      setCities(cities);
+      setContinents(continent);
       setTourType(tourTypes);
     };
     fetchData();
   }, []);
+
+  const getCountries = async () => {
+    const countriesPromise = fetchCountries(selectedContinent?.name);
+    const [countries] = await Promise.all([countriesPromise]);
+    setCountries(countries);
+  };
+  
+  const getCities = async () => {
+    const citiesPromise = fetchCities(selectedCountry?.name);
+    const [cities] = await Promise.all([citiesPromise]);
+    setCities(cities);
+  };
 
   const handleAddOption = () => {
     append({
@@ -253,46 +283,17 @@ const TourForm = () => {
   const excludedFields = ["bookingResult", "adultRate", "childRate"];
   const onSubmit = async (data) => {
     let user = JSON.parse(Cookie.get('user'));
-    let newCityId, newTourTypeId;
-
-    if (customValue['cityname']) {
-      try {
-        const cityResponse = await axiosInstance.post('/addcity', { name: customValue['cityname'] });
-        if (cityResponse.status === 200) {
-          newCityId = cityResponse.data.id; // Adjust according to your API response
-        } else {
-          throw new Error(`Failed to add city: ${cityResponse.statusText}`);
-        }
-      } catch (error) {
-        console.error("Error adding custom city:", error);
-        toast.error("Failed to add custom city");
-        return; // Optionally stop further processing if critical
-      }
-    }
-
-    // Handle custom tour type
-    if (customValue['citytourtype']) {
-      try {
-        const tourTypeResponse = await axiosInstance.post('/addtourtypes', { name: customValue['citytourtype'] });
-        if (tourTypeResponse.status === 200) {
-          newTourTypeId = tourTypeResponse.data.id; // Adjust according to your API response
-        } else {
-          throw new Error(`Failed to add tour type: ${tourTypeResponse.statusText}`);
-        }
-      } catch (error) {
-        console.error("Error adding custom tour type:", error);
-        toast.error("Failed to add custom tour type");
-        return; // Optionally stop further processing if critical
-      }
-    }
 
     let datatopost = {
       ...data,
       vendoruid: user?.uid,
-      cityid: newCityId || parseInt(cityId),
-      countryid: 13063,
-      citytourtypeid: newTourTypeId || cityToureTypeId,
-      cityname: customValue['cityname'] || data.cityname ,
+      countryid: selectedCountry?.CountryId,
+      countryname: selectedCountry?.name,
+      continent: selectedContinent?.name,
+      cityid: parseInt(cityId),
+      countryid: selectedCountry?.CountryId,
+      citytourtypeid: cityToureTypeId,
+      cityname: data.cityname ,
       citytourtype: customValue['citytourtype'] || data.citytourtype,
       minpax: 1,
       contractid: 0,
@@ -331,6 +332,17 @@ const TourForm = () => {
     setValue("imagepaths", [...imagepaths]);
   }, [imagepaths]);
 
+  useEffect(() => {
+    if (selectedContinent) {
+      getCountries();
+    }
+  }, [selectedContinent]);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      getCities();
+    }
+  }, [selectedCountry]);
 
 
   const handleSelectChange = (e) => {
@@ -345,17 +357,61 @@ const TourForm = () => {
       if (fieldKey === 'cityname') {
         setCityId(e.target.selectedOptions[0]?.id);
       } else if (fieldKey === 'countryname') {
-        setCountryId(value);
+        console.log(countries)
+        setSelectedCountry(countries.filter( item => item.CountryId == value )[0]);
       } else if (fieldKey === 'citytourtype') {
         setCityTourTypeId(value);
+      }else if (fieldKey === 'continentname') {
+        setSelectedContinent(continents.filter( item => item.id == value )[0])
       }
     }
   };
 
   const handleCustomValueChange = (e) => {
     const { id, value } = e.target;
+    console.log(id, value)
     setCustomValue(prev => ({ ...prev, [id]: value }));
   };
+
+  const createNewOption = async (type) => {
+    switch (type) {
+      case "countryname":
+        const newOption = await createCountry({ ContinentName: selectedContinent?.name, countryName: customValue['countryname'], image:"https://example.com/image-path.jpg" }); 
+        setCountries((prev) => [...prev, newOption]);        
+        setSelectedCountry(newOption);
+        setIsCustom((prev) => ({ ...prev, [type]: false }));
+        setCustomValue((prev) => ({ ...prev, [type]: "" }));
+        setValue("countryname", newOption.CountryId);
+        break;
+      case "cityname":
+        const newCity = await createCity({ name: customValue['cityname'] });
+        setCities((prev) => [...prev, newCity]);
+        setCityId(newCity.CityId);
+        setIsCustom((prev) => ({ ...prev, [type]: false }));
+        setCustomValue((prev) => ({ ...prev, [type]: "" }));
+        setValue("cityname", newCity.CityId);
+        break;
+      case "tourtype":
+        try {
+          const tourTypeResponse = await axiosInstance.post('/addtourtypes', { name: customValue['citytourtype'] });
+          if (tourTypeResponse) {
+            setCityTourTypeId(tourTypeResponse?.data?.result?.id);
+            setTourType((prev) => [...prev, tourTypeResponse?.data?.result]);
+            setIsCustom((prev) => ({ ...prev, [type]: false }));
+            setCustomValue((prev) => ({ ...prev, [type]: "" }));
+            setValue("citytourtypeid", tourTypeResponse?.data?.result?.id);
+          } else {
+            throw new Error(`Failed to add tour type: ${tourTypeResponse.statusText}`);
+          }
+        } catch (error) {
+          console.error("Error adding custom tour type:", error);
+          toast.error("Failed to add custom tour type");
+        }
+        break;
+  }
+}
+
+
 
   return (
     <Container>
@@ -423,7 +479,7 @@ const TourForm = () => {
                       </div>
                     );
                   } else if (
-                    ["countryname", "cityname", "citytourtype"].includes(key)
+                    ["continentname", "countryname", "cityname", "citytourtype"].includes(key)
                   ) {
                     return (
                       <div key={index} className="mb-4 rounded">
@@ -448,7 +504,7 @@ const TourForm = () => {
                               }}
                               value={isCustom[key] ? 'custom' : field.value}
                             >
-                              <option value="">Select</option>
+                              <option value="" disabled>Select</option>
                               {key === 'cityname' &&
                                 cities?.map((city) => (
                                   <option
@@ -459,7 +515,22 @@ const TourForm = () => {
                                     {city.CityName}
                                   </option>
                                 ))}
-                              {key === 'countryname' && <option value="Dubai">Dubai</option>}
+                              {key === 'continentname' && continents?.map((conti) => (
+                                  <option
+                                    key={conti.id}
+                                    value={conti.id}
+                                  >
+                                    {conti.name}
+                                  </option>
+                                ))}
+                              {key === 'countryname' && countries?.map((country) => (
+                                  <option
+                                    key={country.CountryId}
+                                    value={country.CountryId}
+                                  >
+                                    {country.name}
+                                  </option>
+                                ))}
                               {key === 'citytourtype' &&
                                 tourType?.map((tour) => (
                                   <option
@@ -469,9 +540,12 @@ const TourForm = () => {
                                     {tour.cityTourType}
                                   </option>
                                 ))}
-                              { key !== 'countryname' && <option value="custom">Custom</option>}
+                              { key === 'countryname' && selectedContinent && <option value="custom">Custom</option>}
+                              { key === 'cityname' && selectedCountry && <option value="custom">Custom</option>}
+                              { key === 'citytourtype' && <option value="custom">Custom</option>}
                             </select>
                             {isCustom[key] && (
+                              <div className="space-x-2">
                               <input
                                 type="text"
                                 id={key}
@@ -480,6 +554,14 @@ const TourForm = () => {
                                 value={customValue[key] || ''}
                                 onChange={handleCustomValueChange}
                               />
+                              <button
+                                type="button"
+                                className="mt-2 p-2 bg-blue-500 text-white rounded"
+                                onClick={()=>createNewOption(key)}
+                              >
+                                Submit
+                                </button>
+                              </div>
                             )}
                           </>
                         )}

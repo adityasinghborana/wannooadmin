@@ -22,10 +22,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/admin/favicon.ico" />
       </head>
-      <ToastContainer />
       <StoreProvider>
         <body className={`${inter.className} overflow-hidden`} id="__next">
           {children}
+          <ToastContainer />
         </body>
       </StoreProvider>
     </html>

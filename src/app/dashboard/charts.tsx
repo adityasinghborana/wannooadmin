@@ -40,16 +40,20 @@ export function DashboardChart() {
 
   const getChartData = async () => {
     // Fetching chart data for bookings, users, and vendors
-    const res = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'bookings');
-    const res1 = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'users');
-    const res2 = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'vendors');
+    try {
+      const res = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'bookings');
+      const res1 = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'users');
+      const res2 = await GetChartData({ startDate: date?.from, endDate: date?.to }, 'vendors');
+      setChartData({
+        bookings: res?.map((data: any) => ({ date: data.date, bookings: data.bookings })),
+        users: res1?.map((data: any) => ({ date: data.date, users: data.Users })),
+        vendors: res2?.map((data: any) => ({ date: data.date, vendors: data.Vendors })),
+      });
+    } catch (error) {
+      
+    }
   
     // Setting chart data
-    setChartData({
-      bookings: res?.map((data: any) => ({ date: data.date, bookings: data.bookings })),
-      users: res1?.map((data: any) => ({ date: data.date, users: data.Users })),
-      vendors: res2?.map((data: any) => ({ date: data.date, vendors: data.Vendors })),
-    });
     // setChartData({
     //   bookings: [{ date: "january", bookings: 500 }, { date: "feb", bookings: 500 },{ date:  "march", bookings: 500 }],
     //   users: res1?.map((data: any) => ({ date: data.date, users: data.Users })),

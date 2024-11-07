@@ -441,7 +441,51 @@ export async function GetAllBookings() {
  
   export async function editTour(data:any) { 
     try {
-      const response = await axios.put(`https://znjdppgl-3000.inc1.devtunnels.ms/edittour`, data);
+      const response = await axiosInstance.put(`https://znjdppgl-3000.inc1.devtunnels.ms/edittour`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+ 
+  export async function fetchContinent() { 
+    try {
+      const response = await axiosInstance.get(`/continents`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  export async function fetchCountries(data:any) { 
+    try {
+      const response = await axiosInstance.get(`/countries?name=${data}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  export async function fetchCities(data:any) { 
+    try {
+      const response = await axiosInstance.get(`/cities?countryName=${data}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  export async function createCountry(data:any) { 
+    try {
+      const response = await axiosInstance.post(`/createcountry`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+ 
+  export async function createCity(data:any) { 
+    try {
+      const response = await axiosInstance.post(`/addcity`, data);
       return response.data;
     } catch (error) {
       throw error;

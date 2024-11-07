@@ -39,10 +39,10 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
       }
       let res = await getTourDetails(params.tourid);
       if (res) {
-        setImages(res.tourImages);
-        delete res.tourImages;
+        setImages(res?.tourImages);
+        delete res?.tourImages;
         setTourDetails(res);
-        setAvailability(res.availability || "");
+        setAvailability(res?.availability || "");
       }
     };
     fetchTourDetails();
@@ -63,7 +63,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
     const { TourId, ...rest } = tourdetails; // Destructure to remove TourId
     const updatedTourData = { ...rest, images: selectedImages, tourId: TourId }; // Spread the rest and add images
 
-    await updateAvailability({id: tourdetails.id, available:availability})
+    availability && await updateAvailability({id: tourdetails.id, available:availability})
     await editTour(updatedTourData)
     
     // Call the API to update tour details
@@ -92,7 +92,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
 
   return (
     <div className="w-full flex justify-center px-20">
-      <div className="w-full max-w-6xl" style={{ maxHeight: "90vh", overflow: "auto" }}>
+      <div className="w-full max-w-7xl" style={{ maxHeight: "90vh", overflow: "auto" }}>
         <form
           onSubmit={handleSubmit}
           className="px-4 py-4 border rounded-xl bg-white"
@@ -108,7 +108,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
               opts={{
                 align: "start",
               }}
-              className="w-full"
+              className="w-[90%] mx-auto"
             >
               <CarouselContent>
                 {images.map((image, index) => (
