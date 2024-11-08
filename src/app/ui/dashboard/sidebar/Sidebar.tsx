@@ -23,6 +23,7 @@ import { auth } from "@/firebase/config";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useEffect, useState } from "react";
 import Cookie from 'js-cookie';
+import { BiLogoSketch } from "react-icons/bi";
 
 const Sidebar = () => {
   const [user, setUser] = useState<any>();
@@ -41,7 +42,7 @@ const Sidebar = () => {
           icon: <MdDashboard />,
         },
       ],
-    },
+    }, 
   ]);
 
   useEffect(() => {
@@ -54,6 +55,11 @@ const Sidebar = () => {
               title: "Dashboard",
               path: "/dashboard",
               icon: <MdDashboard />,
+            },
+            {
+              title: "Blogs",
+              path: "/dashboard/blogs",
+              icon: <BiLogoSketch />,
             },
             {
               title: "Users",

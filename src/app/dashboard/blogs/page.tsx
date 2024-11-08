@@ -1,12 +1,11 @@
 "use client";
 import Container from "@/app/ui/dashboard/container/Container";
-import { getEmail, updateEmail } from "@/lib/services";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-const EmailEditor: React.FC = () => {
+const BlogEditor: React.FC = () => {
   const [id, setId] = useState<number>(1);
   const [subject, setSubject] = useState<string>("");
   const [body, setBody] = useState<string>("");
@@ -54,17 +53,10 @@ const EmailEditor: React.FC = () => {
 
   useEffect(() => {
     const getValues = async () => {
-      try {
-        const res = await getEmail();
-        setId(res?.id);
-        setSubject(res?.subject || "");
-        setBody(res?.body || "");
-      } catch (error) {
-        console.error("Failed to fetch email data", error);
-      }
+      
     };
 
-    getValues();
+    // getValues();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,10 +68,10 @@ const EmailEditor: React.FC = () => {
     };
 
     try {
-      await updateEmail(dataToPost);
-      console.log("Email updated successfully:", dataToPost);
+      
+      console.log("Blog added:", dataToPost);
     } catch (error) {
-      console.error("Failed to update email:", error);
+      console.error("Failed to add Blog:", error);
     }
   };
 
@@ -137,4 +129,4 @@ const EmailEditor: React.FC = () => {
   );
 };
 
-export default EmailEditor;
+export default BlogEditor;
