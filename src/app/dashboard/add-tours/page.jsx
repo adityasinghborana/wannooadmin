@@ -198,7 +198,7 @@ const TourForm = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const [cities, setCities] = useState([]);
-  const [cityId, setCityId] = useState();
+  const [selectedCity, setSelectedCity] = useState();
 
   const [countries, setCountries] = useState();
   const [selectedCountry, setSelectedCountry] = useState();
@@ -293,17 +293,16 @@ const TourForm = () => {
   const excludedFields = ["bookingResult", "adultRate", "childRate"];
   const onSubmit = async (data) => {
     let user = JSON.parse(Cookie.get('user'));
-
     let datatopost = {
       ...data,
       vendoruid: user?.uid,
       countryid: selectedCountry?.CountryId,
       countryname: selectedCountry?.name,
       continent: selectedContinent?.name,
-      cityid: parseInt(cityId),
+      cityid: parseInt(selectedCity?.id),
+      cityname: selectedCity?.CityName,
       countryid: selectedCountry?.CountryId,
       citytourtypeid: selectedTourType.id,
-      cityname: data.cityname,
       citytourtype: customValue['citytourtype'] || selectedTourType.cityTourType,
       minpax: 1,
       contractid: 0,
@@ -365,7 +364,7 @@ const TourForm = () => {
       setIsCustom(prev => ({ ...prev, [fieldKey]: false }));
       setCustomValue(prev => ({ ...prev, [fieldKey]: null }))
       if (fieldKey === 'cityname') {
-        setCityId(e.target.selectedOptions[0]?.id);
+        setSelectedCity(cities.filter(item => item.id == value)[0]);
       } else if (fieldKey === 'countryname') {
         console.log(countries)
         setSelectedCountry(countries.filter(item => item.CountryId == value)[0]);
@@ -397,7 +396,7 @@ const TourForm = () => {
         const newCity = await createCity({ id: selectedCountry?.CountryId, name: customValue['cityname'] });
         console.log(newCity?.result)
         setCities((prev) => [...prev, newCity?.result]);
-        setCityId(newCity?.result?.id);
+        setSelectedCity(newCity?.result?.id);
         setIsCustom((prev) => ({ ...prev, [type]: false }));
         setCustomValue((prev) => ({ ...prev, [type]: "" }));
         setValue("cityname", newCity?.result?.id);
