@@ -30,9 +30,7 @@ import { set } from "date-fns";
 const tourSchema = yup.object().shape({
   continentname: yup.string().required(),
   countryname: yup.string().required(),
-  countryid: yup.string().required(),
   cityname: yup.string().required(),
-  cityid: yup.string().required(),
   tourname: yup.string().required(),
   duration: yup.string().required(),
   imagepath: yup.string().required(),
@@ -61,6 +59,12 @@ const tourSchema = yup.object().shape({
   infantprice: yup.number().required(),
   amount: yup.number().required(),
   imagepaths: yup.array().of(yup.string()).required(),
+  faqs: yup.array().of(
+    yup.object().shape({
+      question: yup.string().required(),
+      answer: yup.string().required(),
+    })
+  ),
   optionlist: yup.array().of(
     yup.object().shape({
       optionname: yup.string().required(),
@@ -124,6 +128,7 @@ const TourForm = () => {
     infantprice: 0,
     amount: 0,
     imagepaths: "",
+    faqs: [{ question: "", answer: "" }],
     optionlist: [
       {
         optionname: "",
@@ -175,6 +180,11 @@ const TourForm = () => {
     name: "optionlist",
   });
 
+  const { fields: faqs, append: appendFaqs, remove: removeFaqs } = useFieldArray({
+    control,
+    name: "faqs",
+  });
+
   const daysOfWeekOptions = [
     { value: "monday", label: "Monday" },
     { value: "tuesday", label: "Tuesday" },
@@ -186,20 +196,20 @@ const TourForm = () => {
   ];
 
   const [openIndex, setOpenIndex] = useState(null);
-  
+
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
 
   const [countries, setCountries] = useState();
   const [selectedCountry, setSelectedCountry] = useState();
-  
+
   const [continents, setContinents] = useState();
   const [selectedContinent, setSelectedContinent] = useState();
-  
-  const [tourType, setTourType] = useState([]);
-  const [cityToureTypeId, setCityTourTypeId] = useState();
 
-  
+  const [tourType, setTourType] = useState([]);
+  const [selectedTourType, setSelectedCityTourType] = useState();
+
+
   const [imagepaths, setImagePaths] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
@@ -226,7 +236,7 @@ const TourForm = () => {
     const [countries] = await Promise.all([countriesPromise]);
     setCountries(countries);
   };
-  
+
   const getCities = async () => {
     const citiesPromise = fetchCities(selectedCountry?.name);
     const [cities] = await Promise.all([citiesPromise]);
@@ -292,9 +302,9 @@ const TourForm = () => {
       continent: selectedContinent?.name,
       cityid: parseInt(cityId),
       countryid: selectedCountry?.CountryId,
-      citytourtypeid: cityToureTypeId,
-      cityname: data.cityname ,
-      citytourtype: customValue['citytourtype'] || data.citytourtype,
+      citytourtypeid: selectedTourType.id,
+      cityname: data.cityname,
+      citytourtype: customValue['citytourtype'] || selectedTourType.cityTourType,
       minpax: 1,
       contractid: 0,
       isrecommended: false,
@@ -358,11 +368,11 @@ const TourForm = () => {
         setCityId(e.target.selectedOptions[0]?.id);
       } else if (fieldKey === 'countryname') {
         console.log(countries)
-        setSelectedCountry(countries.filter( item => item.CountryId == value )[0]);
+        setSelectedCountry(countries.filter(item => item.CountryId == value)[0]);
       } else if (fieldKey === 'citytourtype') {
-        setCityTourTypeId(value);
-      }else if (fieldKey === 'continentname') {
-        setSelectedContinent(continents.filter( item => item.id == value )[0])
+        setSelectedCityTourType(tourType.filter(item => item.id == value)[0]);
+      } else if (fieldKey === 'continentname') {
+        setSelectedContinent(continents.filter(item => item.id == value)[0])
       }
     }
   };
@@ -376,26 +386,27 @@ const TourForm = () => {
   const createNewOption = async (type) => {
     switch (type) {
       case "countryname":
-        const newOption = await createCountry({ ContinentName: selectedContinent?.name, countryName: customValue['countryname'], image:"https://example.com/image-path.jpg" }); 
-        setCountries((prev) => [...prev, newOption]);        
+        const newOption = await createCountry({ ContinentName: selectedContinent?.name, countryName: customValue['countryname'], image: "https://example.com/image-path.jpg" });
+        setCountries((prev) => [...prev, newOption]);
         setSelectedCountry(newOption);
         setIsCustom((prev) => ({ ...prev, [type]: false }));
         setCustomValue((prev) => ({ ...prev, [type]: "" }));
         setValue("countryname", newOption.CountryId);
         break;
       case "cityname":
-        const newCity = await createCity({ name: customValue['cityname'] });
-        setCities((prev) => [...prev, newCity]);
-        setCityId(newCity.CityId);
+        const newCity = await createCity({ id: selectedCountry?.CountryId, name: customValue['cityname'] });
+        console.log(newCity?.result)
+        setCities((prev) => [...prev, newCity?.result]);
+        setCityId(newCity?.result?.id);
         setIsCustom((prev) => ({ ...prev, [type]: false }));
         setCustomValue((prev) => ({ ...prev, [type]: "" }));
-        setValue("cityname", newCity.CityId);
+        setValue("cityname", newCity?.result?.id);
         break;
       case "tourtype":
         try {
           const tourTypeResponse = await axiosInstance.post('/addtourtypes', { name: customValue['citytourtype'] });
           if (tourTypeResponse) {
-            setCityTourTypeId(tourTypeResponse?.data?.result?.id);
+            setSelectedCityTourType(tourTypeResponse?.data?.result?.id);
             setTourType((prev) => [...prev, tourTypeResponse?.data?.result]);
             setIsCustom((prev) => ({ ...prev, [type]: false }));
             setCustomValue((prev) => ({ ...prev, [type]: "" }));
@@ -408,8 +419,8 @@ const TourForm = () => {
           toast.error("Failed to add custom tour type");
         }
         break;
+    }
   }
-}
 
 
 
@@ -454,7 +465,7 @@ const TourForm = () => {
                           htmlFor={key}
                           className="block text-gray-700 text-sm font-bold mb-2"
                         >
-                          {key === "isslot" ? "Does tour have time slot?" : key === "isonlychild" ? "Is it for only children?" : key.charAt(0).toUpperCase() + key.slice(1) }
+                          {key === "isslot" ? "Does tour have time slot?" : key === "isonlychild" ? "Is it for only children?" : key.charAt(0).toUpperCase() + key.slice(1)}
                         </label>
                         <Controller
                           name={key}
@@ -483,39 +494,39 @@ const TourForm = () => {
                   ) {
                     return (
                       <div key={index} className="mb-4 rounded">
-                      <label
-                        htmlFor={key}
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                      >
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                      </label>
-                      <Controller
-                        name={key}
-                        control={control}
-                        render={({ field }) => (
-                          <>
-                            <select
-                              id={key}
-                              className="text-fieldutilities"
-                              {...field}
-                              onChange={(e) => {
-                                handleSelectChange(e);
-                                field.onChange(e);
-                              }}
-                              value={isCustom[key] ? 'custom' : field.value}
-                            >
-                              <option value="" disabled>Select</option>
-                              {key === 'cityname' &&
-                                cities?.map((city) => (
-                                  <option
-                                    key={city.CityId}
-                                    value={city.CityName}
-                                    id={city.CityId}
-                                  >
-                                    {city.CityName}
-                                  </option>
-                                ))}
-                              {key === 'continentname' && continents?.map((conti) => (
+                        <label
+                          htmlFor={key}
+                          className="block text-gray-700 text-sm font-bold mb-2"
+                        >
+                          {key.charAt(0).toUpperCase() + key.slice(1)}
+                        </label>
+                        <Controller
+                          name={key}
+                          control={control}
+                          render={({ field }) => (
+                            <>
+                              <select
+                                id={key}
+                                className="text-fieldutilities"
+                                {...field}
+                                onChange={(e) => {
+                                  handleSelectChange(e);
+                                  field.onChange(e);
+                                }}
+                                value={isCustom[key] ? 'custom' : field.value}
+                              >
+                                <option value="" disabled>Select</option>
+                                {key === 'cityname' &&
+                                  cities?.map((city) => (
+                                    <option
+                                      key={city.id}
+                                      value={city.id}
+                                      id={city.id}
+                                    >
+                                      {city.CityName}
+                                    </option>
+                                  ))}
+                                {key === 'continentname' && continents?.map((conti) => (
                                   <option
                                     key={conti.id}
                                     value={conti.id}
@@ -523,7 +534,7 @@ const TourForm = () => {
                                     {conti.name}
                                   </option>
                                 ))}
-                              {key === 'countryname' && countries?.map((country) => (
+                                {key === 'countryname' && countries?.map((country) => (
                                   <option
                                     key={country.CountryId}
                                     value={country.CountryId}
@@ -531,47 +542,47 @@ const TourForm = () => {
                                     {country.name}
                                   </option>
                                 ))}
-                              {key === 'citytourtype' &&
-                                tourType?.map((tour) => (
-                                  <option
-                                    key={tour.cityTourType}
-                                    value={tour.cityTourType}
+                                {key === 'citytourtype' &&
+                                  tourType?.map((tour) => (
+                                    <option
+                                      key={tour.id}
+                                      value={tour.id}
+                                    >
+                                      {tour.cityTourType}
+                                    </option>
+                                  ))}
+                                {key === 'countryname' && selectedContinent && <option value="custom">Custom</option>}
+                                {key === 'cityname' && selectedCountry && <option value="custom">Custom</option>}
+                                {key === 'citytourtype' && <option value="custom">Custom</option>}
+                              </select>
+                              {isCustom[key] && (
+                                <div className="space-x-2">
+                                  <input
+                                    type="text"
+                                    id={key}
+                                    placeholder="Enter custom value"
+                                    className="mt-2 p-2 border border-gray-300 rounded"
+                                    value={customValue[key] || ''}
+                                    onChange={handleCustomValueChange}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="mt-2 p-2 bg-blue-500 text-white rounded"
+                                    onClick={() => createNewOption(key)}
                                   >
-                                    {tour.cityTourType}
-                                  </option>
-                                ))}
-                              { key === 'countryname' && selectedContinent && <option value="custom">Custom</option>}
-                              { key === 'cityname' && selectedCountry && <option value="custom">Custom</option>}
-                              { key === 'citytourtype' && <option value="custom">Custom</option>}
-                            </select>
-                            {isCustom[key] && (
-                              <div className="space-x-2">
-                              <input
-                                type="text"
-                                id={key}
-                                placeholder="Enter custom value"
-                                className="mt-2 p-2 border border-gray-300 rounded"
-                                value={customValue[key] || ''}
-                                onChange={handleCustomValueChange}
-                              />
-                              <button
-                                type="button"
-                                className="mt-2 p-2 bg-blue-500 text-white rounded"
-                                onClick={()=>createNewOption(key)}
-                              >
-                                Submit
-                                </button>
-                              </div>
-                            )}
-                          </>
+                                    Submit
+                                  </button>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        />
+                        {errors[key]?.message && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors[key].message}
+                          </p>
                         )}
-                      />
-                      {errors[key]?.message && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors[key].message}
-                        </p>
-                      )}
-                    </div>
+                      </div>
                     );
                   } else if (["imagepaths", "imagepath"].includes(key)) {
                     if (key === "imagepaths") {
@@ -657,7 +668,7 @@ const TourForm = () => {
                         </div>
                       );
                     }
-                  } else {
+                  } else if (key === "faqs") { return null;} else {
                     const field = tourSchema.fields[key];
                     return (
                       <div key={index} className="mb-4">
@@ -694,15 +705,61 @@ const TourForm = () => {
                 })}
             </div>
 
+            <h2>FAQs</h2>
+            {faqs.map((item, index) => (
+              <div key={item.id} className="mb-4">
+                <label htmlFor={`faqs.${index}.question`} className="block mb-2">Question</label>
+                <Controller
+                  name={`faqs.${index}.question`}
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="text"
+                      {...field}
+                      placeholder="Enter question"
+                      className="p-2 border border-gray-300 rounded mb-2 w-full"
+                    />
+                  )}
+                />
+
+                <label htmlFor={`faqs.${index}.answer`} className="block mb-2">Answer</label>
+                <Controller
+                  name={`faqs.${index}.answer`}
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="text"
+                      {...field}
+                      placeholder="Enter answer"
+                      className="p-2 border border-gray-300 rounded mb-2 w-full"
+                    />
+                  )}
+                />
+
+                {/* Button to remove an FAQ */}
+                <div className="flex gap-4">
+                  <button type="button" onClick={() => removeFaqs(index)} className={`${faqs.length === 1 && "hidden"} text-red-500 mt-2`}>
+                    Remove FAQ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => appendFaqs({ question: "", answer: "" })}
+                    className="mt-4 p-2 bg-blue-500 text-white rounded"
+                  >
+                    Add FAQ
+                  </button>
+                </div>
+              </div>
+            ))}
+
             {/* Option List */}
             <div className="space-y-4">
               {optionFields.map((option, index) => (
                 <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
                   <div className="flex items-center w-full rounded-2xl px-3 mb-4 bg-primary text-primary-bodytext">
                     <h3
-                      className={`text-lg text-center text-primary-bodytext font-medium ${
-                        index !== openIndex && "text-primary-bodytext"
-                      } p-2`}
+                      className={`text-lg text-center text-primary-bodytext font-medium ${index !== openIndex && "text-primary-bodytext"
+                        } p-2`}
                       style={{ width: "100%" }}
                     >
                       Option {index + 1} {option.optionname}
@@ -743,9 +800,8 @@ const TourForm = () => {
                             return (
                               <div
                                 key={optionIndex}
-                                className={`flex space-x-2 ${
-                                  optionKey === "operationDays" && "col-span-3 "
-                                }`}
+                                className={`flex space-x-2 ${optionKey === "operationDays" && "col-span-3 "
+                                  }`}
                               >
                                 <label
                                   htmlFor={`optionlist[${index}].${optionKey}`}
@@ -824,7 +880,7 @@ const TourForm = () => {
                         })}
                       </div>
 
-                      { isslotValue === 'true' && <div className="grid gap-2 border px-2 py-2 mt-2">
+                      {isslotValue === 'true' && <div className="grid gap-2 border px-2 py-2 mt-2">
                         <h4 className="text-base font-medium mb-2">
                           Time Slots
                         </h4>

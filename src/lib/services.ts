@@ -485,7 +485,7 @@ export async function GetAllBookings() {
  
   export async function createCity(data:any) { 
     try {
-      const response = await axiosInstance.post(`/addcity`, data);
+      const response = await axiosInstance.put(`/addcity`, data);
       return response.data;
     } catch (error) {
       throw error;
