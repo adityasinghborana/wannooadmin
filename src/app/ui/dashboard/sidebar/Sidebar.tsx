@@ -46,7 +46,7 @@ const Sidebar = () => {
   ]);
 
   useEffect(() => {
-    if (CheckIsAdmin) {
+    // if (CheckIsAdmin) {
       setMenuItems([
         {
           title: "Pages",
@@ -190,51 +190,51 @@ const Sidebar = () => {
           ],
         },
       ]);
-    } else {
-      setMenuItems([
-        {
-          title: "Pages",
-          list: [
-            {
-              title: "Dashboard",
-              path: "/dashboard",
-              icon: <MdDashboard />,
-            },
-          ],
-        },
-        {
-          title: "Services",
-          list: [
-            {
-              title: "Tours",
-              path: "/dashboard/tours",
-              icon: <MdTour />,
-            },
+    // } else {
+    //   setMenuItems([
+    //     {
+    //       title: "Pages",
+    //       list: [
+    //         {
+    //           title: "Dashboard",
+    //           path: "/dashboard",
+    //           icon: <MdDashboard />,
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       title: "Services",
+    //       list: [
+    //         {
+    //           title: "Tours",
+    //           path: "/dashboard/tours",
+    //           icon: <MdTour />,
+    //         },
 
-            {
-              title: "Add Tours",
-              path: "/dashboard/add-tours",
-              icon: <MdAddCard />,
-            },
-            {
-              title: "Events",
-              path: "/dashboard/events",
-              icon: <MdFestival />,
-            },
-            {
-              title: "Add Event",
-              path: "/dashboard/addevents",
-              icon: <MdEvent />,
-            },
-            {
-              title: "Coupons",
-              path: "/dashboard/coupons",
-              icon: <MdDiscount />,
-            },
-          ],
-        },
-      ]);
-    }
+    //         {
+    //           title: "Add Tours",
+    //           path: "/dashboard/add-tours",
+    //           icon: <MdAddCard />,
+    //         },
+    //         {
+    //           title: "Events",
+    //           path: "/dashboard/events",
+    //           icon: <MdFestival />,
+    //         },
+    //         {
+    //           title: "Add Event",
+    //           path: "/dashboard/addevents",
+    //           icon: <MdEvent />,
+    //         },
+    //         {
+    //           title: "Coupons",
+    //           path: "/dashboard/coupons",
+    //           icon: <MdDiscount />,
+    //         },
+    //       ],
+    //     },
+    //   ]);
+    // }
   }, [CheckIsAdmin]);
 
   return (

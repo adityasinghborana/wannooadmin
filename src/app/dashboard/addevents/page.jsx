@@ -249,7 +249,7 @@ const EventForm = () => {
       vendoruid: user?.uid,
       isVisible: data?.isVisible === "true" ? true : false,
       isVisibleHome: data?.isVisibleHome === "true" ? true : false,
-      cityId: parseInt(data?.cityId),
+      cityId: parseInt(cityId),
       eventName: data?.eventName,
       duration: data?.duration,
       imagePath: data?.imagePath,
@@ -293,6 +293,7 @@ const EventForm = () => {
         })),
       },
     };
+    console.log(cityId)
     console.log(data);
     console.log(formattedData);
     try {
@@ -426,9 +427,9 @@ const EventForm = () => {
                               {key === "cityId" &&
                                 cities?.map((city) => (
                                   <option
-                                    key={city.CityId}
-                                    value={city.CityId}
-                                    id={city.CityId}
+                                    key={city.id}
+                                    value={city.id}
+                                    id={city.id}
                                   >
                                     {city.CityName}
                                   </option>

@@ -16,7 +16,7 @@ export const columns: ColumnDef<Event, any>[] = [
     header: "Image", // Adjust this accessor to match your Event interface
     cell: (row: any) => (
       <img
-        src={row.row.original.imagePath}
+        src={`${process.env.NEXT_PUBLIC_URL}${row.row.original.imagePath}`}
         alt="Event Image"
         style={{ width: "100px", height: "auto" }}
       />
@@ -80,7 +80,7 @@ export const columns: ColumnDef<Event, any>[] = [
       return (
         <div className="flex max-w-full gap-2 h-full items-center justify-center">
           <Link
-            href={`/dashboard/events/${row?.row?.original?.eventdetail[0]?.id}`}
+            href={`/dashboard/events/${row?.row?.original?.id}`}
             className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
           >
             <MdEdit />
