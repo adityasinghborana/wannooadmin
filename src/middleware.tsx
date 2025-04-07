@@ -1,4 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
+import Constants from './constants';
+
+
+
 
 export async function middleware(request: NextRequest) {
   // Get the 'user' cookie
@@ -42,7 +46,7 @@ export async function middleware(request: NextRequest) {
 
   // Perform the API request to check vendor status
   try {
-    const res = await fetch('http://68.66.251.170/api/vendor', {
+    const res = await fetch(`${Constants.localBaseUrl}/vendor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,15 +64,15 @@ console.log(data);
     if (data?.data?.isApproved) {
       return NextResponse.next();;
     } else {
-      return NextResponse.redirect(new URL('/admin', request.url));
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
   } catch (error) {
     console.error('Error fetching vendor data:', error);
-    return NextResponse.redirect(new URL('/signIn', request.url));
+    return NextResponse.redirect(new URL('/admin/signIn', request.url));
   }
 }
 
-// Config to apply this middleware to specific routes
+//Config to apply this middleware to specific routes
 export const config = {
   matcher: ['/dashboard/:path*'], // Apply middleware to all paths under /admin
 };

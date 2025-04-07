@@ -9,7 +9,7 @@ import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { MdDelete, MdEdit, MdViewAgenda } from "react-icons/md";
 import { toast } from "react-toastify";
-
+import Constants from "@/constants.js"
 interface Row {
   id: GridRowId;
   email: string;
@@ -71,7 +71,7 @@ const Tours: FC = () => {
                 height: "100%",
               }}
             >
-              <img src={imagePath} alt={imagePath} height={130} width={130} />
+              <img src={`${Constants.localBaseUrl}${imagePath}`} alt={imagePath} height={130} width={130} />
             </div>
           </>
         );

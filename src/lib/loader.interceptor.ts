@@ -21,7 +21,7 @@ const createLoader = () => {
 
 const axiosInstance = axios.create({
    baseURL: 'http://68.66.251.170/api', // Production
-  //  baseURL: 'http://localhost:3000', // LocalHost
+  // baseURL: 'http://localhost:3000', // LocalHost
   //baseURL: 'https://c3c1cscz-3000.inc1.devtunnels.ms', // Dev tunnel
 
 });

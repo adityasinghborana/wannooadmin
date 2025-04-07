@@ -194,10 +194,10 @@ const TourForm = () => {
 
   const handleConfirm = async () => {
     let formData = new FormData();
-    formData.append("image", selectedImage);
+    formData.append("images", selectedImage);
     let imgData = await UploadBackgroundImage(formData);
     // Assuming you're storing image paths in a field named "imagepaths"
-    setValue("imagepath", imgData?.path);
+    setValue("imagepath", imgData?.files[0].path);
     setIsModalOpen(false);
   };
 
@@ -466,6 +466,8 @@ const TourForm = () => {
                                   onImageSelect={setImagePaths}
                                   Images={GetAllImages}
                                 />
+
+                              
                               )}
                             />
                           }
