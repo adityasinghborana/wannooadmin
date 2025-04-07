@@ -38,25 +38,17 @@ const tourSchema = yup.object().shape({
   contractid: yup.number().required(),
   isrecommended: yup.boolean().required(),
   isprivate: yup.boolean().required(),
-  isslot: yup.boolean().required(),
+  Bookable: yup.boolean().required(),
   tourdescription: yup.string().required(),
   tourinclusion: yup.string().required(),
   shortdescription: yup.string().required(),
   importantinformation: yup.string().required(),
   itenararydescription: yup.string().required(),
   usefulinformation: yup.string().required(),
-  childage: yup.string().required(),
-  infantage: yup.string().required(),
-  infantcount: yup.number().required(),
-  isonlychild: yup.boolean().required(),
   starttime: yup.string().required(),
-  meal: yup.string(),
   googlemapurl: yup.string().url(),
   tourexclusion: yup.string(),
-  adultprice: yup.number().required(),
-  childprice: yup.number().required(),
   isvendortour: yup.boolean().required(),
-  infantprice: yup.number().required(),
   amount: yup.number().required(),
   imagepaths: yup.array().of(yup.string()).required(),
   faqs: yup.array().of(
@@ -65,34 +57,7 @@ const tourSchema = yup.object().shape({
       answer: yup.string().required(),
     })
   ),
-  optionlist: yup.array().of(
-    yup.object().shape({
-      optionname: yup.string().required(),
-      childage: yup.string().required(),
-      infantage: yup.string().required(),
-      minpax: yup.number().required(),
-      maxpax: yup.number().required(),
-      duration: yup.string().required(),
-      optiondescription: yup.string().required(),
-      operationDays: yup.object().shape({
-        monday: yup.number().required(),
-        tuesday: yup.number().required(),
-        wednesday: yup.number().required(),
-        thursday: yup.number().required(),
-        friday: yup.number().required(),
-        saturday: yup.number().required(),
-        sunday: yup.number().required(),
-      }),
-      timeSlots: yup.array().of(
-        yup.object().shape({
-          timeSlot: yup.string().required(),
-          available: yup.number().required(),
-          adultPrice: yup.number().required(),
-          childPrice: yup.number().required(),
-        })
-      ),
-    })
-  ),
+  
 });
 
 const TourForm = () => {
@@ -107,7 +72,7 @@ const TourForm = () => {
     contractid: 0,
     isrecommended: false,
     isprivate: false,
-    isslot: false,
+   Bookable:true,
     isvendortour: true,
     tourdescription: "",
     tourinclusion: "",
@@ -115,48 +80,13 @@ const TourForm = () => {
     importantinformation: "",
     itenararydescription: "",
     usefulinformation: "",
-    childage: "",
-    infantage: "",
-    infantcount: 0,
-    isonlychild: false,
     starttime: "",
-    meal: "",
     googlemapurl: "",
     tourexclusion: "",
-    adultprice: 0,
-    childprice: 0,
-    infantprice: 0,
     amount: 0,
     imagepaths: "",
     faqs: [{ question: "", answer: "" }],
-    optionlist: [
-      {
-        optionname: "",
-        childage: "",
-        infantage: "",
-        minpax: 1,
-        maxpax: 0,
-        duration: "",
-        optiondescription: "",
-        operationDays: {
-          monday: 1,
-          tuesday: 0,
-          wednesday: 0,
-          thursday: 0,
-          friday: 0,
-          saturday: 0,
-          sunday: 0,
-        },
-        timeSlots: [
-          {
-            timeSlot: "0",
-            available: 0,
-            adultPrice: 0,
-            childPrice: 0,
-          },
-        ],
-      },
-    ],
+    
   };
 
   const {
@@ -169,33 +99,15 @@ const TourForm = () => {
     resolver: yupResolver(tourSchema),
     defaultValues,
   });
-  const isslotValue = watch('isslot');
-  const {
-    fields: optionFields,
-    append,
-    remove,
-    update,
-  } = useFieldArray({
-    control,
-    name: "optionlist",
-  });
+  
 
   const { fields: faqs, append: appendFaqs, remove: removeFaqs } = useFieldArray({
     control,
     name: "faqs",
   });
 
-  const daysOfWeekOptions = [
-    { value: "monday", label: "Monday" },
-    { value: "tuesday", label: "Tuesday" },
-    { value: "wednesday", label: "Wednesday" },
-    { value: "thursday", label: "Thursday" },
-    { value: "friday", label: "Friday" },
-    { value: "saturday", label: "Saturday" },
-    { value: "sunday", label: "Sunday" },
-  ];
+  
 
-  const [openIndex, setOpenIndex] = useState(null);
 
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState();
@@ -243,54 +155,7 @@ const TourForm = () => {
     setCities(cities);
   };
 
-  const handleAddOption = () => {
-    append({
-      optionname: "",
-      childage: "",
-      infantage: "",
-      minpax: 1,
-      maxpax: 0,
-      duration: "",
-      optiondescription: "",
-      operationDays: {
-        monday: 1,
-        tuesday: 0,
-        wednesday: 0,
-        thursday: 0,
-        friday: 0,
-        saturday: 0,
-        sunday: 0,
-      },
-      timeSlots: [
-        {
-          timeSlot: "0",
-          available: 0,
-          adultPrice: 0,
-          childPrice: 0,
-        },
-      ],
-    });
-  };
-  const handleRemoveOption = (index) => {
-    remove(index);
-  };
-
-  const handleAddTimeSlot = (index) => {
-    let newData = optionFields[index];
-    newData?.timeSlots.push({
-      timeSlot: "0",
-      available: 0,
-      adultPrice: 0,
-      childPrice: 0,
-    });
-    update(index, newData);
-  };
-  const handleRemoveTimeSlot = (index) => {
-    let newData = optionFields[index];
-    newData.timeSlots.splice(index, 1);
-    update(index, newData);
-  };
-  const excludedFields = ["bookingResult", "adultRate", "childRate"];
+  
   const onSubmit = async (data) => {
     let user = JSON.parse(Cookie.get('user'));
     let datatopost = {
@@ -304,11 +169,10 @@ const TourForm = () => {
       countryid: selectedCountry?.CountryId,
       citytourtypeid: selectedTourType.id,
       citytourtype: customValue['citytourtype'] || selectedTourType.cityTourType,
-      minpax: 1,
       contractid: 0,
       isrecommended: false,
       isprivate: false,
-      infantcount: 0,
+      
     };
     let res = await AddTour(datatopost);
     res?.result?.status === 200 && toast.success("Tour added successfully");
@@ -437,7 +301,7 @@ const TourForm = () => {
                 .filter(
                   (key) =>
                     ![
-                      "optionlist",
+                  
                       "vendoruid",
                       "countryid",
                       "cityid",
@@ -446,7 +310,7 @@ const TourForm = () => {
                       "contractid",
                       "isrecommended",
                       "isprivate",
-                      "infantcount",
+                     
                     ].includes(key)
                 )
                 .map((key, index) => {
@@ -454,8 +318,8 @@ const TourForm = () => {
                     [
                       "isprivate",
                       "isrecommended",
-                      "isslot",
-                      "isonlychild",
+                    "Bookable"
+                      
                     ].includes(key)
                   ) {
                     return (
@@ -464,7 +328,7 @@ const TourForm = () => {
                           htmlFor={key}
                           className="block text-gray-700 text-sm font-bold mb-2"
                         >
-                          {key === "isslot" ? "Does tour have time slot?" : key === "isonlychild" ? "Is it for only children?" : key.charAt(0).toUpperCase() + key.slice(1)}
+                          {key === "Bookable" ? "Booking From our Site " : key === "isonlychild" ? "Is it for only children?" : key.charAt(0).toUpperCase() + key.slice(1)}
                         </label>
                         <Controller
                           name={key}
@@ -552,7 +416,7 @@ const TourForm = () => {
                                   ))}
                                 {key === 'countryname' && selectedContinent && <option value="custom">Custom</option>}
                                 {key === 'cityname' && selectedCountry && <option value="custom">Custom</option>}
-                                {key === 'citytourtype' && <option value="custom">Custom</option>}
+                             
                               </select>
                               {isCustom[key] && (
                                 <div className="space-x-2">
@@ -752,218 +616,12 @@ const TourForm = () => {
             ))}
 
             {/* Option List */}
-            <div className="space-y-4">
-              {optionFields.map((option, index) => (
-                <div key={option.id} className={` rounded-2xl p-4 my-4 mt-4`}>
-                  <div className="flex items-center w-full rounded-2xl px-3 mb-4 bg-primary text-primary-bodytext">
-                    <h3
-                      className={`text-lg text-center text-primary-bodytext font-medium ${index !== openIndex && "text-primary-bodytext"
-                        } p-2`}
-                      style={{ width: "100%" }}
-                    >
-                      Option {index + 1} {option.optionname}
-                    </h3>
-                    <div className="w-[20%] flex justify-items-end text-primary-text ">
-                      <button
-                        type="button"
-                        className="text-primary-bodytext hover:text-primary-bodytext"
-                        onClick={() =>
-                          setOpenIndex(index === openIndex ? null : index)
-                        }
-                      >
-                        {index === openIndex ? (
-                          <MdExpandLess />
-                        ) : (
-                          <MdExpandMore />
-                        )}
-                      </button>
-                      {optionFields.length > 1 && (
-                        <button
-                          type="button"
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => handleRemoveOption(index)}
-                        >
-                          <MdDelete />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  {index === openIndex && (
-                    <div className="space-y-4 mx-auto" style={{ width: "90%" }}>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Object.keys(option).map((optionKey, optionIndex) => {
-                          if (optionKey === "timeSlots") return null; // Skip rendering timeSlots here
-                          if (optionKey === "id") return null; // Skip rendering timeSlots here
-                          if (optionKey === "minpax") return null; // Skip rendering timeSlots here
-                          if (optionKey === "operationDays") {
-                            return (
-                              <div
-                                key={optionIndex}
-                                className={`flex space-x-2 ${optionKey === "operationDays" && "col-span-3 "
-                                  }`}
-                              >
-                                <label
-                                  htmlFor={`optionlist[${index}].${optionKey}`}
-                                  className="text-sm font-medium text-gray-700 mr-2 content-center "
-                                >
-                                  {optionKey.charAt(0).toUpperCase() +
-                                    optionKey.slice(1)}
-                                </label>
-                                <Controller
-                                  name={`optionlist[${index}].${optionKey}`}
-                                  control={control}
-                                  // rules={{ required: true }}
-                                  render={({ field }) => (
-                                    <Select
-                                      {...field}
-                                      className="react-select w-full"
-                                      classNamePrefix="react-select"
-                                      options={daysOfWeekOptions}
-                                      onChange={(selected) => {
-                                        const operationDays =
-                                          daysOfWeekOptions.reduce(
-                                            (acc, day) => {
-                                              acc[day.value] = selected.some(
-                                                (sel) => sel.value === day.value
-                                              )
-                                                ? 1
-                                                : 0;
-                                              return acc;
-                                            },
-                                            {}
-                                          );
-                                        field.onChange(operationDays);
-                                      }}
-                                      value={daysOfWeekOptions.filter(
-                                        (option) => field.value[option.value]
-                                      )}
-                                      isMulti
-                                    />
-                                  )}
-                                />
-                                {errors.optionlist?.[index]?.operationDays && (
-                                  <p className="text-red-500 text-xs mt-1">
-                                    {
-                                      errors.optionlist[index].operationDays
-                                        .message
-                                    }
-                                  </p>
-                                )}
-                              </div>
-                            );
-                          }
-                          return (
-                            <div key={optionIndex} className="flex space-x-2">
-                              <label
-                                htmlFor={`optionlist[${index}].${optionKey}`}
-                                className="text-sm content-center font-medium text-gray-700 mr-2"
-                              >
-                                {optionKey.charAt(0).toUpperCase() +
-                                  optionKey.slice(1) +
-                                  ":"}
-                              </label>
-                              <Controller
-                                name={`optionlist[${index}].${optionKey}`}
-                                control={control}
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                  <input
-                                    type="text"
-                                    {...field}
-                                    className="text-fieldutilities"
-                                  />
-                                )}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {isslotValue === 'true' && <div className="grid gap-2 border px-2 py-2 mt-2">
-                        <h4 className="text-base font-medium mb-2">
-                          Time Slots
-                        </h4>
-                        <div className="px-2 py-2">
-                          {option?.timeSlots?.map((timeSlot, timeSlotIndex) => (
-                            <div
-                              key={timeSlotIndex}
-                              className="my-2 border p-2"
-                            >
-                              <div className="flex justify-between">
-                                <h4>Time Slot {timeSlotIndex + 1}</h4>
-                                <div className="justify-items-end">
-                                  <button
-                                    type="button"
-                                    className="bg-green-500 text-green-600 rounded px-2 py-1"
-                                    onClick={() => handleAddTimeSlot(index)}
-                                  >
-                                    <MdAdd />
-                                  </button>
-                                  {option.timeSlots.length > 1 && (
-                                    <button
-                                      type="button"
-                                      className="bg-red-500 hover:bg-red-700 text-white rounded px-2 py-1"
-                                      onClick={() =>
-                                        handleRemoveTimeSlot(index)
-                                      }
-                                    >
-                                      <MdDelete />
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                              <div
-                                key={timeSlotIndex}
-                                className="grid grid-cols-1 md:grid-cols-3 gap-4 px-2 py-2"
-                              >
-                                {Object.keys(timeSlot)?.map((field, i) => {
-                                  return (
-                                    <div key={i}>
-                                      <label
-                                        htmlFor={`optionlist[${index}].timeSlots[${timeSlotIndex}].${field}`}
-                                        className="text-sm font-medium text-gray-700"
-                                      >
-                                        {field.charAt(0).toUpperCase() +
-                                          field.slice(1)}
-                                      </label>
-                                      <Controller
-                                        name={`optionlist[${index}].timeSlots[${timeSlotIndex}].${field}`}
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({ field }) => (
-                                          <input
-                                            type="text"
-                                            {...field}
-                                            className="text-fieldutilities"
-                                          />
-                                        )}
-                                      />
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>}
-                    </div>
-                  )}
-                </div>
-              ))}
-              <Button
-                variant="secondary"
-                className="bg-primary"
-                type="button"
-                onClick={() => handleAddOption()}
-              >
-                Add Option
-              </Button>
-            </div>
+            
             {/* Submit Button */}
             <div className="flex justify-center w-full">
               <Button
-                variant="secondary"
-                className="bg-primary w-1/2 text-primary-bodytext"
+                variant="Primary"
+                className="bg-primary w-1/2 text-primary-bodytext hover:bg-green-700" 
                 type="submit"
               >
                 Submit

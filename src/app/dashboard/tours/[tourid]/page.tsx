@@ -53,17 +53,17 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
     setTourDetails({ ...tourdetails, [name]: value });
   };
 
-  const handleAvailabilityChange = (e: any) => {
-    const value = e.target.value;
-    setAvailability(value === "" ? "" : Number(value));
-  };
+  // const handleAvailabilityChange = (e: any) => {
+  //   const value = e.target.value;
+  //   setAvailability(value === "" ? "" : Number(value));
+  // };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const { TourId, ...rest } = tourdetails; // Destructure to remove TourId
     const updatedTourData = { ...rest, images: selectedImages, tourId: TourId }; // Spread the rest and add images
 
-    availability && await updateAvailability({id: tourdetails.id, available:availability})
+    //availability && await updateAvailability({id: tourdetails.id, available:availability})
     await editTour(updatedTourData)
     
     // Call the API to update tour details
@@ -98,7 +98,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
           className="px-4 py-4 border rounded-xl bg-white"
         >
           <div className="mb-5">
-            <Link href={"/dashboard/tours"} className="text-black text-3xl">
+            <Link href={"admin/dashboard/tours"} className="text-black text-3xl">
               <MdArrowBack />
             </Link>
           </div>
@@ -155,7 +155,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
                 </div>
               </div>
             ))}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="availability"
                 className="block text-sm font-medium text-gray-700 uppercase"
@@ -171,7 +171,7 @@ export default function EditTour({ params }: { params: { tourid: String } }) {
                 className="mt-1 p-2 border border-gray-300 rounded-lg w-full text-black"
                 placeholder="Enter availability number"
               />
-            </div>
+            </div> */}
           </div>
           {isedit && (
             <button

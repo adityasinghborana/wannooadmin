@@ -231,7 +231,7 @@ const Coupon = () => {
                   <FormField
                     control={form.control}
                     name="eventid"
-                    defaultValue={0}
+                 
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Event</FormLabel>

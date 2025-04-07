@@ -1,24 +1,25 @@
 "use client";
 import Container from "@/app/ui/dashboard/container/Container";
-import SCustomImageUpload from "@/app/ui/dashboard/SingleImageLibrary/SCustomImageUpload";
+
 import {
-  GetAllImages,
+ 
+  UpdateContactUsPageData,
   UpdateHomePageData,
   getContactUsPageData,
-  getHomePageData,
+
 } from "@/lib/services";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const ContactUsPage = () => {
   const [contactpagedata, setContactPageData] = useState({});
-  const [imagepath, setImagePath] = useState('');
+
 
   useEffect(() => {
     setContactPageData((prevData) => ({
       ...prevData,
-      Imagepath: imagepath,
     }));
-  }, [imagepath]);
+  }, [contactpagedata]);
 
   const getData = async () => {
     setContactPageData(await getContactUsPageData());
@@ -36,13 +37,14 @@ const ContactUsPage = () => {
       ...prevData,
       [name]: value,
     }));
-    // const { id, ...rest } = homepagedata as Record<string, any>;
-    // setHomePageData(rest);
+
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await UpdateHomePageData(contactpagedata);
+    await UpdateContactUsPageData(contactpagedata).then((res)=>{
+toast.success("Data Updated successfully")
+    });
   };
 
   return (
@@ -62,7 +64,7 @@ const ContactUsPage = () => {
             {/* Other form fields */}
             {Object.keys(contactpagedata).map((key) => {
               if (key === "id") return null;
-              if (key === "Imagepath") return <SCustomImageUpload onImageSelect={setImagePath} Images={GetAllImages}/>;
+             
               return (
                 <div className="mb-4 " key={key}>
                   <label className="block text-gray-500 capitalize">

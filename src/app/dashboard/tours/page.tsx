@@ -2,11 +2,13 @@
 import DataGridContainer from "@/app/ui/dashboard/DataGridContainer/DataGridContainer";
 import Container from "@/app/ui/dashboard/container/Container";
 import { deleteTour, getAllTours } from "@/lib/services";
-import { useAppSelector } from "@/lib/store/hooks";
+import { addTours } from "@/lib/store/features/tours/tourSlice";
+import { useAppSelector,useAppDispatch  } from "@/lib/store/hooks";
 import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { MdDelete, MdEdit, MdViewAgenda } from "react-icons/md";
+import { toast } from "react-toastify";
 
 interface Row {
   id: GridRowId;
@@ -19,19 +21,38 @@ interface Row {
 }
 
 const Tours: FC = () => {
+  const dispatch = useAppDispatch();
   const Tours = useAppSelector((state) => state.tour.Tours);
   const [rows, setRows] = useState<Row[]>(Tours);
 
-  useEffect(() => {
-    Tours.length === 0 && getAllTours().then((data) => setRows(data));
-  }, []);
+  const fetchTours = async () => {
+    const data = await getAllTours();
+    dispatch(addTours(data));
+    setRows(data);
+  };
 
-  const handleDelete = async(params:any)=>{
-      let data = await deleteTour(params?.row?.tourId)
-      if(data){
-        setRows(rows.filter((item) => item.id !== params?.row?.id))
+  useEffect(() => {
+    if (Tours.length === 0) {
+      fetchTours();
+    } else {
+      setRows(Tours); // keep rows in sync with Redux
+    }
+  }, [Tours]);
+
+  const handleDelete = async (params: any) => {
+    try {
+      const result = await deleteTour(params?.row?.tourId);
+      if (result) {
+        toast.success("Tour deleted successfully!");
+        fetchTours(); // refresh list in Redux and local state
+      } else {
+        toast.error("Failed to delete tour.");
       }
-  }
+    } catch (error) {
+      toast.error("Something went wrong while deleting.");
+      console.error(error);
+    }
+  };
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {

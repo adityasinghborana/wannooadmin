@@ -37,7 +37,7 @@ const SignIn = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-white w-full">
-      <div className="bg-black p-8 rounded-2xl shadow-md w-96 text-white">
+      <div className="bg-secondary p-8 rounded-2xl shadow-md w-96 text-primary">
         <Image
           src={`/admin/logo/Group.png`}
           alt="Logo"
@@ -56,7 +56,7 @@ const SignIn = () => {
             <div className="mb-4">
               <label
                 htmlFor="username"
-                className="block text-sm font-semibold mb-2 text-white"
+                className="block text-sm font-semibold mb-2 text-primary"
               >
                 Username
               </label>
@@ -71,7 +71,7 @@ const SignIn = () => {
             <div className="mb-6">
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold mb-2 text-white"
+                className="block text-sm font-semibold mb-2 text-primary"
               >
                 Password
               </label>
@@ -85,7 +85,7 @@ const SignIn = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-purple-500 text-white py-2 rounded-md hover:bg-purple-700 transition duration-300 ease-in-out"
+              className="w-full bg-primary text-white py-2 rounded-md hover:bg-purple-700 transition duration-300 ease-in-out"
             >
               Login
             </button>

@@ -125,8 +125,8 @@ const SignupForm = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-white p-4">
-      <div className="bg-black text-white  w-1/2 px-8 shadow-lg  max-w-4xl rounded-2xl py-8">
-        <div className="flex flex-col justify-center items-center">
+  <div className="bg-foreground text-primary w-1/2 px-8 shadow-lg max-w-4xl rounded-2xl py-8 overflow-y-auto max-h-screen">
+        <div className="flex flex-col justify-center items-center overflow-auto">
         <Image
             src={`/admin/logo/Group.png`}
             alt="Logo"
@@ -141,7 +141,7 @@ const SignupForm = () => {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Name</label>
+              <label className="block text-primary">Name</label>
               <input
                 type="text"
                 name="name"
@@ -154,7 +154,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Age</label>
+              <label className="block text-primary">Age</label>
               <input
                 type="number"
                 name="age"
@@ -170,7 +170,7 @@ const SignupForm = () => {
 
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Username</label>
+              <label className="block text-primary">Username</label>
               <input
                 type="text"
                 name="username"
@@ -183,7 +183,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Password</label>
+              <label className="block text-primary">Password</label>
               <input
                 type="password"
                 name="password"
@@ -199,7 +199,7 @@ const SignupForm = () => {
 
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Email</label>
+              <label className="block text-primary">Email</label>
               <input
                 type="email"
                 name="email"
@@ -212,7 +212,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Mobile</label>
+              <label className="block text-primary">Mobile</label>
               <input
                 type="text"
                 name="mobile"
@@ -227,7 +227,7 @@ const SignupForm = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-white">Address</label>
+            <label className="block text-primary">Address</label>
             <input
               type="text"
               name="address"
@@ -242,7 +242,7 @@ const SignupForm = () => {
 
           <div className="grid grid-cols-2 gap-6 mb-4">
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">City</label>
+              <label className="block text-primary">City</label>
               <input
                 type="text"
                 name="city"
@@ -255,7 +255,7 @@ const SignupForm = () => {
               )}
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-white">Country</label>
+              <label className="block text-primary">Country</label>
               <input
                 type="text"
                 name="country"
@@ -270,7 +270,7 @@ const SignupForm = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-white">License Number</label>
+            <label className="block text-primary">License Number</label>
             <input
               type="text"
               name="license_number"
@@ -286,7 +286,7 @@ const SignupForm = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-white">Services Description</label>
+            <label className="block text-primary">Services Description</label>
             <textarea
               name="services_description"
               value={formData.services_description}
@@ -300,8 +300,8 @@ const SignupForm = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-4 gap-x-12 mb-4 max-w-max">
-            <div className="flex flex-row">
+          <div className="grid grid-cols-4 ">
+           
               <input
                 type="file"
                 id="document_tradelicense"
@@ -337,9 +337,9 @@ const SignupForm = () => {
                   {errors.document_tradelicense}
                 </span>
               )}
-            </div>
+       
 
-            <div>
+      
               <input
                 type="file"
                 id="document_other"
@@ -376,9 +376,7 @@ const SignupForm = () => {
                   {errors.document_other}
                 </span>
               )}
-            </div>
-
-            <div>
+            
               <input
                 type="file"
                 id="document_bank"
@@ -447,8 +445,10 @@ const SignupForm = () => {
                 </span>
               )}
             </div>
-          </div>
+          
+<div className="h-5">
 
+</div>
           <div className="flex justify-center">
             <button
               type="submit"

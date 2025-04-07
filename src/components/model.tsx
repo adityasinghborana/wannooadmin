@@ -5,9 +5,10 @@ type ModalProps = {
   title: string;
   message: string;
   onClose: () => void;
+  onConfirm?: () => void
 };
 
-const Modal: React.FC<ModalProps> = ({ isOpen, title, message, onClose }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, title, message, onClose ,onConfirm}) => {
   if (!isOpen) return null; // Don't render anything if modal is not open
 
   return (
@@ -30,6 +31,18 @@ const Modal: React.FC<ModalProps> = ({ isOpen, title, message, onClose }) => {
             >
               Close
             </button>
+            
+          {onConfirm && (
+            <button
+              onClick={onConfirm}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Confirm
+            </button>
+
+
+          )}
+
           </div>
         </div>
       </div>

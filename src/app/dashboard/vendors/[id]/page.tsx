@@ -99,7 +99,7 @@ export default function EditVendor({ params }: { params: { id: string } }) {
           style={{ height: "calc(100vh - 10rem)" }}
         >
           <div className="mb-5">
-            <Link href={"/dashboard/vendors"} className="text-black text-3xl">
+            <Link href={"/admin/dashboard/vendors"} className="text-black text-3xl">
               <MdArrowBack />
             </Link>
           </div>

@@ -2,21 +2,22 @@
 import Container from "@/app/ui/dashboard/container/Container";
 import ImageUploadModal from "@/app/ui/dashboard/SingleImageModal/CustomSingleImageUpload";
 import { Button } from "@/components/ui/button";
-import { UploadBackgroundImage } from "@/lib/services";
+import { createBlog, UploadBackgroundImage } from "@/lib/services";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
+import { toast } from "react-toastify";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const BlogEditor: React.FC = () => {
   const [id, setId] = useState<number>(1);
-  const [subject, setSubject] = useState<string>("");
-  const [body, setBody] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
-  const handleBodyChange = (value: string) => {
-    setBody(value);
+  const handleContentChange = (value: string) => {
+    setContent(value);
   };
 
   const formats = [
@@ -87,15 +88,23 @@ const BlogEditor: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const dataToPost = {
-      id,
-      subject,
-      body,
-      selectedImage
+      title: title,  
+      imagepath: selectedImage, // Change 'selectedImage' to 'imagepath'
+      content: content,  // Change 'body' to 'content'
     };
 
     try {
-      console.log("Blog added:", dataToPost);
+      createBlog(dataToPost).then((res)=>{
+        if(res.result.clientVersion != null ){
+          toast.error("Something Went Wrong");
+        }
+        else{
+          toast.success("Blog Added Successfully");
+        }
+      });
+           console.log("Blog added:", dataToPost);
     } catch (error) {
+      toast.error("Something Went Wrong");
       console.error("Failed to add Blog:", error);
     }
   };
@@ -113,17 +122,17 @@ const BlogEditor: React.FC = () => {
         >
           <div className="mb-4">
             <label
-              htmlFor="subject"
+              htmlFor="title"
               className="block text-gray-700 font-bold mb-2"
             >
-              Subject
+              Title
             </label>
             <input
               type="text"
-              id="subject"
-              placeholder="Enter subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              id="title"
+              placeholder="Enter title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
@@ -168,16 +177,16 @@ const BlogEditor: React.FC = () => {
           </div>
           <div className="mb-4">
             <label
-              htmlFor="body"
+              htmlFor="content"
               className="block text-gray-700 font-bold mb-2"
             >
-              Body
+              Content
             </label>
             <ReactQuill
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               theme="snow"
-              value={body}
-              onChange={handleBodyChange}
+              value={content}
+              onChange={handleContentChange}
               modules={modules}
               formats={formats}
             />

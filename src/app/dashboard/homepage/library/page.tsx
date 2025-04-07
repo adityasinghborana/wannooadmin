@@ -7,9 +7,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FiTrash, FiUpload } from "react-icons/fi";
-import Container from "@/app/ui/dashboard/container/Container";
-import localbaseurl from "@/constants.js";
-import Constants from "@/constants.js";
+
 
 interface Image {
   id: number;
@@ -119,14 +117,15 @@ const ImageManagement: React.FC = () => {
   };
 
   return (
-    <Container>
+
       <div
-        className="bg-white p-8 shadow-md w-full rounded-3xl mt-8"
-        style={{ height: "calc(100vh - 8rem)" }}
+        className="bg-white p-8 overflow-y-auto h-full shadow-md w-full rounded-3xl "
+        // style={{ height: "calc(100vh - 8rem)" }}
       >
         {/* <h2 className="text-2xl text-black font-bold mb-6 text-center">
           Manage Images
         </h2> */}
+        {/* <ScrollArea className="h-[700px] w-full rounded-md border p-4"> */}
         <div className="overflow-y-auto flex-grow">
           <div className="mb-4 flex justify-between items-center">
             <label className="block text-gray-700 text-lg">Upload Images</label>
@@ -160,7 +159,7 @@ const ImageManagement: React.FC = () => {
                   <img
                     src={process.env.NEXT_PUBLIC_URL + image.url}
                     alt={image.filename}
-                    className={`w-full h-48 transition-transform duration-200 ease-in-out transform group-hover:scale-105 object-cover ${
+                    className={`w-full h-44 transition-transform duration-200 ease-in-out transform group-hover:scale-105 object-cover ${
                       selectedImages.includes(image.url)
                         ? "border-4 border-blue-500"
                         : "border"
@@ -182,7 +181,7 @@ const ImageManagement: React.FC = () => {
             <div className="flex justify-center items-center mt-10 text-white ">
               <button
                 onClick={handlePrevPage}
-                className="py-2 px-4 rounded-2xl text-lg bg-primary hover:bg-gray-400 mr-2"
+                className="py-2 px-4 rounded-full text-lg bg-primary hover:bg-gray-400 mr-2"
               >
                 &lt;
               </button>
@@ -203,6 +202,7 @@ const ImageManagement: React.FC = () => {
             </div>
           )}
         </div>
+        {/* </ScrollArea> */}
 
         {/* Modal for Image Upload */}
         <Modal
@@ -225,20 +225,20 @@ const ImageManagement: React.FC = () => {
           <div className="flex justify-end">
             <button
               onClick={handleSaveImage}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
+              className="bg-primary text-white px-4 py-2 rounded hover:bg-green-600 mr-2"
             >
               Save
             </button>
             <button
               onClick={() => setIsModalOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
               Cancel
             </button>
           </div>
         </Modal>
       </div>
-    </Container>
+
   );
 };
 

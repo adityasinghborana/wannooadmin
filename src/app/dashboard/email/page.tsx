@@ -1,5 +1,6 @@
 "use client";
 import Container from "@/app/ui/dashboard/container/Container";
+import { toast } from "react-toastify";
 import { getEmail, updateEmail } from "@/lib/services";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
@@ -76,9 +77,15 @@ const EmailEditor: React.FC = () => {
     };
 
     try {
-      await updateEmail(dataToPost);
-      console.log("Email updated successfully:", dataToPost);
+      const res = await updateEmail(dataToPost);
+    
+      if (res) {
+        toast.success("Email added successfully");
+      } else {
+        toast.error("Something Went Wrong");
+      }
     } catch (error) {
+      toast.error("Something Went Wrong");
       console.error("Failed to update email:", error);
     }
   };

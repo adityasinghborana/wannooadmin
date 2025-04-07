@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
 
   // Perform the API request to check vendor status
   try {
-    const res = await fetch('http://69.48.163.45:3000/vendor', {
+    const res = await fetch('http://68.66.251.170/api/vendor', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const data = await res.json();
-
+console.log(data);
     // Redirect based on the response from the API
     if (data?.data?.isApproved) {
       return NextResponse.next();;
@@ -64,7 +64,7 @@ export async function middleware(request: NextRequest) {
     }
   } catch (error) {
     console.error('Error fetching vendor data:', error);
-    return NextResponse.redirect(new URL('/admin/signIn', request.url));
+    return NextResponse.redirect(new URL('/signIn', request.url));
   }
 }
 

@@ -59,7 +59,7 @@ const DashboardLayout: React.FC<{
         <div className="flex flex-col w-full h-full">{children}</div>
       ) : (
         <div className="flex flex-row w-full" style={{ maxHeight: "calc(100vh)" }}>
-          <div className="shadow-2xl w-full pr-2 md:w-1/6 bg-primary-foreground hidden md:block rounded-r-3xl">
+          <div className="shadow-2xl w-full pr-2 md:w-1/6 bg-primary hidden md:block rounded-r-3xl">
             <Sidebar />
           </div>
           <div className="flex flex-col flex-grow w-full h-full">

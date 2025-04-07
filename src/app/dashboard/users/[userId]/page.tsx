@@ -87,7 +87,7 @@ export default function EditUser({ params }: { params: { userId: string } }) {
           style={{ height: "calc(100vh - 10rem)" }}
         >
           <div className="mb-5">
-            <Link href={"/dashboard/users"} className="text-black text-3xl">
+            <Link href={"/admin/dashboard/users"} className="text-black text-3xl">
               <MdArrowBack />
             </Link>
           </div>
@@ -186,7 +186,7 @@ export default function EditUser({ params }: { params: { userId: string } }) {
           </div>
 
           {/* Orders Section */}
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <h3 className="text-lg font-medium text-gray-900">Orders</h3>
             {userDetails.orders.length === 0 ? (
               <p className="mt-2 text-sm text-gray-500">No orders available.</p>
@@ -209,7 +209,7 @@ export default function EditUser({ params }: { params: { userId: string } }) {
                 ))}
               </ul>
             )}
-          </div>
+          </div> */}
 
           {loading ? (
             <button

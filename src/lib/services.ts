@@ -12,7 +12,7 @@ export async function getAllUsers(){
 
 export async function GetAllCardDetails(){
   try {
-      let res = await axios.get('https://znjdppgl-3000.inc1.devtunnels.ms/dashboarddata')
+      let res = await axiosInstance.get('/dashboarddata')
       return res?.data
   } catch (error) {
       throw error
@@ -21,7 +21,7 @@ export async function GetAllCardDetails(){
 
 export async function GetChartData(date:any, type:any) {
   try {
-    let res = await axios.post(`https://znjdppgl-3000.inc1.devtunnels.ms/${type === 'bookings' ? 'dashboardchartbooking': type === 'users' ? 'dashboardchartusers' : 'dashboardchartvendors' }`, date)
+    let res = await axiosInstance.post(`/${type === 'bookings' ? 'dashboardchartbooking': type === 'users' ? 'dashboardchartusers' : 'dashboardchartvendors' }`, date)
       return res?.data
   } catch (error) {
       throw error
@@ -227,6 +227,24 @@ export async function AddTourTypes(data:any) {
     } catch (error) {
         throw error
     }   
+}
+
+export async function UpdateTourTypes(id: string, data: any) {
+  try {
+      let res = await axiosInstance.put(`/updatetourtypes/${id}`, data);
+      return res?.data;
+  } catch (error) {
+      throw error;
+  }
+}
+
+export async function DeleteTourTypes(id: string) {
+  try {
+      let res = await axiosInstance.delete(`/deletetourtypes/${id}`);
+      return res?.data;
+  } catch (error) {
+      throw error;
+  }
 }
 
 export async function AddCity(data:any) {
@@ -440,7 +458,7 @@ export async function GetAllBookings() {
  
   export async function editTour(data:any) { 
     try {
-      const response = await axiosInstance.put(`https://znjdppgl-3000.inc1.devtunnels.ms/edittour`, data);
+      const response = await axiosInstance.put(`/edittour`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -485,6 +503,15 @@ export async function GetAllBookings() {
   export async function createCity(data:any) { 
     try {
       const response = await axiosInstance.put(`/addcity`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  export async function createBlog(data:any) { 
+    try {
+      const response = await axiosInstance.post(`/addblog`, data);
       return response.data;
     } catch (error) {
       throw error;

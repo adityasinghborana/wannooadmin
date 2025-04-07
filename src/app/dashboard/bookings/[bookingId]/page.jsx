@@ -48,7 +48,7 @@ const BookingDetail = () => {
   return (
     <div className="" style={{ height: 'calc(100vh - 5rem)', overflowY: 'scroll' }}>
       <div className="mb-5">
-            <Link href={"/dashboard/bookings"} className="text-black text-3xl">
+            <Link href={"/admin/dashboard/bookings"} className="text-black text-3xl">
               <MdArrowBack />
             </Link>
           </div>

@@ -36,18 +36,21 @@ const Bookings = () => {
   const columns = [
     { field: "status", headerName: "status", flex: 1 },
     {
-      field: "bookingId",
-      headerName: "Booking_Id",
+      field: "id",
+      headerName: "BookingId",
       flex: 1,
     },
     {
-      field: "serviceUniqueId",
-      headerName: "Service_Unique_Id",
+      field: "serviceTotal",
+      headerName: "Amount",
       flex: 1,
+      renderCell: (params) => (
+        <span>${parseFloat(params.value).toFixed(2)}</span>
+      ),
     },
     {
-      field: "servicetype",
-      headerName: "Service Type",
+      field: "passengers",
+      headerName: "Passengers",
       flex: 1,
     },
     {
@@ -56,33 +59,31 @@ const Bookings = () => {
       flex: 1,
     },
     {
-      field: "startTime",
-      headerName: "Tour Start Time",
+      field: "fullName",
+      headerName: "FullName",
       flex: 1,
     },
     {
-      field: "bookingResultId",
-      headerName: "Booking_Result_Id",
+      field: "email",
+      headerName: "Email",
       flex: 1,
     },
-    // {
-    //   field: "bookingResult",
-    //   headerName: "Reference_No",
-    //   flex: 1,
-    // },
+   
     {
-      field: "bookingResult",
-      headerName: "Reference_No",
+      field: "role",
+      headerName: "Vendor Name",
       flex: 1,
       renderCell: (params) => (
-        <span>{params?.row?.bookingResult?.referenceNo}</span>
+        <span>{params.row?.role?.username || 'N/A'}</span>
       ),
     },
+    
+
     {
       field: "userId",
-      headerName: "User_Id",
+      headerName: "User Id",
       flex: 1,
-      renderCell: (params) => <span>{params?.row?.bookingResult?.userId}</span>,
+      
     },
     {
       field: "actions",
