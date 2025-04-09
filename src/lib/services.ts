@@ -311,6 +311,16 @@ export async function AddTour(tourData:any) {
       throw error;
     }
   }
+  export async function editTour(tourData:any) {
+    try {
+      const response = await axiosInstance.patch('/edittour', tourData);
+      console.log(response.data)
+      return response.data;
+    } catch (error) {
+        console.log(error);
+      throw error;
+    }
+  }
 
 export async function GetAllBookings() {
     try {
@@ -456,14 +466,7 @@ export async function GetAllBookings() {
     }
   }
  
-  export async function editTour(data:any) { 
-    try {
-      const response = await axiosInstance.put(`/edittour`, data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
+
  
   export async function fetchContinent() { 
     try {

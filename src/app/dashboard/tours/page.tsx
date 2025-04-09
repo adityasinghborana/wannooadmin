@@ -9,7 +9,7 @@ import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { MdDelete, MdEdit, MdViewAgenda } from "react-icons/md";
 import { toast } from "react-toastify";
-import Constants from "@/constants.js"
+
 interface Row {
   id: GridRowId;
   email: string;
@@ -71,7 +71,12 @@ const Tours: FC = () => {
                 height: "100%",
               }}
             >
-              <img src={`${Constants.localBaseUrl}${imagePath}`} alt={imagePath} height={130} width={130} />
+          <img
+  src={`${process.env.NEXT_PUBLIC_URL+imagePath}`}
+  alt={imagePath}
+  height={130}
+  width={130}
+/>   
             </div>
           </>
         );
@@ -99,13 +104,13 @@ const Tours: FC = () => {
       renderCell: (params) => (
         <div className="flex gap-2 h-full items-center justify-center">
           <Link
-            href={`/dashboard/tours/${params.row.id}`}
+            href={`/admin/dashboard/tours/${params.row.id}`}
             className="flex items-center justify-center px-2 py-1 rounded bg-green-300 text-white hover:bg-green-600 focus:outline-none focus:bg-green-600"
           >
             <MdEdit />
           </Link>
           <Link
-            href={`/dashboard/tours/view${params.row.id}`}
+            href={`/admin/dashboard/tours/view${params.row.id}`}
             className="flex items-center justify-center px-2 py-1 rounded bg-yellow-300 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
           >
             <MdViewAgenda />

@@ -108,12 +108,12 @@ const SignupForm = () => {
 
   const handleConfirm = async (name) => {
     let formData = new FormData();
-    formData.append("image", selectedImage);
+    formData.append("images", selectedImage);
     let imgData = await UploadBackgroundImage(formData);
     // Assuming you're storing image paths in a field named "imagepaths"
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: imgData?.path,
+      [name]: imgData?.files[0].path,
     }));
     setIsModalOpen({
       document_tradelicense: false,

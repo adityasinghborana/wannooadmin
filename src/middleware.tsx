@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
 
   // Perform the API request to check vendor status
   try {
-    const res = await fetch(`${Constants.localBaseUrl}/vendor`, {
+    const res = await fetch(`http://localhost:3000/vendor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,11 +64,11 @@ console.log(data);
     if (data?.data?.isApproved) {
       return NextResponse.next();;
     } else {
-      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+      return NextResponse.redirect(new URL(' /dashboard', request.url));
     }
   } catch (error) {
     console.error('Error fetching vendor data:', error);
-    return NextResponse.redirect(new URL('/admin/signIn', request.url));
+    return NextResponse.redirect(new URL('/signIn', request.url));
   }
 }
 
